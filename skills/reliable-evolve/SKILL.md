@@ -1,6 +1,6 @@
 ---
 name: reliable-evolve
-description: "分析 PROJECT_EXPERIENCES.md 中记录的经验——生成三类进化建议（CLAUDE.md 规则变更、技能行为变更、规格修订）。所有建议需人类明确批准后才应用。周期性使用或在积累多条 session-retro 条目后使用。"
+description: "分析 .reliable-agent/experiences.md 中记录的经验——生成三类进化建议（CLAUDE.md 规则变更、技能行为变更、规格修订）。所有建议需人类明确批准后才应用。周期性使用或在积累多条 session-retro 条目后使用。"
 version: "1.0.0"
 license: MIT
 ---
@@ -11,7 +11,7 @@ license: MIT
 
 ## Overview
 
-这是三层进化模型的核心引擎。读取 PROJECT_EXPERIENCES.md 中的结构化经验，通过聚类分析识别重复模式，生成三类变更建议。**所有建议不经人类批准绝不自动应用。**
+这是三层进化模型的核心引擎。读取 `.reliable-agent/experiences.md` 中的结构化经验，通过聚类分析识别重复模式，生成三类变更建议。**所有建议不经人类批准绝不自动应用。**
 
 **核心理念**: 进化不是自动的。AI 可以做模式识别和建议生成，但改变行为的决定权在人类。
 
@@ -30,7 +30,7 @@ digraph reliable_evolve {
     node [shape=box, style=rounded];
 
     start [label="启动 /evolve-reliable", shape=doublecircle];
-    load [label="读取\nPROJECT_EXPERIENCES.md"];
+    load [label="读取\n.reliable-agent/\nexperiences.md"];
     cluster [label="聚类分析\n按类别+领域+重复度"];
     identify [label="识别重复模式\n（>= 2 次）"];
     cross_ref [label="交叉引用\nCLAUDE.md+Skills+Specs\n找缺口"];
@@ -62,7 +62,7 @@ digraph reliable_evolve {
 ```
 
 ### Step 1: 加载经验
-- 读取 PROJECT_EXPERIENCES.md
+- 读取 `.reliable-agent/experiences.md`
 - 收集所有经验记录
 - 完成标准: 所有经验已加载
 
@@ -136,7 +136,7 @@ digraph reliable_evolve {
 
 ## Verification
 
-- [ ] PROJECT_EXPERIENCES.md 已读取且所有经验已编录
+- [ ] .reliable-agent/experiences.md 已读取且所有经验已编录
 - [ ] 重复模式（>= 2 次）已识别
 - [ ] 每条建议链接到具体触发经验
 - [ ] 每条建议包含: 触发、确切变更文字、理由、风险

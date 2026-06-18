@@ -92,7 +92,7 @@ AI 会按照 TDD 循环实现：
 /session-retro
 ```
 
-提取 session 经验教训，记录到 PROJECT_EXPERIENCES.md。
+提取 session 经验教训，记录到 .reliable-agent/experiences.md。
 
 ## 完整流程
 

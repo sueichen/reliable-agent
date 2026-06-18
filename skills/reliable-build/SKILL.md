@@ -33,7 +33,7 @@ digraph reliable_build {
 
     start [label="启动 /build-reliable", shape=doublecircle];
     select_task [label="选择下一个\n待办任务"];
-    context [label="加载上下文\nCLAUDE.md+代码+\nPROJECT_EXPERIENCES"];
+    context [label="加载上下文\nCLAUDE.md+代码+\n.reliable-agent/\nexperiences"];
     red [label="RED: 编写失败测试\n（测试行为，非实现）", shape=box style=filled fillcolor="#ffcccc"];
     verify_fail [label="验证测试\n正确失败？", shape=diamond];
     rethink [label="重新设计测试"];
@@ -76,14 +76,14 @@ digraph reliable_build {
 ```
 
 ### Step 1: 选择下一个任务
-- 从 `docs/plans/*-plan.md` 中选取下一个待办任务
+- 从 `.reliable-agent/plans/*-plan.md` 中选取下一个待办任务
 - 遵守依赖顺序
 - 完成标准: 已选择任务，其依赖已满足
 
 ### Step 2: 加载上下文
 - 读取任务验收标准
 - 加载相关已有代码、CLAUDE.md 中的模式
-- 检查 PROJECT_EXPERIENCES.md 中相关经验
+- 检查 `.reliable-agent/experiences.md` 中相关经验
 - 完成标准: 已理解任务和相关代码上下文
 
 ### Step 3: RED — 编写失败测试

@@ -51,7 +51,7 @@
 ## 三层进化模型
 
 ```
-第一层: PROJECT_EXPERIENCES.md  ← 自动追加（只添不删）
+第一层: .reliable-agent/experiences.md  ← 自动追加（只添不删）
          ↓
 第二层: CLAUDE.md              ← evolve 生成 proposal → 人类审批
          ↓

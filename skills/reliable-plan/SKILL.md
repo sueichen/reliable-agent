@@ -29,7 +29,7 @@ digraph reliable_plan {
     node [shape=box, style=rounded];
 
     start [label="启动 /plan-reliable", shape=doublecircle];
-    context_load [label="加载上下文\nCLAUDE.md+SPEC+\nPROJECT_EXPERIENCES"];
+    context_load [label="加载上下文\nCLAUDE.md+SPEC+\n.reliable-agent/\nexperiences"];
     surface [label="暴露假设\n提交用户确认"];
     grill [label="对抗式提问\n（一次一个问题）"];
     propose [label="提出 2-3 个方案\n含权衡+推荐"];
@@ -61,7 +61,7 @@ digraph reliable_plan {
 ### Step 1: 加载上下文
 - 读取 CLAUDE.md（项目宪法）
 - 读取 SPEC.md（如存在）
-- 读取 PROJECT_EXPERIENCES.md（如存在）——检查过往相关经验
+- 读取 `.reliable-agent/experiences.md`（如存在）——检查过往相关经验
 - 搜索项目中类似的过往工作
 - 完成标准: 已确认所有相关上下文已加载
 
@@ -119,7 +119,7 @@ digraph reliable_plan {
 - 完成标准: 方案中无未解决的占位符或矛盾
 
 ### Step 9: 保存方案
-- 写入 `docs/plans/YYYY-MM-DD-<topic>-plan.md`
+- 写入 `.reliable-agent/plans/YYYY-MM-DD-<topic>-plan.md`
 - 完成标准: 文件已保存
 
 ### Step 10: 人类审批
@@ -162,5 +162,5 @@ digraph reliable_plan {
 - [ ] 测试策略已定义
 - [ ] 每个任务有验收标准
 - [ ] 方案经过自查（无占位符/矛盾）
-- [ ] 方案已保存到 docs/plans/
+- [ ] 方案已保存到 .reliable-agent/plans/
 - [ ] 人类明确批准了方案

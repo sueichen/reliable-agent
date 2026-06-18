@@ -31,11 +31,12 @@ npm run dev
 ## 项目结构
 
 ```
-src/           # 源代码
-tests/         # 测试代码
-docs/          # 文档
-  plans/       #   实现计划
-  adrs/        #   架构决策记录
+src/                  # 源代码
+tests/                # 测试代码
+.reliable-agent/      # 可靠工程产物（AI 生成，人工审查）
+  plans/              #   实现计划
+  adrs/               #   架构决策记录
+  experiences.md      #   结构化经验知识库
 ```
 
 ## 代码风格
@@ -123,5 +124,5 @@ Co-Authored-By: [name] <[email]>
 
 - README 包含：项目用途、安装步骤、基本用法
 - 每个非平凡的公共 API 有 JSDoc/TSDoc
-- 架构决策记录在 `docs/adrs/` 中，格式 `YYYY-MM-DD-[标题].md`
+- 架构决策记录在 `.reliable-agent/adrs/` 中，格式 `YYYY-MM-DD-[标题].md`
 - 每个 ADR 记录：背景、决策、后果、考虑的替代方案

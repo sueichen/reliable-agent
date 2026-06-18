@@ -104,9 +104,11 @@ digraph reliable_spec {
 - 写入项目根目录 CLAUDE.md
 - 完成标准: 文件已保存
 
-### Step 7: 新项目搭建
-- 如果是新项目，创建 `src/`, `tests/`, `docs/` 目录
-- 完成标准: 基本目录结构就位
+### Step 7: 搭建 `.reliable-agent/`
+- 创建 `.reliable-agent/plans/` 目录
+- 创建 `.reliable-agent/adrs/` 目录
+- 初始化空的 `.reliable-agent/experiences.md`
+- 完成标准: `.reliable-agent/` 目录结构就位
 
 <HARD-GATE>
 在 CLAUDE.md 被保存之前，不要开始任何实现工作。在人类批准之前，不要保存 CLAUDE.md。

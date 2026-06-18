@@ -8,7 +8,7 @@
 ┌─────────────────────────────────────────────┐
 │  第一层：Experience（经验文件）               │
 │  角色：自动追加，AI 可读写                    │
-│  文件：PROJECT_EXPERIENCES.md                │
+│  文件：.reliable-agent/experiences.md        │
 │  内容：错误模式、优化发现、审查高频问题         │
 │  进化方式：/session-retro 自动追加             │
 │  风险：低（只记录，不改变行为）               │
@@ -49,7 +49,7 @@
 ```
 /session-retro (每个 session 结束)
     │
-    ├─→ 追加经验到 PROJECT_EXPERIENCES.md（自动）
+    ├─→ 追加经验到 .reliable-agent/experiences.md（自动）
     └─→ 积累 >= 3 条新经验 → 提示运行 /evolve-reliable
 
 /evolve-reliable (周期性)

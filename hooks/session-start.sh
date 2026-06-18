@@ -39,7 +39,7 @@ ${using_skill_escaped}
 <IMPORTANT>
 When a project contains a CLAUDE.md file, read it first before any implementation work — it defines the project's constitution, code standards, and boundaries.
 
-When a project contains a PROJECT_EXPERIENCES.md file, read it when debugging, reviewing, or before making changes in areas with recorded experiences — it contains structured knowledge of past error patterns, optimization discoveries, and recurring review issues.
+When a project contains a .reliable-agent/experiences.md file, read it when debugging, reviewing, or before making changes in areas with recorded experiences — it contains structured knowledge of past error patterns, optimization discoveries, and recurring review issues.
 </IMPORTANT>
 </EXTREMELY-IMPORTANT>"
 
