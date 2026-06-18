@@ -171,3 +171,4 @@ digraph reliable_plan {
 
 **其他选项**:
 - `/reliable-plan` — 方案需要调整，继续在当前阶段修改设计
+- `/reliable-auto` — 自动接管后续全流程（build→verify→log→review→doc）

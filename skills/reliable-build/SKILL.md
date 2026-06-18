@@ -172,3 +172,4 @@ digraph reliable_build {
 
 **其他选项**:
 - `/reliable-build` — 继续实现方案中标记为未完成的下一个任务切片
+- `/reliable-auto` — 自动接管后续全流程（verify→log→review→doc）

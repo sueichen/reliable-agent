@@ -29,8 +29,8 @@ cp -r .claude/commands/* ~/.claude/commands/
 安装后，启动新的 Claude Code session。你应该看到：
 
 ```
-You have reliable-agent installed. This plugin provides 11 phase-gated 
-engineering workflow skills for reliable code engineering.
+You have reliable-agent installed. This plugin provides 12 phase-gated 
+engineering workflow skills (including an auto-pilot mode) for reliable code engineering.
 ```
 
 输入 `/reliable-spec` 测试第一个命令是否可被发现。

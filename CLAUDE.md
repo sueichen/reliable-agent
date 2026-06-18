@@ -20,6 +20,7 @@ scripts/        → 验证和管理脚本
 | 阶段 | 技能 | 简要说明 |
 |------|------|---------|
 | Bootstrap | using-reliable-agent | 元技能——SessionStart 注入，技能发现 |
+| Auto | reliable-auto | 自动化工作流——检测阶段并自动执行 plan→update-doc |
 | Define | reliable-spec | 项目初始化——生成 CLAUDE.md + 宪法 |
 | Plan | reliable-plan | 需求分析 + grill-me + 设计方案 |
 | Build | reliable-build | TDD 增量实现 |

@@ -22,6 +22,7 @@
   ],
   "skills": [
     "./skills/using-reliable-agent",
+    "./skills/reliable-auto",
     "./skills/reliable-spec",
     "./skills/reliable-plan",
     "./skills/reliable-build",
@@ -44,6 +45,7 @@
   "commands": [
     "./.claude/commands/reliable-spec.md",
     "./.claude/commands/reliable-plan.md",
+    "./.claude/commands/reliable-auto.md",
     "./.claude/commands/reliable-build.md",
     "./.claude/commands/reliable-verify.md",
     "./.claude/commands/reliable-log.md",

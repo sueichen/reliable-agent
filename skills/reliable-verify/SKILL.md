@@ -164,6 +164,7 @@ digraph reliable_verify {
 **全部通过时**:
 - `/reliable-log` — 检查可观测性（日志/指标/追踪）是否到位
 - 或直接 `/reliable-request-review` — 跳过可观测性，直接提交 5-agent 并行审查
+- `/reliable-auto` — 自动接管后续流程（审查→修复→验证→文档），一站式完成
 
 **有失败项时**:
 - `/reliable-build` — 返回修复测试失败、lint 错误或构建问题，修复后重新验证

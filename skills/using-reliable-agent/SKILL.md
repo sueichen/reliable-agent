@@ -108,7 +108,9 @@ digraph skill_flow {
     node [shape=box, style=rounded];
 
     start [label="收到任务", shape=doublecircle];
-    
+
+    need_auto [label="需要自动化多阶段\n（plan→update-doc）?", shape=diamond];
+
     has_claude_md [label="项目有 CLAUDE.md\n+ 宪法?", shape=diamond];
     need_spec [label="需要初始化项目\n或生成规范?", shape=diamond];
     need_plan [label="有需求但\n无实现方案?", shape=diamond];
@@ -124,6 +126,7 @@ digraph skill_flow {
 
     spec_call [label="调用: reliable-spec", shape=box style=filled fillcolor=lightblue];
     plan_call [label="调用: reliable-plan", shape=box style=filled fillcolor=lightblue];
+    auto_call [label="调用: reliable-auto\n（自动执行 plan→\nbuild→verify→log→\nreview→doc）", shape=box style=filled fillcolor=lightgreen];
     build_call [label="调用: reliable-build", shape=box style=filled fillcolor=lightblue];
     verify_call [label="调用: reliable-verify", shape=box style=filled fillcolor=lightblue];
     log_call [label="调用: reliable-log", shape=box style=filled fillcolor=lightblue];
@@ -136,7 +139,11 @@ digraph skill_flow {
 
     done [label="完成", shape=doublecircle];
 
-    start -> has_claude_md;
+    start -> need_auto;
+    need_auto -> auto_call [label="是"];
+    auto_call -> done;
+    need_auto -> has_claude_md [label="否"];
+
     has_claude_md -> need_spec [label="否，或需要更新"];
     has_claude_md -> need_plan [label="是"];
     
@@ -194,6 +201,8 @@ digraph skill_flow {
 ```
 
 并非每个任务都需要所有技能。一个 bug 修复可能只需要：`reliable-build → reliable-verify → reliable-request-review → reliable-ship → reliable-session-retro`。
+
+或者使用 `/reliable-auto` 一键自动执行 plan → update-doc 全流程（检测当前阶段、自动处理审查反馈和验证循环、在 evolve/ship 前停止）。
 
 ## 质量门禁
 

@@ -1,6 +1,6 @@
 # Reliable-Agent
 
-可靠工程工作流技能集 — 11 个阶段门控工作流，覆盖从规范到回顾的完整可靠工程循环。
+可靠工程工作流技能集 — 12 个阶段门控工作流（含 1 个全自动模式），覆盖从规范到回顾的完整可靠工程循环。
 
 ## 核心理念
 
@@ -14,6 +14,7 @@
 
 | 命令 | 阶段 | 功能 |
 |------|------|------|
+| `/reliable-auto` | Auto | 自动检测阶段，一次性执行 plan→update-doc |
 | `/reliable-spec` | Define | 项目初始化 — 生成 CLAUDE.md + 宪法 |
 | `/reliable-plan` | Plan | 需求分析 + grill-me + 设计方案 |
 | `/reliable-build` | Build | TDD 增量实现（红绿重构） |
@@ -53,6 +54,9 @@ claude plugins install /path/to/reliable-agent
 # 初始化项目
 /reliable-spec
 
+# 或一键自动化全流程（检测阶段并自动执行）
+/reliable-auto
+
 # 规划功能
 /reliable-plan
 
@@ -87,7 +91,7 @@ claude plugins install /path/to/reliable-agent
 ## 文件结构
 
 ```
-skills/         → 12 个技能（1 元技能 + 11 工作流）
+skills/         → 13 个技能（1 元技能 + 1 自动化 + 11 工作流）
 agents/         → 5 个 agent 角色定义
 templates/      → 5 个项目模板
 references/     → 7 个交叉引用检查清单

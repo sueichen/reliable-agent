@@ -94,14 +94,37 @@ AI 会按照 TDD 循环实现：
 
 提取 session 经验教训，记录到 .reliable-agent/experiences.md。
 
+## 一键自动化
+
+如果不想逐步运行上述步骤 2-7（plan 到 update-doc），可以使用自动化命令：
+
+```
+/reliable-auto
+```
+
+AI 会:
+- 自动检测项目当前所处阶段（通过分析 CLAUDE.md、plan 文件、git 历史等）
+- 展示检测结果并请求一次性确认（后续阶段自动执行）
+- 顺序执行 plan → build → verify → log → request-review
+- 自动处理审查反馈：修复 → 重验证 → 重审查（最多 3 次循环）
+- 审查通过后自动更新文档
+- 在 update-doc 完成后停止，生成自动决策报告
+- 提示手动运行 `/reliable-evolve`、`/reliable-ship` 和 `/reliable-session-retro`
+
+**注意**: 此命令不从 spec 开始（规范生成始终需要人工交互），也不执行 ship（发布需要人类批准）。
+
 ## 完整流程
 
 ```
-/reliable-spec → /reliable-plan → /reliable-build
-    → /reliable-verify → /reliable-log
-    → /reliable-request-review → /reliable-receive-review
-    → /reliable-update-doc → /reliable-ship
-    → /reliable-session-retro
+手动:  /reliable-spec → /reliable-plan → /reliable-build
+           → /reliable-verify → /reliable-log
+           → /reliable-request-review → /reliable-receive-review
+           → /reliable-evolve → /reliable-update-doc → /reliable-ship
+           → /reliable-session-retro
+
+自动化: /reliable-auto  → plan → build → verify → log
+           → request-review → [审查循环] → update-doc → STOP
+           （然后手动运行 evolve → ship → session-retro）
 ```
 
 ## 需要帮助？
