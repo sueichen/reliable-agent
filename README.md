@@ -1,6 +1,6 @@
 # Reliable-Agent
 
-可靠工程工作流技能集 — 12 个阶段门控工作流（含 1 个全自动模式），覆盖从规范到回顾的完整可靠工程循环。
+可靠工程工作流技能集 — 11 个阶段门控工作流（含 1 个全自动模式），覆盖从规范到回顾的完整可靠工程循环。
 
 ## 核心理念
 
@@ -22,10 +22,9 @@
 | `/reliable-log` | Observe | 可观测性检查与补充 |
 | `/reliable-request-review` | Review | 多角度代码审查（5-agent 并行） |
 | `/reliable-receive-review` | Review | 审查反馈处理与修复 |
-| `/reliable-evolve` | Evolve | 经验分析 → 进化建议 |
 | `/reliable-update-doc` | Doc | 文档同步更新 |
 | `/reliable-ship` | Ship | 提交 + PR + 合并 |
-| `/reliable-session-retro` | Retro | Session 回顾 + 经验提取 |
+| `/reliable-evolve` | Evolve | Session 回顾+经验提取+进化建议 |
 
 ## 质量门禁
 
@@ -81,17 +80,14 @@ claude plugins install /path/to/reliable-agent
 # 发布
 /reliable-ship
 
-# 回顾与经验提取
-/reliable-session-retro
-
-# 周期性进化（积累经验后）
+# Session 回顾与进化（经验提取+进化建议）
 /reliable-evolve
 ```
 
 ## 文件结构
 
 ```
-skills/         → 13 个技能（1 元技能 + 1 自动化 + 11 工作流）
+skills/         → 12 个技能（1 元技能 + 1 自动化 + 10 工作流）
 agents/         → 5 个 agent 角色定义
 templates/      → 5 个项目模板
 references/     → 7 个交叉引用检查清单

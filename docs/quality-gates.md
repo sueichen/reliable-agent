@@ -11,8 +11,8 @@
 | G1 | reliable-verify | 新代码有对应测试，全部通过 | reliable-build |
 | G2 | reliable-request-review | 100% 测试通过，0 lint，构建成功，风格规范已检查 | reliable-verify |
 | G3 | reliable-ship | 所有 Critical 已修复，Optional 已记录 | reliable-receive-review |
-| G4 | reliable-session-retro | commit 格式正确，PR 描述完整 | reliable-ship |
-| G5 | 下一个 session | 经验已提取，session 可追溯 | reliable-session-retro |
+| G4 | reliable-ship | commit 格式正确，PR 描述完整 | reliable-ship |
+| G5 | reliable-evolve | 经验已提取，session 可追溯 | reliable-evolve |
 
 ## 门禁强制示例
 
@@ -51,4 +51,4 @@ G3 未满足：存在未解决的 Critical 审查发现。
 - G2 防止破损代码进入审查（浪费审查者时间），含风格违规检查
 - G3 防止有已知漏洞或风格违规的代码发布
 - G4 防止不可追溯的变更进入仓库
-- G5 防止经验丢失、错误重复
+- G5 防止经验丢失、错误重复（由 evolve 的 Phase 1 实施）

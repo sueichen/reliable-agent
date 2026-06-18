@@ -3,7 +3,6 @@
 > **自动化模式**: `/reliable-auto` 可自动检测当前阶段并一次性执行从 plan 到 update-doc 的完整流程，自动处理审查反馈和验证循环。详见下方手动流程中的每个阶段。
 
 ## 完整生命周期
-
 ```
 /reliable-spec ──────► CLAUDE.md 存在（项目宪法）
      │
@@ -26,16 +25,13 @@
 /reliable-receive-review ─► 所有审查关注点已解决
      │
      ▼
-/reliable-evolve ─────► （可选，周期性）建议经人类审查
-     │
-     ▼
 /reliable-update-doc ─► 文档同步
      │
      ▼
 /reliable-ship ───────► G4: commit 格式正确，PR 描述完整
      │
      ▼
-/reliable-session-retro ───────► G5: 经验已提取，session 可追溯
+/reliable-evolve ───────► G5: 经验已提取，session 可追溯
 ```
 
 ## 质量门禁
@@ -47,8 +43,8 @@
 | G1 | build → verify | 新代码有对应测试，全部通过 | 是 |
 | G2 | verify → review | 100% 测试通过，0 lint 错误，构建成功，风格规范已检查 | 是 |
 | G3 | review → ship | 所有 Critical 已修复，Optional 已记录 | 是 |
-| G4 | ship → retro | commit 符合 CLAUDE.md 格式，PR 描述完整 | 是 |
-| G5 | retro 结束 | 当前 session 经验已提取，标记为可追溯 | 是 |
+| G4 | ship → evolve | commit 符合 CLAUDE.md 格式，PR 描述完整 | 是 |
+| G5 | evolve 结束 | 当前 session 经验已提取，标记为可追溯 | 是 |
 
 ## 三层进化模型
 
@@ -63,7 +59,7 @@
 ## 循环
 
 完成一个完整周期后：
-1. `/reliable-session-retro` 提取经验
-2. 积累多条经验后运行 `/reliable-evolve`
+1. `/reliable-evolve` 回顾 session 并提取经验（Phase 1）
+2. 积累多条经验后自动进入聚类分析和进化建议（Phase 2-4）
 3. evolve 生成的建议经人类审批后应用
 4. 下一轮 session 受益于改进的技能和规则

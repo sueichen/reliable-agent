@@ -11,7 +11,7 @@ license: MIT
 
 ## Overview
 
-一键自动执行可靠工程工作流：检测项目当前所处阶段，从该阶段开始自动运行到 update-doc，自动处理审查反馈和验证循环。在 update-doc 完成后停止，提示用户手动运行 evolve、ship 和 session-retro。
+一键自动执行可靠工程工作流：检测项目当前所处阶段，从该阶段开始自动运行到 update-doc，自动处理审查反馈和验证循环。在 update-doc 完成后停止，提示用户手动运行 ship 和 evolve。
 
 **核心理念**: 自动化重复的流程步骤，但保留人类在关键节点（spec 生成、ship 发布）的控制权。自动化是为了提效，不是为了绕过质量门禁。
 
@@ -64,7 +64,7 @@ digraph reliable_auto {
     run_doc [label="Phase 6: reliable-update-doc\n自动更新所有受影响文档\ndocs单独提交", shape=box style=filled fillcolor=lightyellow];
 
     /* Stop */
-    stop_here [label="AUTO 模式在此停止\n\n生成自动决策报告\n提示运行:\n/reliable-evolve\n/reliable-ship\n/reliable-session-retro", shape=doublecircle style=filled fillcolor=lightgreen];
+    stop_here [label="AUTO 模式在此停止\n\n生成自动决策报告\n提示运行:\n/reliable-ship\n/reliable-evolve", shape=doublecircle style=filled fillcolor=lightgreen];
 
     /* Report */
     report [label="生成自动决策报告\n（所有阶段所有决策）", shape=box style=filled fillcolor=lightcyan];
@@ -129,7 +129,7 @@ digraph reliable_auto {
    → 阶段: update-doc — 文档需同步
 
 9. 已到 update-doc 阶段（文档已更新或无需更新）？
-   → 阶段: DONE — 提示用户运行 evolve + ship + session-retro
+   → 阶段: DONE — 提示用户运行 ship + evolve
 ```
 
 ### 检测确认输出格式
@@ -348,9 +348,8 @@ update-doc 完成后，auto 模式必须:
   下一步（手动运行）:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  /reliable-evolve        — 经验分析与进化建议（积累经验后运行）
   /reliable-ship          — 最终发布门禁（提交+PR+合并，需人类批准）
-  /reliable-session-retro — Session 回顾与经验提取
+  /reliable-evolve        — Session 回顾、经验提取与进化建议
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   自动决策报告已生成（见上方）
@@ -407,9 +406,8 @@ update-doc 完成后，auto 模式必须:
 - Changelog 条目: [简述]
 
 ### 8. 下一步
-- [ ] 运行 /reliable-evolve（积累经验后）
 - [ ] 运行 /reliable-ship
-- [ ] 运行 /reliable-session-retro
+- [ ] 运行 /reliable-evolve（session 回顾+经验提取+进化建议）
 ```
 
 ## Common Rationalizations
@@ -453,16 +451,15 @@ update-doc 完成后，auto 模式必须:
 - [ ] 审查循环未超过 3 次
 - [ ] 自动决策报告完整（覆盖所有阶段）
 - [ ] 停止在 update-doc（未进入 ship）
-- [ ] 下一步指引已显示（evolve + ship + session-retro）
+- [ ] 下一步指引已显示（ship + evolve）
 - [ ] 所有 Critical 修复有证明测试
 
 ## 下一步指引
 
 **AUTO 模式在此停止。请手动运行:**
 
-1. **`/reliable-evolve`** — 经验分析与进化建议：聚类模式 → 生成 Type A/B/C 建议 → 需人类批准后应用
-2. **`/reliable-ship`** — 最终发布门禁：验证所有质量门禁 → 检查提交格式 → 生成 PR 描述 → 需要人类批准 push
-3. **`/reliable-session-retro`** — Session 回顾：提取结构化经验 → 追加到 experiences.md → 标记需要进化的经验
+1. **`/reliable-ship`** — 最终发布门禁：验证所有质量门禁 → 检查提交格式 → 生成 PR 描述 → 需要人类批准 push
+2. **`/reliable-evolve`** — Session 回顾与进化：提取结构化经验 → 追加到 experiences.md → 聚类分析 → 生成 Type A/B/C 建议 → 需人类批准后应用
 
 **如果 auto 模式中途停止（遇到阻塞）**:
 - 解决阻塞问题后，重新运行 `/reliable-auto` — 它会从当前阶段继续

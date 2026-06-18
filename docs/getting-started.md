@@ -86,13 +86,13 @@ AI 会按照 TDD 循环实现：
 
 提交校验 + PR 生成 + CI 监控 + 合并。等待你批准后推送。
 
-### 8. 回顾
+### 8. 回顾与进化
 
 ```
-/reliable-session-retro
+/reliable-evolve
 ```
 
-提取 session 经验教训，记录到 .reliable-agent/experiences.md。
+回顾 session 并提取结构化经验到 `.reliable-agent/experiences.md`（Phase 1），积累经验后自动进入聚类分析和进化建议（Phase 2-4）。
 
 ## 一键自动化
 
@@ -109,7 +109,7 @@ AI 会:
 - 自动处理审查反馈：修复 → 重验证 → 重审查（最多 3 次循环）
 - 审查通过后自动更新文档
 - 在 update-doc 完成后停止，生成自动决策报告
-- 提示手动运行 `/reliable-evolve`、`/reliable-ship` 和 `/reliable-session-retro`
+- 提示手动运行 `/reliable-ship` 和 `/reliable-evolve`
 
 **注意**: 此命令不从 spec 开始（规范生成始终需要人工交互），也不执行 ship（发布需要人类批准）。
 
@@ -119,12 +119,12 @@ AI 会:
 手动:  /reliable-spec → /reliable-plan → /reliable-build
            → /reliable-verify → /reliable-log
            → /reliable-request-review → /reliable-receive-review
-           → /reliable-evolve → /reliable-update-doc → /reliable-ship
-           → /reliable-session-retro
+           → /reliable-update-doc → /reliable-ship
+           → /reliable-evolve
 
 自动化: /reliable-auto  → plan → build → verify → log
            → request-review → [审查循环] → update-doc → STOP
-           （然后手动运行 evolve → ship → session-retro）
+           （然后手动运行 ship → evolve）
 ```
 
 ## 需要帮助？

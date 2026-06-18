@@ -28,7 +28,7 @@
 ```
 reliable-spec → reliable-plan → reliable-build → reliable-verify
     → reliable-log → reliable-request-review → reliable-receive-review
-    → reliable-update-doc → reliable-ship → reliable-session-retro
+    → reliable-update-doc → reliable-ship → reliable-evolve
 ```
 
 ## 质量门禁

@@ -13,7 +13,7 @@ AI 将:
 5. 修复后自动重新验证（reliable-verify）和重新审查（reliable-request-review）
 6. 审查通过后自动执行 update-doc（自动更新文档）
 7. 在 update-doc 完成后停止，生成自动决策报告
-8. 提示用户手动运行 /reliable-evolve、/reliable-ship 和 /reliable-session-retro
+8. 提示用户手动运行 /reliable-ship 和 /reliable-evolve
 
 审查-修复-验证循环:
 - 迭代 1/3: 修复所有 Critical + Important + 合理 Suggestion

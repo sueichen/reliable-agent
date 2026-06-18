@@ -45,7 +45,7 @@ digraph reliable_ship {
     monitor_ci [label="监控 CI"];
     ci_pass [label="CI 通过？", shape=diamond];
     human_merge [label="人类执行合并"];
-    done [label="G4 通过\n准备 /reliable-session-retro", shape=doublecircle];
+    done [label="G4 通过\n准备 /reliable-evolve", shape=doublecircle];
 
     start -> gate_check;
     gate_check -> fail_gate [label="否"];
@@ -163,4 +163,4 @@ digraph reliable_ship {
 
 ## 下一步指引
 
-**推荐路径** → `/reliable-session-retro` — 发布完成，回顾本次 session 并提取经验教训
+**推荐路径** → `/reliable-evolve` — 发布完成，回顾本次 session、提取经验教训并分析进化建议

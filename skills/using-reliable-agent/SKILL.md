@@ -119,10 +119,9 @@ digraph skill_flow {
     need_log [label="需要检查/补充\n可观测性?", shape=diamond];
     need_review [label="验证通过\n需要审查?", shape=diamond];
     has_review [label="有审查反馈\n需要处理?", shape=diamond];
-    need_evolve [label="积累经验后\n需要进化?", shape=diamond];
+    need_evolve [label="Session 结束\n需要回顾/进化?", shape=diamond];
     need_doc [label="需要更新\n文档?", shape=diamond];
     need_ship [label="准备提交\n和发布?", shape=diamond];
-    need_retro [label="Session 结束\n需要回顾?", shape=diamond];
 
     spec_call [label="调用: reliable-spec", shape=box style=filled fillcolor=lightblue];
     plan_call [label="调用: reliable-plan", shape=box style=filled fillcolor=lightblue];
@@ -135,7 +134,6 @@ digraph skill_flow {
     evolve_call [label="调用: reliable-evolve", shape=box style=filled fillcolor=lightblue];
     doc_call [label="调用: reliable-update-doc", shape=box style=filled fillcolor=lightblue];
     ship_call [label="调用: reliable-ship", shape=box style=filled fillcolor=lightblue];
-    retro_call [label="调用: reliable-session-retro", shape=box style=filled fillcolor=lightblue];
 
     done [label="完成", shape=doublecircle];
 
@@ -166,19 +164,16 @@ digraph skill_flow {
     review_call -> has_review;
     
     has_review -> receive_call [label="是"];
-    receive_call -> need_evolve;
-    
-    need_evolve -> evolve_call [label="是（周期性）"];
-    evolve_call -> need_doc;
+    receive_call -> need_doc;
     
     need_doc -> doc_call [label="是"];
     doc_call -> need_ship;
     
     need_ship -> ship_call [label="是"];
-    ship_call -> need_retro;
+    ship_call -> need_evolve;
     
-    need_retro -> retro_call [label="是"];
-    retro_call -> done;
+    need_evolve -> evolve_call [label="是\n（回顾+进化）"];
+    evolve_call -> done;
 }
 ```
 
@@ -194,15 +189,14 @@ digraph skill_flow {
  5. reliable-log             → 可观测性检查/补充
  6. reliable-request-review  → 多角度代码审查（5-agent 并行，含 style-auditor）
  7. reliable-receive-review  → 审查反馈处理+修复
- 8. reliable-evolve          → 分析经验，生成进化建议（周期性）
- 9. reliable-update-doc      → 文档同步更新
-10. reliable-ship            → 提交+PR+合并（含风格合规扫描）
-11. reliable-session-retro            → Session 回顾+经验提取
+ 8. reliable-update-doc      → 文档同步更新
+ 9. reliable-ship            → 提交+PR+合并（含风格合规扫描）
+10. reliable-evolve          → Session 回顾+经验提取+进化建议
 ```
 
-并非每个任务都需要所有技能。一个 bug 修复可能只需要：`reliable-build → reliable-verify → reliable-request-review → reliable-ship → reliable-session-retro`。
+并非每个任务都需要所有技能。一个 bug 修复可能只需要：`reliable-build → reliable-verify → reliable-request-review → reliable-ship → reliable-evolve`。
 
-或者使用 `/reliable-auto` 一键自动执行 plan → update-doc 全流程（检测当前阶段、自动处理审查反馈和验证循环、在 evolve/ship 前停止）。
+或者使用 `/reliable-auto` 一键自动执行 plan → update-doc 全流程（检测当前阶段、自动处理审查反馈和验证循环、在 ship/evolve 前停止）。
 
 ## 质量门禁
 
@@ -211,14 +205,14 @@ digraph skill_flow {
 | G1 | build→verify | 新代码有对应测试，全部通过 | 是 |
 | G2 | verify→review | 100% 测试通过，0 lint 错误，构建成功，风格规范已检查 | 是 |
 | G3 | review→ship | 所有 Critical 已修复，Optional 已记录 | 是 |
-| G4 | ship→retro | commit 格式符合规范，PR 描述完整 | 是 |
-| G5 | retro 结束 | 经验已提取，session 可追溯 | 是 |
+| G4 | ship→evolve | commit 格式符合规范，PR 描述完整 | 是 |
+| G5 | evolve 结束 | 经验已提取，session 可追溯 | 是 |
 
 ## 技能类型
 
 **刚性的**（reliable-build、reliable-verify、reliable-request-review）：严格遵循。不要偏离纪律。
 
-**灵活的**（reliable-evolve、reliable-update-doc）：根据上下文调整原则。
+**灵活的**（reliable-update-doc、reliable-evolve）：根据上下文调整原则。
 
 技能本身会告诉你它属于哪种。
 

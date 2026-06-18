@@ -10,7 +10,7 @@
 │  角色：自动追加，AI 可读写                    │
 │  文件：.reliable-agent/experiences.md        │
 │  内容：错误模式、优化发现、审查高频问题         │
-│  进化方式：/reliable-session-retro 自动追加             │
+│  进化方式：/reliable-evolve Phase 1 自动追加             │
 │  风险：低（只记录，不改变行为）               │
 ├─────────────────────────────────────────────┤
 │  第二层：Configuration（项目配置）            │
@@ -47,20 +47,20 @@
 ## 进化流程
 
 ```
-/reliable-session-retro (每个 session 结束)
+/reliable-evolve (每个 session 结束，或周期性)
     │
-    ├─→ 追加经验到 .reliable-agent/experiences.md（自动）
-    └─→ 积累 >= 3 条新经验 → 提示运行 /reliable-evolve
-
-/reliable-evolve (周期性)
+    ├─ Phase 1: 回顾 session → 提取经验 → 追加到 experiences.md（自动）
     │
-    ├─→ 聚类分析经验
-    ├─→ 识别重复模式（>= 2 次）
-    ├─→ 生成三种建议：
+    ├─ 积累 >= 3 条新经验 → 自动进入 Phase 2-4
+    │
+    ├─ Phase 2: 聚类分析经验 → 识别重复模式（>= 2 次）
+    │
+    ├─ Phase 3: 生成三种建议：
     │   ├─ Type A: CLAUDE.md 规则变更
     │   ├─ Type B: Skill 行为变更
     │   └─ Type C: Spec 修订
-    └─→ 所有建议等待人类审批
+    │
+    └─ Phase 4: 所有建议等待人类审批
 ```
 
 ## 禁止的进化
