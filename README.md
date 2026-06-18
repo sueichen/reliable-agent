@@ -14,17 +14,17 @@
 
 | 命令 | 阶段 | 功能 |
 |------|------|------|
-| `/spec-reliable` | Define | 项目初始化 — 生成 CLAUDE.md + 宪法 |
-| `/plan-reliable` | Plan | 需求分析 + grill-me + 设计方案 |
-| `/build-reliable` | Build | TDD 增量实现（红绿重构） |
-| `/verify-reliable` | Verify | 自动化验证（测试+lint+构建） |
-| `/log-reliable` | Observe | 可观测性检查与补充 |
-| `/request-review-reliable` | Review | 多角度代码审查（4-agent 并行） |
-| `/receive-review-reliable` | Review | 审查反馈处理与修复 |
-| `/evolve-reliable` | Evolve | 经验分析 → 进化建议 |
-| `/update-doc-reliable` | Doc | 文档同步更新 |
-| `/ship-reliable` | Ship | 提交 + PR + 合并 |
-| `/session-retro` | Retro | Session 回顾 + 经验提取 |
+| `/reliable-spec` | Define | 项目初始化 — 生成 CLAUDE.md + 宪法 |
+| `/reliable-plan` | Plan | 需求分析 + grill-me + 设计方案 |
+| `/reliable-build` | Build | TDD 增量实现（红绿重构） |
+| `/reliable-verify` | Verify | 自动化验证（测试+lint+构建） |
+| `/reliable-log` | Observe | 可观测性检查与补充 |
+| `/reliable-request-review` | Review | 多角度代码审查（5-agent 并行） |
+| `/reliable-receive-review` | Review | 审查反馈处理与修复 |
+| `/reliable-evolve` | Evolve | 经验分析 → 进化建议 |
+| `/reliable-update-doc` | Doc | 文档同步更新 |
+| `/reliable-ship` | Ship | 提交 + PR + 合并 |
+| `/reliable-session-retro` | Retro | Session 回顾 + 经验提取 |
 
 ## 质量门禁
 
@@ -51,44 +51,44 @@ claude plugins install /path/to/reliable-agent
 
 ```bash
 # 初始化项目
-/spec-reliable
+/reliable-spec
 
 # 规划功能
-/plan-reliable
+/reliable-plan
 
 # TDD 实现
-/build-reliable
+/reliable-build
 
 # 验证
-/verify-reliable
+/reliable-verify
 
 # 可观测性检查
-/log-reliable
+/reliable-log
 
 # 代码审查
-/request-review-reliable
+/reliable-request-review
 
 # 处理审查反馈
-/receive-review-reliable
+/reliable-receive-review
 
 # 更新文档
-/update-doc-reliable
+/reliable-update-doc
 
 # 发布
-/ship-reliable
+/reliable-ship
 
 # 回顾与经验提取
-/session-retro
+/reliable-session-retro
 
 # 周期性进化（积累经验后）
-/evolve-reliable
+/reliable-evolve
 ```
 
 ## 文件结构
 
 ```
 skills/         → 12 个技能（1 元技能 + 11 工作流）
-agents/         → 4 个 agent 角色定义
+agents/         → 5 个 agent 角色定义
 templates/      → 5 个项目模板
 references/     → 7 个交叉引用检查清单
 hooks/          → SessionStart 生命周期钩子

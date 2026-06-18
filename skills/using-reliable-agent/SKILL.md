@@ -122,17 +122,17 @@ digraph skill_flow {
     need_ship [label="准备提交\n和发布?", shape=diamond];
     need_retro [label="Session 结束\n需要回顾?", shape=diamond];
 
-    spec_call [label="调用: spec-reliable", shape=box style=filled fillcolor=lightblue];
-    plan_call [label="调用: plan-reliable", shape=box style=filled fillcolor=lightblue];
-    build_call [label="调用: build-reliable", shape=box style=filled fillcolor=lightblue];
-    verify_call [label="调用: verify-reliable", shape=box style=filled fillcolor=lightblue];
-    log_call [label="调用: log-reliable", shape=box style=filled fillcolor=lightblue];
-    review_call [label="调用: request-review-reliable", shape=box style=filled fillcolor=lightblue];
-    receive_call [label="调用: receive-review-reliable", shape=box style=filled fillcolor=lightblue];
-    evolve_call [label="调用: evolve-reliable", shape=box style=filled fillcolor=lightblue];
-    doc_call [label="调用: update-doc-reliable", shape=box style=filled fillcolor=lightblue];
-    ship_call [label="调用: ship-reliable", shape=box style=filled fillcolor=lightblue];
-    retro_call [label="调用: session-retro", shape=box style=filled fillcolor=lightblue];
+    spec_call [label="调用: reliable-spec", shape=box style=filled fillcolor=lightblue];
+    plan_call [label="调用: reliable-plan", shape=box style=filled fillcolor=lightblue];
+    build_call [label="调用: reliable-build", shape=box style=filled fillcolor=lightblue];
+    verify_call [label="调用: reliable-verify", shape=box style=filled fillcolor=lightblue];
+    log_call [label="调用: reliable-log", shape=box style=filled fillcolor=lightblue];
+    review_call [label="调用: reliable-request-review", shape=box style=filled fillcolor=lightblue];
+    receive_call [label="调用: reliable-receive-review", shape=box style=filled fillcolor=lightblue];
+    evolve_call [label="调用: reliable-evolve", shape=box style=filled fillcolor=lightblue];
+    doc_call [label="调用: reliable-update-doc", shape=box style=filled fillcolor=lightblue];
+    ship_call [label="调用: reliable-ship", shape=box style=filled fillcolor=lightblue];
+    retro_call [label="调用: reliable-session-retro", shape=box style=filled fillcolor=lightblue];
 
     done [label="完成", shape=doublecircle];
 
@@ -180,20 +180,20 @@ digraph skill_flow {
 对于完整的功能开发，典型技能序列如下：
 
 ```
- 1. spec-reliable            → 生成 CLAUDE.md + 项目宪法 + 导入代码规范到 .reliable-agent/codestyle/
- 2. plan-reliable            → 需求分析 + grill-me + 设计方案
- 3. build-reliable           → TDD 增量实现（含风格合规）
- 4. verify-reliable          → 自动化验证（测试+lint+风格检查+构建）
- 5. log-reliable             → 可观测性检查/补充
- 6. request-review-reliable  → 多角度代码审查（5-agent 并行，含 style-auditor）
- 7. receive-review-reliable  → 审查反馈处理+修复
- 8. evolve-reliable          → 分析经验，生成进化建议（周期性）
- 9. update-doc-reliable      → 文档同步更新
-10. ship-reliable            → 提交+PR+合并（含风格合规扫描）
-11. session-retro            → Session 回顾+经验提取
+ 1. reliable-spec            → 生成 CLAUDE.md + 项目宪法 + 导入代码规范到 .reliable-agent/codestyle/
+ 2. reliable-plan            → 需求分析 + grill-me + 设计方案
+ 3. reliable-build           → TDD 增量实现（含风格合规）
+ 4. reliable-verify          → 自动化验证（测试+lint+风格检查+构建）
+ 5. reliable-log             → 可观测性检查/补充
+ 6. reliable-request-review  → 多角度代码审查（5-agent 并行，含 style-auditor）
+ 7. reliable-receive-review  → 审查反馈处理+修复
+ 8. reliable-evolve          → 分析经验，生成进化建议（周期性）
+ 9. reliable-update-doc      → 文档同步更新
+10. reliable-ship            → 提交+PR+合并（含风格合规扫描）
+11. reliable-session-retro            → Session 回顾+经验提取
 ```
 
-并非每个任务都需要所有技能。一个 bug 修复可能只需要：`build-reliable → verify-reliable → request-review-reliable → ship-reliable → session-retro`。
+并非每个任务都需要所有技能。一个 bug 修复可能只需要：`reliable-build → reliable-verify → reliable-request-review → reliable-ship → reliable-session-retro`。
 
 ## 质量门禁
 
@@ -207,9 +207,9 @@ digraph skill_flow {
 
 ## 技能类型
 
-**刚性的**（build-reliable、verify-reliable、request-review-reliable）：严格遵循。不要偏离纪律。
+**刚性的**（reliable-build、reliable-verify、reliable-request-review）：严格遵循。不要偏离纪律。
 
-**灵活的**（evolve-reliable、update-doc-reliable）：根据上下文调整原则。
+**灵活的**（reliable-evolve、reliable-update-doc）：根据上下文调整原则。
 
 技能本身会告诉你它属于哪种。
 
@@ -241,7 +241,7 @@ digraph skill_flow {
 1. **开始任何实现工作前先读 CLAUDE.md** — 它定义了项目的宪法、代码标准和边界。
 2. **在调试、审查、或修改有记录经验区域的代码前读 `.reliable-agent/experiences.md`** — 它包含结构化的过往错误模式、优化发现和审查高频问题。
 3. **关键阶段保持在同一未中断的 context window** — spec→plan→build 三个阶段在同一上下文中完成，确保思维连贯。
-4. **每个 /build-reliable 任务从干净上下文启动** — 从 plan 中获取当前任务，避免上下文污染。
+4. **每个 /reliable-build 任务从干净上下文启动** — 从 plan 中获取当前任务，避免上下文污染。
 
 ## 用户指令
 

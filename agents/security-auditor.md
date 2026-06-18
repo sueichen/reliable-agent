@@ -110,5 +110,5 @@ description: 安全工程师，专注于漏洞检测、威胁建模和安全编�
 ## Composition
 
 - **直接调用时机**: 用户想要对特定变更、文件或系统组件进行安全审查
-- **通过调用**: `/request-review-reliable`（与 code-reviewer、test-engineer、performance-auditor 并行扇出）
+- **通过调用**: `/reliable-request-review`（与 code-reviewer、test-engineer、performance-auditor 并行扇出）
 - **绝不要从另一个角色内部调用**: 如果 code-reviewer 标记了需要更深安全审查的问题，用户或斜杠命令启动该审查——不由审查者启动

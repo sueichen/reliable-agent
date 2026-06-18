@@ -6,7 +6,7 @@
 
 ```
 skills/         → 12 个技能目录（1 元技能 + 11 工作流技能）
-agents/         → 4 个可复用的智能体角色定义
+agents/         → 5 个可复用的智能体角色定义
 hooks/          → SessionStart 生命周期钩子
 .claude/commands/ → 11 个斜杠命令（用户入口点）
 templates/      → 5 个项目初始化模板
@@ -25,7 +25,7 @@ scripts/        → 验证和管理脚本
 | Build | reliable-build | TDD 增量实现 |
 | Verify | reliable-verify | 自动化验证——测试+lint+构建 |
 | Observe | reliable-log | 可观测性检查——日志+指标+追踪 |
-| Review | reliable-request-review | 多角度代码审查——4-agent 并行扇出 |
+| Review | reliable-request-review | 多角度代码审查——5-agent 并行扇出 |
 | Review | reliable-receive-review | 审查反馈处理+修复 |
 | Evolve | reliable-evolve | 经验分析→3 类变更建议 |
 | Doc | reliable-update-doc | 文档同步更新 |

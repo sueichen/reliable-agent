@@ -1,6 +1,6 @@
 ---
 name: reliable-request-review
-description: "多角度代码审查——并行扇出 5 个专业角色（code-reviewer、security-auditor、test-engineer、performance-auditor、style-auditor），综合发现生成结构化审查报告含严重度分类。在 verify-reliable 通过后、需要全面审查才能发布时使用。"
+description: "多角度代码审查——并行扇出 5 个专业角色（code-reviewer、security-auditor、test-engineer、performance-auditor、style-auditor），综合发现生成结构化审查报告含严重度分类。在 reliable-verify 通过后、需要全面审查才能发布时使用。"
 version: "1.0.0"
 license: MIT
 ---
@@ -15,11 +15,11 @@ license: MIT
 
 ## When to Use
 
-- verify-reliable 通过后
+- reliable-verify 通过后
 - 代码需要合并前审查
 - PR 提交前自审查
 
-**前置条件**: verify-reliable 必须已通过（G1/G2）。如果未通过，拒绝审查。
+**前置条件**: reliable-verify 必须已通过（G1/G2）。如果未通过，拒绝审查。
 
 ## Core Process
 
@@ -28,9 +28,9 @@ digraph reliable_request_review {
     rankdir=TB;
     node [shape=box, style=rounded];
 
-    start [label="启动 /request-review-reliable", shape=doublecircle];
-    preflight [label="检查前置条件\nverify-reliable 已通过？", shape=diamond];
-    reject [label="拒绝审查\n返回 /verify-reliable", shape=doublecircle];
+    start [label="启动 /reliable-request-review", shape=doublecircle];
+    preflight [label="检查前置条件\nreliable-verify 已通过？", shape=diamond];
+    reject [label="拒绝审查\n返回 /reliable-verify", shape=doublecircle];
     scope [label="收集审查范围\n（staged changes / diff）"];
     parallel [label="并行扇出 5 个角色", shape=box style=filled fillcolor=lightyellow];
     reviewer [label="code-reviewer\n五轴审查", shape=box];
@@ -41,8 +41,8 @@ digraph reliable_request_review {
     merge [label="合并去重\n+ 严重度分类"];
     any_critical [label="任何 Critical？", shape=diamond];
     any_important [label="任何 Important？", shape=diamond];
-    verdict_changes [label="判定: REQUEST CHANGES\n路由到 /receive-review-reliable", shape=doublecircle];
-    verdict_approve [label="判定: APPROVE\n准备 /ship-reliable", shape=doublecircle];
+    verdict_changes [label="判定: REQUEST CHANGES\n路由到 /reliable-receive-review", shape=doublecircle];
+    verdict_approve [label="判定: APPROVE\n准备 /reliable-ship", shape=doublecircle];
 
     start -> preflight;
     preflight -> reject [label="否"];
@@ -67,8 +67,8 @@ digraph reliable_request_review {
 ```
 
 ### Step 1: 前置检查
-- 确认 verify-reliable 已通过
-- 如果未通过：拒绝审查——"G2 未满足：verify-reliable 必须在审查前通过。先运行 /verify-reliable。"
+- 确认 reliable-verify 已通过
+- 如果未通过：拒绝审查——"G2 未满足：reliable-verify 必须在审查前通过。先运行 /reliable-verify。"
 - 完成标准: G1/G2 已确认通过
 
 ### Step 2: 收集审查范围
@@ -103,7 +103,7 @@ digraph reliable_request_review {
 - Verification Story（测试审查、构建验证、安全检查）
 
 <HARD-GATE>
-如果任何 Critical 发现存在，判定为 REQUEST CHANGES。在所有 Critical 解决之前不要进入 ship-reliable。
+如果任何 Critical 发现存在，判定为 REQUEST CHANGES。在所有 Critical 解决之前不要进入 reliable-ship。
 </HARD-GATE>
 
 ## Common Rationalizations
@@ -124,7 +124,7 @@ digraph reliable_request_review {
 
 ## Verification
 
-- [ ] verify-reliable 已通过（在开始前确认）
+- [ ] reliable-verify 已通过（在开始前确认）
 - [ ] 5 个角色并行运行（单轮派发）
 - [ ] 每个角色返回了结构化报告
 - [ ] 发现已去重和按严重度分类

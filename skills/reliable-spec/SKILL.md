@@ -29,7 +29,7 @@ digraph reliable_spec {
     rankdir=TB;
     node [shape=box, style=rounded];
 
-    start [label="启动 /spec-reliable", shape=doublecircle];
+    start [label="启动 /reliable-spec", shape=doublecircle];
     check_existing [label="检查 CLAUDE.md\n是否存在？", shape=diamond];
     read_existing [label="读取已有\nCLAUDE.md"];
     explore [label="探索项目结构\n语言/框架/目录"];

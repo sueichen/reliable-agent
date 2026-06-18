@@ -14,4 +14,4 @@ Phase 2 — 设计方案：
 2. 设计解决方案：架构、组件、数据流、错误处理、测试方案
 3. 拆分为可验证的任务，含验收标准和依赖关系
 4. 保存方案到 .reliable-agent/plans/YYYY-MM-DD-<topic>-plan.md
-5. 提交人类审查——未经批准不要进入 build-reliable
+5. 提交人类审查——未经批准不要进入 reliable-build

@@ -1,6 +1,6 @@
 # 安全检查清单
 
-> 用于 `/request-review-reliable` 的安全审计阶段。参考 OWASP Top 10 + OWASP Top 10 for LLM。
+> 用于 `/reliable-request-review` 的安全审计阶段。参考 OWASP Top 10 + OWASP Top 10 for LLM。
 
 ## 1. 输入处理
 

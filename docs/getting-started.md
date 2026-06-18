@@ -13,7 +13,7 @@ claude plugins install reliable-agent
 在项目根目录运行：
 
 ```
-/spec-reliable
+/reliable-spec
 ```
 
 AI 会：
@@ -25,7 +25,7 @@ AI 会：
 ### 2. 规划功能
 
 ```
-/plan-reliable
+/reliable-plan
 ```
 
 AI 会：
@@ -39,7 +39,7 @@ AI 会：
 ### 3. 实现代码
 
 ```
-/build-reliable
+/reliable-build
 ```
 
 AI 会按照 TDD 循环实现：
@@ -51,13 +51,13 @@ AI 会按照 TDD 循环实现：
 
 使用 `auto` 模式可一次性实现所有任务：
 ```
-/build-reliable auto
+/reliable-build auto
 ```
 
 ### 4. 验证
 
 ```
-/verify-reliable
+/reliable-verify
 ```
 
 运行完整验证：测试、lint、构建、类型检查。全部通过才能进入审查。
@@ -65,7 +65,7 @@ AI 会按照 TDD 循环实现：
 ### 5. 审查
 
 ```
-/request-review-reliable
+/reliable-request-review
 ```
 
 并行运行 5 个专业审查者（正确性、安全、测试覆盖、性能、代码风格），综合生成审查报告。
@@ -73,7 +73,7 @@ AI 会按照 TDD 循环实现：
 ### 6. 处理审查反馈
 
 ```
-/receive-review-reliable
+/reliable-receive-review
 ```
 
 系统性修复每条发现，Critical 必须有证明测试，修复后重验证。
@@ -81,7 +81,7 @@ AI 会按照 TDD 循环实现：
 ### 7. 发布
 
 ```
-/ship-reliable
+/reliable-ship
 ```
 
 提交校验 + PR 生成 + CI 监控 + 合并。等待你批准后推送。
@@ -89,7 +89,7 @@ AI 会按照 TDD 循环实现：
 ### 8. 回顾
 
 ```
-/session-retro
+/reliable-session-retro
 ```
 
 提取 session 经验教训，记录到 .reliable-agent/experiences.md。
@@ -97,15 +97,15 @@ AI 会按照 TDD 循环实现：
 ## 完整流程
 
 ```
-/spec-reliable → /plan-reliable → /build-reliable
-    → /verify-reliable → /log-reliable
-    → /request-review-reliable → /receive-review-reliable
-    → /update-doc-reliable → /ship-reliable
-    → /session-retro
+/reliable-spec → /reliable-plan → /reliable-build
+    → /reliable-verify → /reliable-log
+    → /reliable-request-review → /reliable-receive-review
+    → /reliable-update-doc → /reliable-ship
+    → /reliable-session-retro
 ```
 
 ## 需要帮助？
 
-- 输入 `/spec-reliable` 开始任何新项目
-- 输入 `/plan-reliable` 规划任何新功能
+- 输入 `/reliable-spec` 开始任何新项目
+- 输入 `/reliable-plan` 规划任何新功能
 - AI 会在每个步骤引导你

@@ -22,6 +22,6 @@ Invoke the reliable-agent:reliable-session-retro skill.
 
 4. 将每条新经验链接到相关的 CLAUDE.md 边界：
    - 这条经验是否暗示缺少某条边界规则？
-   - 标记给 evolve-reliable 命令稍后处理
+   - 标记给 reliable-evolve 命令稍后处理
 
 5. 总结 session：完成任务、新增测试、提交数、记录的经验数

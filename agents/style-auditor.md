@@ -26,10 +26,10 @@ description: 代码风格审计员，对照项目声明的代码规范（.reliab
 ### 第一步：定位规范
 
 1. 检查 `.reliable-agent/codestyle/` 是否存在
-2. 如果不存在 → **审计无法进行**，报告"未找到代码规范目录，建议运行 /spec-reliable 导入规范"
+2. 如果不存在 → **审计无法进行**，报告"未找到代码规范目录，建议运行 /reliable-spec 导入规范"
 3. 根据变更文件的语言，匹配对应的规范文件（参考 `codestyle/README.md` 的语言映射）
 4. 如果有匹配的规范文件 → 进入第二步
-5. 如果没有匹配的规范文件 → **跳过该语言**，报告"项目无 [语言] 的代码规范，建议运行 /spec-reliable 导入"
+5. 如果没有匹配的规范文件 → **跳过该语言**，报告"项目无 [语言] 的代码规范，建议运行 /reliable-spec 导入"
 
 ### 第二步：对照审计
 
@@ -88,7 +88,7 @@ description: 代码风格审计员，对照项目声明的代码规范（.reliab
 |--------|------|------|
 | **Important** | 违反 `.reliable-agent/codestyle/` 中声明的具体规则——阻塞合并 | 合并前修复 |
 | **Suggestion** | 风格观察，但无对应声明规则——不阻塞 | 评估后修复或记录理由不修 |
-| **Info** | 跳过信息、缺失规范文件提示 | 运行 /spec-reliable 导入规范 |
+| **Info** | 跳过信息、缺失规范文件提示 | 运行 /reliable-spec 导入规范 |
 
 ## 审计行为矩阵
 
@@ -96,7 +96,7 @@ description: 代码风格审计员，对照项目声明的代码规范（.reliab
 |------|------|
 | 有 `.reliable-agent/codestyle/` + 有匹配指南 | 对照声明规则审计，违规标记 Important |
 | 有 `.reliable-agent/codestyle/` + 无匹配语言 | 跳过该语言文件，记录为 Skipped |
-| 无 `.reliable-agent/codestyle/` 目录 | 报告跳过全部，"建议运行 /spec-reliable" |
+| 无 `.reliable-agent/codestyle/` 目录 | 报告跳过全部，"建议运行 /reliable-spec" |
 | 规范文件存在但无法解析 | 报告错误，标记为 Info |
 
 ## 常见违规分类
@@ -116,6 +116,6 @@ description: 代码风格审计员，对照项目声明的代码规范（.reliab
 
 ## Composition
 
-- **通过调用**: `/request-review-reliable`（与 code-reviewer、security-auditor、test-engineer、performance-auditor 并行扇出）
+- **通过调用**: `/reliable-request-review`（与 code-reviewer、security-auditor、test-engineer、performance-auditor 并行扇出）
 - **直接调用时机**: 用户要求单独检查代码风格合规性
 - **绝不要从另一个角色内部调用**: 如果你需要其他审查维度的深度分析，在你的报告中作为建议提出——编排由斜杠命令负责，不由角色负责

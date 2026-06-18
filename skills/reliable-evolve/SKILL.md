@@ -1,6 +1,6 @@
 ---
 name: reliable-evolve
-description: "分析 .reliable-agent/experiences.md 中记录的经验——生成三类进化建议（CLAUDE.md 规则变更、技能行为变更、规格修订）。所有建议需人类明确批准后才应用。周期性使用或在积累多条 session-retro 条目后使用。"
+description: "分析 .reliable-agent/experiences.md 中记录的经验——生成三类进化建议（CLAUDE.md 规则变更、技能行为变更、规格修订）。所有建议需人类明确批准后才应用。周期性使用或在积累多条 reliable-session-retro 条目后使用。"
 version: "1.0.0"
 license: MIT
 ---
@@ -17,7 +17,7 @@ license: MIT
 
 ## When to Use
 
-- 积累多条 session-retro 经验后（建议 >= 3 条新经验）
+- 积累多条 reliable-session-retro 经验后（建议 >= 3 条新经验）
 - 周期性（例如每个 sprint 结束时）
 - 重复问题出现在多次 code review 中
 - 用户主动要求分析项目经验
@@ -29,7 +29,7 @@ digraph reliable_evolve {
     rankdir=TB;
     node [shape=box, style=rounded];
 
-    start [label="启动 /evolve-reliable", shape=doublecircle];
+    start [label="启动 /reliable-evolve", shape=doublecircle];
     load [label="读取\n.reliable-agent/\nexperiences.md"];
     cluster [label="聚类分析\n按类别+领域+重复度"];
     identify [label="识别重复模式\n（>= 2 次）"];
@@ -142,4 +142,4 @@ digraph reliable_evolve {
 - [ ] 每条建议包含: 触发、确切变更文字、理由、风险
 - [ ] 未经人类批准未自动应用任何建议
 - [ ] 批准的建议逐一提交
-- [ ] 应用的 CLAUDE.md 变更通过 spec-reliable 验证
+- [ ] 应用的 CLAUDE.md 变更通过 reliable-spec 验证

@@ -3,37 +3,37 @@
 ## 完整生命周期
 
 ```
-/spec-reliable ──────► CLAUDE.md 存在（项目宪法）
+/reliable-spec ──────► CLAUDE.md 存在（项目宪法）
      │
      ▼
-/plan-reliable ──────► 方案经人类批准
+/reliable-plan ──────► 方案经人类批准
      │
      ▼
-/build-reliable ─────► TDD 增量实现，每个切片测试通过
+/reliable-build ─────► TDD 增量实现，每个切片测试通过
      │
      ▼
-/verify-reliable ──────► G1: 新代码有测试，全部通过
+/reliable-verify ──────► G1: 新代码有测试，全部通过
      │                   G2: 100% 测试通过，0 lint，构建成功
      ▼
-/log-reliable ────────► 遥测覆盖确认
+/reliable-log ────────► 遥测覆盖确认
      │
      ▼
-/request-review-reliable ─► G3: 所有 Critical 已修复，Optional 已记录；风格违规（Important）已修复
+/reliable-request-review ─► G3: 所有 Critical 已修复，Optional 已记录；风格违规（Important）已修复
      │
      ▼
-/receive-review-reliable ─► 所有审查关注点已解决
+/reliable-receive-review ─► 所有审查关注点已解决
      │
      ▼
-/evolve-reliable ─────► （可选，周期性）建议经人类审查
+/reliable-evolve ─────► （可选，周期性）建议经人类审查
      │
      ▼
-/update-doc-reliable ─► 文档同步
+/reliable-update-doc ─► 文档同步
      │
      ▼
-/ship-reliable ───────► G4: commit 格式正确，PR 描述完整
+/reliable-ship ───────► G4: commit 格式正确，PR 描述完整
      │
      ▼
-/session-retro ───────► G5: 经验已提取，session 可追溯
+/reliable-session-retro ───────► G5: 经验已提取，session 可追溯
 ```
 
 ## 质量门禁
@@ -61,7 +61,7 @@
 ## 循环
 
 完成一个完整周期后：
-1. `/session-retro` 提取经验
-2. 积累多条经验后运行 `/evolve-reliable`
+1. `/reliable-session-retro` 提取经验
+2. 积累多条经验后运行 `/reliable-evolve`
 3. evolve 生成的建议经人类审批后应用
 4. 下一轮 session 受益于改进的技能和规则

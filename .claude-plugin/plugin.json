@@ -42,16 +42,16 @@
     "./agents/style-auditor"
   ],
   "commands": [
-    "./.claude/commands/spec-reliable.md",
-    "./.claude/commands/plan-reliable.md",
-    "./.claude/commands/build-reliable.md",
-    "./.claude/commands/verify-reliable.md",
-    "./.claude/commands/log-reliable.md",
-    "./.claude/commands/request-review-reliable.md",
-    "./.claude/commands/receive-review-reliable.md",
-    "./.claude/commands/evolve-reliable.md",
-    "./.claude/commands/update-doc-reliable.md",
-    "./.claude/commands/ship-reliable.md",
-    "./.claude/commands/session-retro.md"
+    "./.claude/commands/reliable-spec.md",
+    "./.claude/commands/reliable-plan.md",
+    "./.claude/commands/reliable-build.md",
+    "./.claude/commands/reliable-verify.md",
+    "./.claude/commands/reliable-log.md",
+    "./.claude/commands/reliable-request-review.md",
+    "./.claude/commands/reliable-receive-review.md",
+    "./.claude/commands/reliable-evolve.md",
+    "./.claude/commands/reliable-update-doc.md",
+    "./.claude/commands/reliable-ship.md",
+    "./.claude/commands/reliable-session-retro.md"
   ]
 }

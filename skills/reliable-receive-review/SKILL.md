@@ -1,6 +1,6 @@
 ---
 name: reliable-receive-review
-description: "处理代码审查反馈——系统性修复 Critical 和 Important 发现，记录 Optional 项，修复后重新验证。在收到 request-review-reliable 或外部审查者的审查报告后使用。"
+description: "处理代码审查反馈——系统性修复 Critical 和 Important 发现，记录 Optional 项，修复后重新验证。在收到 reliable-request-review 或外部审查者的审查报告后使用。"
 version: "1.0.0"
 license: MIT
 ---
@@ -15,7 +15,7 @@ license: MIT
 
 ## When to Use
 
-- 收到 request-review-reliable 的审查报告后
+- 收到 reliable-request-review 的审查报告后
 - 收到外部审查者的反馈后
 - 需要处理 PR review comments 时
 
@@ -26,7 +26,7 @@ digraph reliable_receive_review {
     rankdir=TB;
     node [shape=box, style=rounded];
 
-    start [label="启动 /receive-review-reliable", shape=doublecircle];
+    start [label="启动 /reliable-receive-review", shape=doublecircle];
     parse [label="解析审查报告\n提取所有发现"];
     sort [label="按严重度排序\nCritical→Important→Suggestion"];
     next [label="处理下一条发现"];
@@ -42,10 +42,10 @@ digraph reliable_receive_review {
     is_optional [label="Optional"];
     document [label="记录在注释/ADR"];
     more [label="更多发现？", shape=diamond];
-    re_verify [label="运行 /verify-reliable\n重新验证"];
+    re_verify [label="运行 /reliable-verify\n重新验证"];
     summary [label="生成修复摘要\n已修复/已延迟/理由"];
     check_gate [label="所有 Critical\n已解决？", shape=diamond];
-    done [label="G3 通过\n准备 /ship-reliable", shape=doublecircle];
+    done [label="G3 通过\n准备 /reliable-ship", shape=doublecircle];
     back_to_fix [label="继续修复"];
 
     start -> parse;
@@ -93,7 +93,7 @@ digraph reliable_receive_review {
 - 完成标准: 每条发现已处理（修复或记录决策）
 
 ### Step 4: 重新验证
-- 运行 verify-reliable 再次确认：
+- 运行 reliable-verify 再次确认：
   - 所有测试通过
   - Lint 清洁
   - 构建成功
@@ -107,7 +107,7 @@ digraph reliable_receive_review {
 - 完成标准: 摘要完整
 
 ### Step 6: 门禁检查
-- 如果所有 Critical/Important 已解决→标记就绪，准备 ship-reliable
+- 如果所有 Critical/Important 已解决→标记就绪，准备 reliable-ship
 - 如果仍存在未解决的 Critical→继续修复
 - 完成标准: G3 已确认
 
@@ -132,7 +132,7 @@ digraph reliable_receive_review {
 - 未记录理由就驳回 Critical 发现
 - 修复 Critical 无证明测试
 - 修复后跳过重新验证
-- 修复一个东西破坏另一个（被 verify-reliable 捕捉到）
+- 修复一个东西破坏另一个（被 reliable-verify 捕捉到）
 - "看起来没问题了"替代实际验证
 
 ## Verification
@@ -141,5 +141,5 @@ digraph reliable_receive_review {
 - [ ] 每条 Important 发现已处理
 - [ ] Critical 修复有证明测试
 - [ ] 修复摘要清楚地将每条发现链接到其解决方案
-- [ ] verify-reliable 在修复后重新运行并通过
+- [ ] reliable-verify 在修复后重新运行并通过
 - [ ] Suggestion 决策（接受/拒绝）已记录

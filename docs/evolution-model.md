@@ -10,21 +10,21 @@
 │  角色：自动追加，AI 可读写                    │
 │  文件：.reliable-agent/experiences.md        │
 │  内容：错误模式、优化发现、审查高频问题         │
-│  进化方式：/session-retro 自动追加             │
+│  进化方式：/reliable-session-retro 自动追加             │
 │  风险：低（只记录，不改变行为）               │
 ├─────────────────────────────────────────────┤
 │  第二层：Configuration（项目配置）            │
 │  角色：AI 可提议，人类审批后生效              │
 │  文件：CLAUDE.md                             │
 │  内容：代码规范细则、commit 模板、边界规则      │
-│  进化方式：/evolve-reliable 读取经验 → 生成建议 │
+│  进化方式：/reliable-evolve 读取经验 → 生成建议 │
 │  风险：中（改变行为，但范围受限）               │
 ├─────────────────────────────────────────────┤
 │  第三层：Skills（命令技能）                    │
 │  角色：AI 可提议，人类审批后生效               │
 │  文件：skills/reliable-*/SKILL.md             │
 │  内容：工作流步骤、门禁规则、验证标准          │
-│  进化方式：/evolve-reliable 生成变更建议       │
+│  进化方式：/reliable-evolve 生成变更建议       │
 │  风险：高（改变核心行为，必须人工确认）         │
 └─────────────────────────────────────────────┘
 ```
@@ -47,12 +47,12 @@
 ## 进化流程
 
 ```
-/session-retro (每个 session 结束)
+/reliable-session-retro (每个 session 结束)
     │
     ├─→ 追加经验到 .reliable-agent/experiences.md（自动）
-    └─→ 积累 >= 3 条新经验 → 提示运行 /evolve-reliable
+    └─→ 积累 >= 3 条新经验 → 提示运行 /reliable-evolve
 
-/evolve-reliable (周期性)
+/reliable-evolve (周期性)
     │
     ├─→ 聚类分析经验
     ├─→ 识别重复模式（>= 2 次）

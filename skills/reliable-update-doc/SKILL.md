@@ -1,6 +1,6 @@
 ---
 name: reliable-update-doc
-description: "同步文档与代码变更——更新 README、ADR、API 文档、changelog 和内联文档。在代码变更完成但文档过时时使用，或在 ship-reliable 临近且文档需要更新时使用。"
+description: "同步文档与代码变更——更新 README、ADR、API 文档、changelog 和内联文档。在代码变更完成但文档过时时使用，或在 reliable-ship 临近且文档需要更新时使用。"
 version: "1.0.0"
 license: MIT
 ---
@@ -18,7 +18,7 @@ license: MIT
 ## When to Use
 
 - 代码变更完成但相关文档过时
-- ship-reliable 之前检查文档同步
+- reliable-ship 之前检查文档同步
 - 架构决策需要新 ADR
 
 ## Core Process
@@ -28,7 +28,7 @@ digraph reliable_update_doc {
     rankdir=TB;
     node [shape=box, style=rounded];
 
-    start [label="启动 /update-doc-reliable", shape=doublecircle];
+    start [label="启动 /reliable-update-doc", shape=doublecircle];
     scan [label="扫描 git diff\n识别变更文件"];
     map [label="映射变更到\n受影响文档"];
     for_each [label="对每个受影响的文档"];

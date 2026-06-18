@@ -26,9 +26,9 @@
 ## 工作流
 
 ```
-spec-reliable → plan-reliable → build-reliable → verify-reliable
-    → log-reliable → request-review-reliable → receive-review-reliable
-    → update-doc-reliable → ship-reliable → session-retro
+reliable-spec → reliable-plan → reliable-build → reliable-verify
+    → reliable-log → reliable-request-review → reliable-receive-review
+    → reliable-update-doc → reliable-ship → reliable-session-retro
 ```
 
 ## 质量门禁

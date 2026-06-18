@@ -12,4 +12,4 @@ Invoke the reliable-agent:reliable-verify skill.
 6. 验证无未引用的 TODO/FIXME 注释
 7. 输出验证报告：每类 pass/fail、覆盖摘要、lint 错误数
 
-门禁：如果任何检查失败，返回 build-reliable。在所有条件全绿之前不要进入审查。
+门禁：如果任何检查失败，返回 reliable-build。在所有条件全绿之前不要进入审查。

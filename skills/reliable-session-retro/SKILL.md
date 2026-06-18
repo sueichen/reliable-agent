@@ -9,7 +9,7 @@ license: MIT
 
 ## Overview
 
-回顾当前 session，提取可复用的经验教训。经验结构化记录并追加到 `.reliable-agent/experiences.md`（只追加不删除）。标记可能触发进化建议的经验供 evolve-reliable 处理。
+回顾当前 session，提取可复用的经验教训。经验结构化记录并追加到 `.reliable-agent/experiences.md`（只追加不删除）。标记可能触发进化建议的经验供 reliable-evolve 处理。
 
 **核心理念**: 新鲜的经验是最详细和准确的经验。延迟的回顾含糊且不完整。不记录经验的项目注定重复错误。
 
@@ -28,7 +28,7 @@ digraph reliable_session_retro {
     rankdir=TB;
     node [shape=box, style=rounded];
 
-    start [label="启动 /session-retro", shape=doublecircle];
+    start [label="启动 /reliable-session-retro", shape=doublecircle];
     review [label="回顾 session 对话\n识别问题/错误/决策/意外"];
     filter [label="筛选可提取的经验\n诊断价值？决策价值？\n新发现？预防了问题？"];
     for_each [label="对每个提取的经验"];
@@ -126,7 +126,7 @@ Session 有代码修改时必须运行，不要跳过。
 
 ## Red Flags
 
-- 代码被修改的 session 不运行 session-retro
+- 代码被修改的 session 不运行 reliable-session-retro
 - 只记录症状不分析根因
 - 删除或重写已有经验记录（违反追加模式）
 - 对明确需要规则变更的经验跳过 FLAG-EVOLVE

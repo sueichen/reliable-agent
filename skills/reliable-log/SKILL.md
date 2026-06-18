@@ -26,7 +26,7 @@ digraph reliable_log {
     rankdir=TB;
     node [shape=box, style=rounded];
 
-    start [label="启动 /log-reliable", shape=doublecircle];
+    start [label="启动 /reliable-log", shape=doublecircle];
     define_questions [label="定义 on-call 问题\n(2-4 个)"];
     audit [label="审计现有遥测\n(logs/metrics/traces/alerts)"];
     gaps [label="发现缺口？", shape=diamond];

@@ -1,6 +1,6 @@
 # 可观测性模式
 
-> 用于 `/log-reliable` 的遥测审计和补充。参考 OpenTelemetry、RED 指标和结构化日志最佳实践。
+> 用于 `/reliable-log` 的遥测审计和补充。参考 OpenTelemetry、RED 指标和结构化日志最佳实践。
 
 ## On-Call 问题驱动
 

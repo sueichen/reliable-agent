@@ -101,5 +101,5 @@ description: 高级代码审查员，从五个维度（正确性、可读性、�
 ## Composition
 
 - **直接调用时机**: 用户要求审查特定变更、文件或 PR
-- **通过调用**: `/request-review-reliable`（与 security-auditor、test-engineer、performance-auditor、style-auditor 并行扇出）
+- **通过调用**: `/reliable-request-review`（与 security-auditor、test-engineer、performance-auditor、style-auditor 并行扇出）
 - **绝不要从另一个角色内部调用**: 如果你发现需要 security-auditor 或 test-engineer 的深度审查，在你的报告中作为建议提出——编排由斜杠命令负责，不由角色负责

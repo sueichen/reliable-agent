@@ -1,8 +1,8 @@
 # Project Experiences
 
 > 此文件记录工程 sessions 中的结构化学习。**追加模式** —— 经验只添加，不删除。
-> `/session-retro` 自动追加新经验。`/evolve-reliable` 分析此文件生成变更建议。
-> `/build-reliable` 和 `/request-review-reliable` 会在相关工作前读取此文件。
+> `/reliable-session-retro` 自动追加新经验。`/reliable-evolve` 分析此文件生成变更建议。
+> `/reliable-build` 和 `/reliable-request-review` 会在相关工作前读取此文件。
 
 ## 格式约定
 

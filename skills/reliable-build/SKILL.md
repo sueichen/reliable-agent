@@ -22,7 +22,7 @@ license: MIT
 - 添加功能
 - 重构（先确保测试覆盖）
 
-**不适用**: 仅文档变更、仅配置变更（直接进入 verify-reliable）。
+**不适用**: 仅文档变更、仅配置变更（直接进入 reliable-verify）。
 
 ## Core Process
 
@@ -31,7 +31,7 @@ digraph reliable_build {
     rankdir=TB;
     node [shape=box, style=rounded];
 
-    start [label="启动 /build-reliable", shape=doublecircle];
+    start [label="启动 /reliable-build", shape=doublecircle];
     select_task [label="选择下一个\n待办任务"];
     context [label="加载上下文\nCLAUDE.md+代码+\n.reliable-agent/\nexperiences"];
     red [label="RED: 编写失败测试\n（测试行为，非实现）", shape=box style=filled fillcolor="#ffcccc"];
@@ -48,7 +48,7 @@ digraph reliable_build {
     revert_refactor [label="撤销重构"];
     commit [label="原子提交\n（符合 CLAUDE.md 格式）"];
     more_tasks [label="更多任务？", shape=diamond];
-    done [label="完成，准备\n/verify-reliable", shape=doublecircle];
+    done [label="完成，准备\n/reliable-verify", shape=doublecircle];
 
     start -> select_task;
     select_task -> context;

@@ -88,5 +88,5 @@ description: QA 工程师，专注于测试策略、测试编写和覆盖率分�
 ## Composition
 
 - **直接调用时机**: 用户想要对特定变更进行测试质量审查
-- **通过调用**: `/request-review-reliable`（与 code-reviewer、security-auditor、performance-auditor 并行扇出）
+- **通过调用**: `/reliable-request-review`（与 code-reviewer、security-auditor、performance-auditor 并行扇出）
 - **绝不要从另一个角色内部调用**: 如果 code-reviewer 标记了测试缺口，由用户或斜杠命令启动 test-engineer——不由审查者启动
