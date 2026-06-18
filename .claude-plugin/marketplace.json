@@ -1,0 +1,20 @@
+{
+  "name": "reliable-agent",
+  "description": "可靠工程工作流插件：基于 TDD、阶段门控、三层演化模型和完整可观测性的 11 个技能，覆盖从规范到回顾的完整工程循环",
+  "owner": {
+    "name": "reliable-agent",
+    "url": "https://github.com/reliable-agent"
+  },
+  "plugins": [
+    {
+      "name": "reliable-agent",
+      "description": "可靠工程工作流技能集 — 11 个阶段门控工作流：规范 / 计划 / 构建 / 验证 / 日志 / 评审 / 演化 / 文档 / 发布 / 回顾",
+      "version": "1.0.0",
+      "source": "./",
+      "author": {
+        "name": "reliable-agent",
+        "url": "https://github.com/reliable-agent"
+      }
+    }
+  ]
+}

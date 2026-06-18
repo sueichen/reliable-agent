@@ -1,0 +1,21 @@
+---
+description: 多角度代码审查——并行扇出 code-reviewer、security-auditor、test-engineer、performance-auditor 四个角色，合并他们的发现
+---
+Invoke the reliable-agent:reliable-request-review skill.
+
+Phase A — 并行扇出：
+并发派发 4 个子智能体角色（单轮，所有 Agent 工具调用同时发出）：
+1. code-reviewer：五轴审查（正确性、可读性、架构、安全性、性能）
+2. security-auditor：OWASP Top 10 + 供应链 + 密钥 + 认证验证
+3. test-engineer：覆盖分析——正常路径、边界情况、错误路径、并发、缺失断言
+4. performance-auditor：N+1 查询、无限操作、内存模式、算法复杂度、资源使用
+
+Phase B — 合并：
+综合 4 份报告的发现：
+- 将任何角色的 Critical 发现提升为阻塞项
+- 在审查者之间去重
+- 分类：Critical（必须修复）/ Important（应该修复）/ Suggestion（考虑）/ Optional（已记录）
+
+Phase C — 输出：
+生成结构化的审查报告，含 file:line 引用和修复建议。
+默认判定：如果存在任何 Critical 发现，则 REQUEST CHANGES。

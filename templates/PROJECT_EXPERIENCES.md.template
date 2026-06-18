@@ -1,0 +1,67 @@
+# Project Experiences
+
+> 此文件记录工程 sessions 中的结构化学习。**追加模式** —— 经验只添加，不删除。
+> `/session-retro` 自动追加新经验。`/evolve-reliable` 分析此文件生成变更建议。
+> `/build-reliable` 和 `/request-review-reliable` 会在相关工作前读取此文件。
+
+## 格式约定
+
+每条经验记录：
+
+```
+### EXP-[YYYY-MM-DD]-[NNN]: [简短标题]
+
+- **类别**: [见下方分类]
+- **日期**: [记录日期]
+- **上下文**: [我们在做什么——功能、bugfix、重构、基础设施]
+- **症状**: [观察到的行为——我们看到了什么]
+- **根因**: [根本原因——为什么会发生]
+- **解决方案**: [什么修复了它]
+- **预防**: [如何防止再次发生]
+- **严重度**: critical | important | notable
+- **标签**: [逗号分隔的关键词，用于搜索]
+- **标记**: [FLAG-EVOLVE: 建议的 CLAUDE.md/skill/spec 变更]
+```
+
+## 分类
+
+| 类别 | 说明 |
+|------|------|
+| `error-pattern` | 一个 bug 的根因和解决方案，值得记录以便未来调试 |
+| `optimization-discovery` | 一个非显而易见的性能改进 |
+| `review-recurrence` | 在代码审查中反复出现的发现 |
+| `workflow-friction` | 拖慢开发速度的流程或工具摩擦点 |
+| `security-finding` | 安全漏洞或加固发现 |
+| `process-win` | 一个被证明有效预防问题的流程或技能步骤 |
+
+## 经验记录
+
+### 错误模式
+
+<!-- EXP records here -->
+
+### 优化发现
+
+<!-- EXP records here -->
+
+### 审查高频问题
+
+<!-- EXP records here -->
+
+### 流程摩擦
+
+<!-- EXP records here -->
+
+### 安全发现
+
+<!-- EXP records here -->
+
+### 流程胜利
+
+<!-- EXP records here -->
+
+---
+
+*最后更新: [date]*
+*总经验数: [count]*
+*已记录的 Sessions: [count]*

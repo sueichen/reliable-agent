@@ -1,0 +1,37 @@
+{
+  "name": "reliable-agent",
+  "version": "1.0.0",
+  "description": "可靠工程工作流技能集 — 11 个阶段门控技能，覆盖从规范到回顾的完整可靠工程循环",
+  "type": "module",
+  "bin": {
+    "reliable-agent": "scripts/install.js"
+  },
+  "files": [
+    "skills/",
+    "agents/",
+    "hooks/",
+    ".claude/commands/",
+    ".claude-plugin/",
+    "templates/",
+    "references/",
+    "CLAUDE.md",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "reliable-engineering",
+    "claude-code",
+    "skills",
+    "tdd",
+    "code-review",
+    "observability",
+    "slash-commands",
+    "quality-gates",
+    "chinese"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/reliable-agent/reliable-agent"
+  },
+  "license": "MIT"
+}

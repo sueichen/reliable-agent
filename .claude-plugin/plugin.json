@@ -1,0 +1,56 @@
+{
+  "name": "reliable-agent",
+  "description": "可靠工程工作流技能集：11 个阶段门控工作流，覆盖 规范 → 计划 → 构建 → 验证 → 日志 → 评审 → 演化 → 文档 → 发布 → 回顾 的完整可靠工程循环",
+  "version": "1.0.0",
+  "author": {
+    "name": "reliable-agent",
+    "url": "https://github.com/reliable-agent/reliable-agent"
+  },
+  "homepage": "https://github.com/reliable-agent/reliable-agent",
+  "repository": "https://github.com/reliable-agent/reliable-agent",
+  "license": "MIT",
+  "keywords": [
+    "reliable-engineering",
+    "tdd",
+    "code-review",
+    "observability",
+    "evolution",
+    "slash-commands",
+    "workflow",
+    "quality-gates",
+    "chinese"
+  ],
+  "skills": [
+    "./skills/using-reliable-agent",
+    "./skills/reliable-spec",
+    "./skills/reliable-plan",
+    "./skills/reliable-build",
+    "./skills/reliable-verify",
+    "./skills/reliable-log",
+    "./skills/reliable-request-review",
+    "./skills/reliable-receive-review",
+    "./skills/reliable-evolve",
+    "./skills/reliable-update-doc",
+    "./skills/reliable-ship",
+    "./skills/reliable-session-retro"
+  ],
+  "agents": [
+    "./agents/code-reviewer",
+    "./agents/security-auditor",
+    "./agents/test-engineer",
+    "./agents/performance-auditor"
+  ],
+  "commands": [
+    "./.claude/commands/spec-reliable.md",
+    "./.claude/commands/plan-reliable.md",
+    "./.claude/commands/build-reliable.md",
+    "./.claude/commands/verify-reliable.md",
+    "./.claude/commands/log-reliable.md",
+    "./.claude/commands/request-review-reliable.md",
+    "./.claude/commands/receive-review-reliable.md",
+    "./.claude/commands/evolve-reliable.md",
+    "./.claude/commands/update-doc-reliable.md",
+    "./.claude/commands/ship-reliable.md",
+    "./.claude/commands/session-retro.md"
+  ]
+}

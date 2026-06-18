@@ -1,0 +1,62 @@
+# 项目宪法
+
+> 此文件是 ACLAUDE.md 的补充，定义了项目的工程纪律框架。
+
+## 什么是"完成"
+
+一个任务被标记为"完成"需要满足：
+
+1. 代码通过所有测试（新代码有对应测试）
+2. 代码通过 lint（0 错误）
+3. 构建成功
+4. 变更在 100 行以内（超过 1000 行必须拆分）
+5. Code Review 通过（无 Critical 问题未解决）
+6. 文档已更新（如适用）
+7. 可观测性信号已添加（日志/指标/追踪）
+8. Commit 消息符合格式规范
+
+## 什么是"可靠"
+
+- **测试可靠**: 测试不依赖实现细节，重构不破坏测试
+- **可观测可靠**: 生产环境出问题时可以从遥测定位根因
+- **安全可靠**: OWASP Top 10 已覆盖，密钥不进代码
+- **文档可靠**: 文档与代码同步，决策有记录
+- **可追溯**: 每次变更可以追溯到需求、审查和测试结果
+
+## 工作流
+
+```
+spec-reliable → plan-reliable → build-reliable → verify-reliable
+    → log-reliable → request-review-reliable → receive-review-reliable
+    → update-doc-reliable → ship-reliable → session-retro
+```
+
+## 质量门禁
+
+| 门禁 | 条件 | 阻塞? |
+|------|------|-------|
+| G1 | 新代码有测试，全部通过 | 是 |
+| G2 | 100% 测试通过，0 lint，构建成功 | 是 |
+| G3 | Critical 修复，Optional 记录 | 是 |
+| G4 | commit 格式正确，PR 完整 | 是 |
+| G5 | 经验已提取，session 可追溯 | 是 |
+
+## 三层边界
+
+### Always:
+- 先写测试，再写代码
+- 验证而非假设
+- 记录 root cause 而非 symptom
+- 暴露假设
+
+### Ask First:
+- 新依赖
+- schema 变更
+- 公共 API 变更
+- 架构决策
+
+### Never:
+- 提交密钥
+- 跳过门禁
+- 删除测试
+- 在生产环境调试
