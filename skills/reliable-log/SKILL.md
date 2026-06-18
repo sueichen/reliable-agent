@@ -118,3 +118,7 @@ digraph reliable_log {
 - [ ] 延迟使用直方图（P95/P99 可查询）
 - [ ] 新告警基于症状且有 runbook 链接
 - [ ] 在 staging 中诱导的失败可通过遥测单独定位
+
+## 下一步指引
+
+**推荐路径** → `/reliable-request-review` — 可观测性已就绪，将代码提交多方（5-agent 并行）审查

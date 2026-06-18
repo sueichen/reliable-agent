@@ -37,7 +37,7 @@ scripts/        → 验证和管理脚本
 - 每个技能在 `skills/<name>/SKILL.md` 中
 - YAML frontmatter 包含 `name`、`description`、`version`、`license`
 - Description 只写触发条件，不写流程细节（防止 AI 从 description 中编造响应）
-- 每个技能包含：Overview、When to Use、Core Process（含 DOT 图）、Common Rationalizations、Red Flags、Verification
+- 每个技能包含：Overview、When to Use、Core Process（含 DOT 图）、Common Rationalizations、Red Flags、Verification、下一步指引
 - 共享引用在 `references/` 中，不在技能目录内
 - 辅助文件仅在内容超过 100 行时创建
 - DOT digraph 是权威流程定义，文字为辅助

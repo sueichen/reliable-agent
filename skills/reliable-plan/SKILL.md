@@ -164,3 +164,10 @@ digraph reliable_plan {
 - [ ] 方案经过自查（无占位符/矛盾）
 - [ ] 方案已保存到 .reliable-agent/plans/
 - [ ] 人类明确批准了方案
+
+## 下一步指引
+
+**推荐路径** → `/reliable-build` — 方案已批准，按任务拆解开始 TDD 增量实现
+
+**其他选项**:
+- `/reliable-plan` — 方案需要调整，继续在当前阶段修改设计

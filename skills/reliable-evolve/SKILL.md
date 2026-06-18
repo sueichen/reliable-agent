@@ -143,3 +143,10 @@ digraph reliable_evolve {
 - [ ] 未经人类批准未自动应用任何建议
 - [ ] 批准的建议逐一提交
 - [ ] 应用的 CLAUDE.md 变更通过 reliable-spec 验证
+
+## 下一步指引
+
+**推荐路径** → `/reliable-update-doc` — 经验已提取，同步更新项目文档
+
+**其他选项**:
+- `/reliable-build` — 立即实现人类已批准的进化建议

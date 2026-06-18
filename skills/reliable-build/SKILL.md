@@ -165,3 +165,10 @@ digraph reliable_build {
 - [ ] 代码符合 `.reliable-agent/codestyle/` 中的声明规范（如存在）
 - [ ] 提交消息遵循 CLAUDE.md 格式
 - [ ] 任务在方案中标记为完成
+
+## 下一步指引
+
+**推荐路径** → `/reliable-verify` — 实现完成，运行完整验证（测试+lint+构建+风格）确认正确性
+
+**其他选项**:
+- `/reliable-build` — 继续实现方案中标记为未完成的下一个任务切片

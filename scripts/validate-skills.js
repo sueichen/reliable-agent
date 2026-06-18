@@ -106,6 +106,12 @@ for (const file of skillFiles) {
         warnings++;
     }
 
+    // Check for next steps guidance (skip using-reliable-agent meta-skill)
+    if (fm.name !== 'using-reliable-agent' && !content.includes('## 下一步指引')) {
+        console.warn(`  WARN: ${relative} — missing '## 下一步指引' section`);
+        warnings++;
+    }
+
     console.log(`  OK: ${relative} (${fm.name})`);
 }
 

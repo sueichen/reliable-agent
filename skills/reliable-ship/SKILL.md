@@ -160,3 +160,7 @@ digraph reliable_ship {
 - [ ] CI 在 PR 分支上通过
 - [ ] G4: commit 格式符合规范
 - [ ] 合并成功完成
+
+## 下一步指引
+
+**推荐路径** → `/reliable-session-retro` — 发布完成，回顾本次 session 并提取经验教训

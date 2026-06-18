@@ -122,3 +122,7 @@ digraph reliable_update_doc {
 - [ ] Changelog 已更新相关条目
 - [ ] 人类审查并批准了文档变更
 - [ ] 文档提交与代码提交分开
+
+## 下一步指引
+
+**推荐路径** → `/reliable-ship` — 文档已更新，进入提交与发布流程

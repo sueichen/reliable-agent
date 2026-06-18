@@ -158,3 +158,12 @@ digraph reliable_verify {
 - [ ] 新代码覆盖满足 CLAUDE.md 阈值
 - [ ] 无遗留调试代码
 - [ ] 验证报告已生成并附在 session 中
+
+## 下一步指引
+
+**全部通过时**:
+- `/reliable-log` — 检查可观测性（日志/指标/追踪）是否到位
+- 或直接 `/reliable-request-review` — 跳过可观测性，直接提交 5-agent 并行审查
+
+**有失败项时**:
+- `/reliable-build` — 返回修复测试失败、lint 错误或构建问题，修复后重新验证

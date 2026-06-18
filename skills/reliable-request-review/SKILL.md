@@ -131,3 +131,10 @@ digraph reliable_request_review {
 - [ ] 每条 Critical/Important 发现含 file:line + 建议
 - [ ] 至少一条正面观察
 - [ ] 审查报告已保存并展示给用户
+
+## 下一步指引
+
+**推荐路径** → `/reliable-receive-review` — 处理审查报告中的发现：修复 Critical，评估 Important，记录 Suggestion
+
+**其他选项**:
+- 等待外部（人类）审查者反馈后再执行 `/reliable-receive-review`

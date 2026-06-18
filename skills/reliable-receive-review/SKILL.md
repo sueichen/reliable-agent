@@ -143,3 +143,12 @@ digraph reliable_receive_review {
 - [ ] 修复摘要清楚地将每条发现链接到其解决方案
 - [ ] reliable-verify 在修复后重新运行并通过
 - [ ] Suggestion 决策（接受/拒绝）已记录
+
+## 下一步指引
+
+**所有 Critical 已修复时**:
+- `/reliable-evolve` — 从本次审查反馈中提取可复用的经验教训
+
+**仍有 Critical 待处理时**:
+- `/reliable-build` → `/reliable-verify` — 修复剩余问题并重新验证
+- 修复完成后重新运行 `/reliable-request-review` 获取新一轮审查

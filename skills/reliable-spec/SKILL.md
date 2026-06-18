@@ -160,3 +160,10 @@ digraph reliable_spec {
 - [ ] Boundaries 部分有具体的 Always/Ask First/Never 条目
 - [ ] Commit 格式模板存在且可匹配
 - [ ] 人类审查并批准了完整的 CLAUDE.md
+
+## 下一步指引
+
+**推荐路径** → `/reliable-plan` — 项目规范已就绪，开始规划首个功能的设计方案
+
+**其他选项**:
+- `/reliable-spec` — 继续完善或修改项目规范（如 CLAUDE.md 需调整）
