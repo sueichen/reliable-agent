@@ -180,16 +180,16 @@ digraph skill_flow {
 对于完整的功能开发，典型技能序列如下：
 
 ```
- 1. spec-reliable            → 生成 CLAUDE.md + 项目宪法
+ 1. spec-reliable            → 生成 CLAUDE.md + 项目宪法 + 导入代码规范到 .reliable-agent/codestyle/
  2. plan-reliable            → 需求分析 + grill-me + 设计方案
- 3. build-reliable           → TDD 增量实现
- 4. verify-reliable          → 自动化验证（测试+lint+构建）
+ 3. build-reliable           → TDD 增量实现（含风格合规）
+ 4. verify-reliable          → 自动化验证（测试+lint+风格检查+构建）
  5. log-reliable             → 可观测性检查/补充
- 6. request-review-reliable  → 多角度代码审查
+ 6. request-review-reliable  → 多角度代码审查（5-agent 并行，含 style-auditor）
  7. receive-review-reliable  → 审查反馈处理+修复
  8. evolve-reliable          → 分析经验，生成进化建议（周期性）
  9. update-doc-reliable      → 文档同步更新
-10. ship-reliable            → 提交+PR+合并
+10. ship-reliable            → 提交+PR+合并（含风格合规扫描）
 11. session-retro            → Session 回顾+经验提取
 ```
 
@@ -200,7 +200,7 @@ digraph skill_flow {
 | 门禁 | 从→到 | 条件 | 阻塞？ |
 |------|-------|------|--------|
 | G1 | build→verify | 新代码有对应测试，全部通过 | 是 |
-| G2 | verify→review | 100% 测试通过，0 lint 错误，构建成功 | 是 |
+| G2 | verify→review | 100% 测试通过，0 lint 错误，构建成功，风格规范已检查 | 是 |
 | G3 | review→ship | 所有 Critical 已修复，Optional 已记录 | 是 |
 | G4 | ship→retro | commit 格式符合规范，PR 描述完整 | 是 |
 | G5 | retro 结束 | 经验已提取，session 可追溯 | 是 |

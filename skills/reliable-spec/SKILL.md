@@ -33,6 +33,8 @@ digraph reliable_spec {
     check_existing [label="检查 CLAUDE.md\n是否存在？", shape=diamond];
     read_existing [label="读取已有\nCLAUDE.md"];
     explore [label="探索项目结构\n语言/框架/目录"];
+    codestyle_check [label="代码规范检查\n已有规范？匹配指南？", shape=diamond];
+    import_style [label="导入匹配的\n代码规范到\n.reliable-agent/codestyle/"];
     interview [label="访谈用户\n7 个维度"];
     generate [label="生成 CLAUDE.md\n7 部分草稿"];
     present [label="展示草稿\n人类审查"];
@@ -46,7 +48,10 @@ digraph reliable_spec {
     check_existing -> read_existing [label="是（更新模式）"];
     check_existing -> explore [label="否（初始化模式）"];
     read_existing -> explore;
-    explore -> interview;
+    explore -> codestyle_check;
+    codestyle_check -> import_style [label="有可用指南"];
+    codestyle_check -> interview [label="无匹配\n或已有规范"];
+    import_style -> interview;
     interview -> generate;
     generate -> present;
     present -> approved;
@@ -70,6 +75,18 @@ digraph reliable_spec {
 - 检测已有配置文件（.eslintrc, .prettierrc 等）
 - 检测目录布局
 - 完成标准: 已列出项目技术栈和现有约定来源
+
+### Step 2a: 代码规范检查与导入
+- 检查 `.reliable-agent/codestyle/` 是否已存在
+  - 如已存在且有内容 → 提示"项目已有代码规范，是否补充？"→ 进入 Step 3
+- 根据 Step 2 检测到的语言，匹配 `codestyle/`（插件内置）中的规范文件
+  - 参考 `codestyle/README.md` 的语言→文件映射表
+- 列出匹配结果：
+  - 有匹配指南的语言 → 推荐导入
+  - 无匹配指南的语言 → 提示"无 [语言] 的 Google 规范，可自行提供或跳过"
+- 等待用户选择要导入的语言规范
+- 将选中的规范文件复制到 `.reliable-agent/codestyle/`
+- 完成标准: 代码规范已导入（或用户明确选择跳过）
 
 ### Step 3: 访谈用户 — 7 个维度
 一次一个问题，等待反馈：
@@ -107,6 +124,7 @@ digraph reliable_spec {
 ### Step 7: 搭建 `.reliable-agent/`
 - 创建 `.reliable-agent/plans/` 目录
 - 创建 `.reliable-agent/adrs/` 目录
+- 创建 `.reliable-agent/codestyle/` 目录（如已导入规范）
 - 初始化空的 `.reliable-agent/experiences.md`
 - 完成标准: `.reliable-agent/` 目录结构就位
 
@@ -135,6 +153,7 @@ digraph reliable_spec {
 
 ## Verification
 
+- [ ] 代码规范已检查并根据用户选择导入（Step 2a）
 - [ ] CLAUDE.md 覆盖全部 7 个必需部分
 - [ ] 每个部分包含具体、可执行的内容（非泛泛建议）
 - [ ] Commands 部分列出实际可执行命令含参数

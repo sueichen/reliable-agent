@@ -34,7 +34,7 @@ digraph reliable_ship {
     gate_check [label="检查所有前置门禁\nG1/G2/G3", shape=diamond];
     fail_gate [label="返回失败的门禁", shape=doublecircle];
     validate_commits [label="验证 commit 消息\n匹配 CLAUDE.md 格式"];
-    precommit_scan [label="预提交扫描\n调试代码/密钥/TODO"];
+    precommit_scan [label="预提交扫描\n调试代码/密钥/TODO\n风格合规"];
     clean [label="干净？", shape=diamond];
     fix_issues [label="修复问题"];
     commit [label="提交变更"];
@@ -88,6 +88,7 @@ digraph reliable_ship {
 - 无不带 Issue 引用的 TODO
 - 无被注释掉的代码
 - 无暂存文件中的密钥或令牌
+- 如 `.reliable-agent/codestyle/` 存在，验证变更文件符合声明规范
 - 完成标准: 预提交扫描清洁
 
 ### Step 4: 提交
@@ -152,7 +153,7 @@ digraph reliable_ship {
 
 - [ ] 所有前置门禁已通过（verify, log, review）
 - [ ] commit 消息验证匹配 CLAUDE.md 格式
-- [ ] 预提交扫描未发现调试代码、无 Issue TODO 或密钥
+- [ ] 预提交扫描未发现调试代码、无 Issue TODO 或密钥；风格合规已检查
 - [ ] 提交是原子的（一个关注点一个提交）
 - [ ] PR 描述完整（What/Why/How Tested/Review Summary/Rollback Plan）
 - [ ] 人类在推送前批准了提交和 PR

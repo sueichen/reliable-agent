@@ -18,7 +18,7 @@
 /log-reliable ────────► 遥测覆盖确认
      │
      ▼
-/request-review-reliable ─► G3: 所有 Critical 已修复，Optional 已记录
+/request-review-reliable ─► G3: 所有 Critical 已修复，Optional 已记录；风格违规（Important）已修复
      │
      ▼
 /receive-review-reliable ─► 所有审查关注点已解决
@@ -43,7 +43,7 @@
 | 门禁 | 从 → 到 | 条件 | 阻塞？ |
 |------|---------|------|--------|
 | G1 | build → verify | 新代码有对应测试，全部通过 | 是 |
-| G2 | verify → review | 100% 测试通过，0 lint 错误，构建成功 | 是 |
+| G2 | verify → review | 100% 测试通过，0 lint 错误，构建成功，风格规范已检查 | 是 |
 | G3 | review → ship | 所有 Critical 已修复，Optional 已记录 | 是 |
 | G4 | ship → retro | commit 符合 CLAUDE.md 格式，PR 描述完整 | 是 |
 | G5 | retro 结束 | 当前 session 经验已提取，标记为可追溯 | 是 |

@@ -33,6 +33,7 @@ description: 高级代码审查员，从五个维度（正确性、可读性、�
 - 命名是否描述清晰且与项目约定一致？
 - 控制流是否直接（无超过 3 层的深度嵌套逻辑）？
 - 代码是否组织良好（相关代码分组，清晰的边界）？
+- **代码风格合规性由 style-auditor 单独审计**——此处仅评估可读性逻辑层面
 
 ### 3. 架构
 - 变更是否遵循现有模式或引入有理由的新模式？
@@ -86,7 +87,7 @@ description: 高级代码审查员，从五个维度（正确性、可读性、�
 |--------|------|------|
 | **Critical** | 安全漏洞、数据丢失风险、功能损坏——阻塞合并 | 立即修复 |
 | **Important** | 缺少测试、错误抽象、糟糕的错误处理——应该修复 | 合并前修复 |
-| **Suggestion** | 命名、代码风格、可选优化——可改进 | 评估后修复或记录理由不修 |
+| **Suggestion** | 命名、风格观察（无声明规则时）、可选优化——可改进 | 评估后修复或记录理由不修 |
 | **Optional** | 未来考虑——记录即可 | 记录在代码注释或 ADR 中 |
 
 ## 自动失败触发条件
@@ -100,5 +101,5 @@ description: 高级代码审查员，从五个维度（正确性、可读性、�
 ## Composition
 
 - **直接调用时机**: 用户要求审查特定变更、文件或 PR
-- **通过调用**: `/request-review-reliable`（与 security-auditor、test-engineer、performance-auditor 并行扇出）
+- **通过调用**: `/request-review-reliable`（与 security-auditor、test-engineer、performance-auditor、style-auditor 并行扇出）
 - **绝不要从另一个角色内部调用**: 如果你发现需要 security-auditor 或 test-engineer 的深度审查，在你的报告中作为建议提出——编排由斜杠命令负责，不由角色负责

@@ -41,6 +41,14 @@ tests/                # 测试代码
 
 ## 代码风格
 
+本项目遵循 `.reliable-agent/codestyle/` 中声明的代码规范。所有代码必须符合对应语言的规范文件。
+
+### 规范文件
+<!-- 由 spec-reliable 自动填充，例如：
+- Python: .reliable-agent/codestyle/python.md
+- TypeScript: .reliable-agent/codestyle/typescript.md
+-->
+
 ### 命名
 - [语言惯例，例如：变量 camelCase，类 PascalCase，常量 UPPER_SNAKE_CASE]
 

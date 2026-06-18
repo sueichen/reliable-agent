@@ -38,7 +38,8 @@
     "./agents/code-reviewer",
     "./agents/security-auditor",
     "./agents/test-engineer",
-    "./agents/performance-auditor"
+    "./agents/performance-auditor",
+    "./agents/style-auditor"
   ],
   "commands": [
     "./.claude/commands/spec-reliable.md",

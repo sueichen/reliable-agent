@@ -7,10 +7,11 @@ Invoke the reliable-agent:reliable-spec skill.
 
 1. 读取现有的 CLAUDE.md（如存在）以了解当前约定
 2. 探索项目结构以了解技术栈
+2a. 检测项目语言，匹配代码规范（codestyle/），询问用户是否导入到 .reliable-agent/codestyle/
 3. 就 7 个维度访谈用户：项目目标、技术栈偏好、团队约定、测试偏好、安全需求、性能目标、commit 格式偏好
 4. 生成涵盖所有 7 部分的 CLAUDE.md
 5. 提交人类审查和修改
 6. 保存批准的 CLAUDE.md 到项目根目录
-7. 如果是新项目，同时搭建初始的目录结构
+7. 如果是新项目，同时搭建初始的目录结构（含 .reliable-agent/codestyle/）
 
 该命令是幂等的——在已有项目上运行会根据当前项目状态更新 CLAUDE.md。

@@ -9,7 +9,7 @@
 | 门禁 | 实施者 | 条件 | 失败时返回 |
 |------|--------|------|-----------|
 | G1 | verify-reliable | 新代码有对应测试，全部通过 | build-reliable |
-| G2 | request-review-reliable | 100% 测试通过，0 lint，构建成功 | verify-reliable |
+| G2 | request-review-reliable | 100% 测试通过，0 lint，构建成功，风格规范已检查 | verify-reliable |
 | G3 | ship-reliable | 所有 Critical 已修复，Optional 已记录 | receive-review-reliable |
 | G4 | session-retro | commit 格式正确，PR 描述完整 | ship-reliable |
 | G5 | 下一个 session | 经验已提取，session 可追溯 | session-retro |
@@ -48,7 +48,7 @@ G3 未满足：存在未解决的 Critical 审查发现。
 **门禁不得跳过。** 每个门禁预防某一类具体的工程失败：
 
 - G1 防止未测试的代码进入验证
-- G2 防止破损代码进入审查（浪费审查者时间）
-- G3 防止有已知漏洞的代码发布
+- G2 防止破损代码进入审查（浪费审查者时间），含风格违规检查
+- G3 防止有已知漏洞或风格违规的代码发布
 - G4 防止不可追溯的变更进入仓库
 - G5 防止经验丢失、错误重复

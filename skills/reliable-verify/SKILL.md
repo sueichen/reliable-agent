@@ -86,6 +86,13 @@ digraph reliable_verify {
 - 零错误（零警告——如果策略规定）
 - 完成标准: lint 清洁
 
+### Step 3a: 风格规范检查（如 codestyle/ 存在）
+- 检查 `.reliable-agent/codestyle/` 是否存在
+- 如存在，对照声明规范检查变更文件的风格合规性
+- 此步骤提供信息性报告，不阻塞 G1/G2
+- 严重违规将标记为供 style-auditor 在审查阶段处理
+- 完成标准: 风格检查已完成（或跳过——无规范文件时）
+
 ### Step 4: 运行构建
 - 执行构建命令
 - 零错误
@@ -145,6 +152,7 @@ digraph reliable_verify {
 - [ ] CLAUDE.md 中的所有验证命令已执行
 - [ ] 完整测试套件: 100% 通过
 - [ ] Lint: 0 错误
+- [ ] 风格检查完成（如 `.reliable-agent/codestyle/` 存在）
 - [ ] 构建: 成功
 - [ ] 类型检查: 成功
 - [ ] 新代码覆盖满足 CLAUDE.md 阈值
