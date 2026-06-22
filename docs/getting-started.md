@@ -26,7 +26,7 @@ claude --plugin-dir .
 > `--plugin-dir` 仅在当前 session 生效。如需持久化，在 Claude Code 交互模式中执行：
 >
 > ```
-> /plugin marketplace add .
+> /plugin marketplace add ./
 > /plugin install reliable-agent
 > ```
 
