@@ -1,7 +1,7 @@
 ---
 description: 运行自动化验证——完整测试套件、lint、构建和类型检查。全部通过才能进入审查
 ---
-Invoke the reliable-agent:reliable-verify skill.
+Invoke the reliable-agent:ra-verify skill.
 
 运行 CLAUDE.md 中定义的所有验证命令：
 1. 运行带覆盖率的完整测试套件
@@ -12,4 +12,4 @@ Invoke the reliable-agent:reliable-verify skill.
 6. 验证无未引用的 TODO/FIXME 注释
 7. 输出验证报告：每类 pass/fail、覆盖摘要、lint 错误数
 
-门禁：如果任何检查失败，返回 reliable-build。在所有条件全绿之前不要进入审查。
+门禁：如果任何检查失败，返回 ra-build。在所有条件全绿之前不要进入审查。

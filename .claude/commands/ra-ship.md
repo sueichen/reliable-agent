@@ -1,11 +1,11 @@
 ---
 description: 带格式校验的提交、带完整描述的 PR、验证所有质量门禁、合并
 ---
-Invoke the reliable-agent:reliable-ship skill.
+Invoke the reliable-agent:ra-ship skill.
 
 Phase A — 发布前验证：
-1. 确认 reliable-verify 已通过（所有测试绿色、0 lint 错误、构建成功）
-2. 确认 reliable-request-review 已完成（无 Critical 问题未解决）
+1. 确认 ra-verify 已通过（所有测试绿色、0 lint 错误、构建成功）
+2. 确认 ra-request-review 已完成（无 Critical 问题未解决）
 3. 验证未提交变更是有意为之（无遗留调试代码、无 console.log、无不带 Issue 引用的 TODO）
 4. 验证 commit 消息格式匹配 CLAUDE.md 的项目约定
 5. 验证 PR 描述完整：What、Why、How Tested、Review Summary、Screenshots（如 UI 变更）、Rollback Plan

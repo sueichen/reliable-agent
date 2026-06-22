@@ -1,7 +1,7 @@
 ---
 description: 检查并补充可观测性——当前变更的结构化日志、指标、追踪和告警覆盖
 ---
-Invoke the reliable-agent:reliable-log skill.
+Invoke the reliable-agent:ra-log skill.
 
 1. 为当前功能/变更定义 on-call 问题
 2. 根据可观测性检查清单审计现有遥测：

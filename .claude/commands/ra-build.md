@@ -1,7 +1,7 @@
 ---
 description: TDD 增量实现——红绿重构循环。一次一个测试、一个实现切片、一次重构
 ---
-Invoke the reliable-agent:reliable-build skill.
+Invoke the reliable-agent:ra-build skill.
 
 TDD 工作流：
 1. 从方案中选择下一个待办任务

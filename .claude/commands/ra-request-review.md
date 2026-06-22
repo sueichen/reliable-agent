@@ -1,7 +1,7 @@
 ---
 description: 多角度代码审查——并行扇出 code-reviewer、security-auditor、test-engineer、performance-auditor、style-auditor 五个角色，合并他们的发现
 ---
-Invoke the reliable-agent:reliable-request-review skill.
+Invoke the reliable-agent:ra-request-review skill.
 
 Phase A — 并行扇出：
 并发派发 5 个子智能体角色（单轮，所有 Agent 工具调用同时发出）：

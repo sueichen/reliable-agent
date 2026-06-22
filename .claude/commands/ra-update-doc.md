@@ -1,7 +1,7 @@
 ---
 description: 同步文档与代码变更——更新 README、ADR、API 文档、changelog 和内联文档
 ---
-Invoke the reliable-agent:reliable-update-doc skill.
+Invoke the reliable-agent:ra-update-doc skill.
 
 1. 扫描最近代码变更（从上次文档更新以来）
 2. 对每个变更区域，检查对应文档：

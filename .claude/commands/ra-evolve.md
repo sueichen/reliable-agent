@@ -1,7 +1,7 @@
 ---
 description: Session 回顾与经验驱动的进化——回顾 session、提取结构化经验并追加到 experiences.md，聚类分析重复模式，生成三类进化建议（全部需人类审查后应用）：CLAUDE.md 规则变更、技能行为变更、规格修订
 ---
-Invoke the reliable-agent:reliable-evolve skill.
+Invoke the reliable-agent:ra-evolve skill.
 
 Phase 1 — Session 回顾与经验提取：
 1. 回顾当前 session 对话记录：

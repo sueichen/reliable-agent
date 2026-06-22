@@ -1,7 +1,7 @@
 ---
 description: 初始化或重新生成项目宪法——生成包含代码规范、commit 格式、测试策略、文档标准、可观测性要求、安全基线和性能基线的 CLAUDE.md
 ---
-Invoke the reliable-agent:reliable-spec skill.
+Invoke the reliable-agent:ra-spec skill.
 
 生成一个作为项目宪法的 CLAUDE.md：
 
