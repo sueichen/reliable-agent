@@ -1,11 +1,11 @@
 ---
-name: reliable-evolve
+name: ra-evolve
 description: "Session 回顾与经验驱动的进化——回顾当前 session、提取结构化经验并追加到 experiences.md，聚类分析重复模式，生成三类进化建议（CLAUDE.md 规则变更、技能行为变更、规格修订）。所有建议需人类明确批准后才应用。在每个重要工程 session 结束时或积累多条经验后使用。"
 version: "1.0.0"
 license: MIT
 ---
 
-# Reliable Evolve — Session 回顾与经验驱动的进化
+# ra-evolve — Session 回顾与经验驱动的进化
 
 **灵活技能**: 根据上下文调整原则。
 
@@ -34,7 +34,7 @@ digraph reliable_evolve {
     rankdir=TB;
     node [shape=box, style=rounded];
 
-    start [label="启动 /reliable-evolve", shape=doublecircle];
+    start [label="启动 /ra-evolve", shape=doublecircle];
 
     /* Phase 1: Session Retro — 经验提取 */
     review [label="Phase 1: 回顾 session 对话\n识别问题/错误/决策/意外"];
@@ -277,7 +277,7 @@ Session 有代码修改时必须运行 Phase 1（经验提取），不要跳过�
 - [ ] 每条建议包含: 触发、确切变更文字、理由、风险
 - [ ] 未经人类批准未自动应用任何建议
 - [ ] 批准的建议逐一提交
-- [ ] 应用的 CLAUDE.md 变更通过 reliable-spec 验证
+- [ ] 应用的 CLAUDE.md 变更通过 ra-spec 验证
 
 ### 综合
 - [ ] G5: 经验已提取，session 可追溯
@@ -285,9 +285,9 @@ Session 有代码修改时必须运行 Phase 1（经验提取），不要跳过�
 ## 下一步指引
 
 **推荐路径**:
-- 如果刚完成 Phase 1（经验 < 3 条）→ `/reliable-plan` — 开始下一个功能迭代的设计方案
-- 如果完成了 Phase 2-4 → `/reliable-update-doc` — 经验分析和进化建议完成，同步更新项目文档
+- 如果刚完成 Phase 1（经验 < 3 条）→ `/ra-plan` — 开始下一个功能迭代的设计方案
+- 如果完成了 Phase 2-4 → `/ra-update-doc` — 经验分析和进化建议完成，同步更新项目文档
 
 **其他选项**:
-- `/reliable-build` — 立即实现人类已批准的进化建议
-- `/reliable-spec` — 如果是新项目，初始化项目规范
+- `/ra-build` — 立即实现人类已批准的进化建议
+- `/ra-spec` — 如果是新项目，初始化项目规范

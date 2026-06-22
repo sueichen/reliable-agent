@@ -1,11 +1,11 @@
 ---
-name: reliable-spec
+name: ra-spec
 description: "项目初始化——生成包含代码规范、commit 格式、测试策略、文档标准、可观测性要求、安全基线和性能基线的 CLAUDE.md 项目宪法。在新项目启动、新建仓库、或项目缺少 CLAUDE.md 时使用。"
 version: "1.0.0"
 license: MIT
 ---
 
-# Reliable Spec — 项目规范初始化
+# ra-spec — 项目规范初始化
 
 **灵活技能**: 根据上下文调整原则。
 
@@ -31,7 +31,7 @@ digraph reliable_spec {
     rankdir=TB;
     node [shape=box, style=rounded];
 
-    start [label="启动 /reliable-spec", shape=doublecircle];
+    start [label="启动 /ra-spec", shape=doublecircle];
     check_existing [label="检查 CLAUDE.md\n是否存在？", shape=diamond];
     read_existing [label="读取已有\nCLAUDE.md"];
     explore [label="探索项目结构\n语言/框架/目录"];
@@ -165,7 +165,7 @@ digraph reliable_spec {
 
 ## 下一步指引
 
-**推荐路径** → `/reliable-plan` — 项目规范已就绪，开始规划首个功能的设计方案
+**推荐路径** → `/ra-plan` — 项目规范已就绪，开始规划首个功能的设计方案
 
 **其他选项**:
-- `/reliable-spec` — 继续完善或修改项目规范（如 CLAUDE.md 需调整）
+- `/ra-spec` — 继续完善或修改项目规范（如 CLAUDE.md 需调整）

@@ -1,11 +1,11 @@
 ---
-name: reliable-plan
+name: ra-plan
 description: "需求分析与对抗式 grill-me 提问，输出包含任务拆解的详细实现方案。在有规范或需求但缺少实现方案时使用。"
 version: "1.0.0"
 license: MIT
 ---
 
-# Reliable Plan — 需求分析与方案设计
+# ra-plan — 需求分析与方案设计
 
 **灵活技能**: 根据上下文调整原则。
 
@@ -21,7 +21,7 @@ license: MIT
 - 用户给出了大致方向但需要细化
 - 需要将模糊想法转化为可执行任务
 
-**不适用**: 纯文档变更、单行 bug 修复（直接进入 reliable-build）。
+**不适用**: 纯文档变更、单行 bug 修复（直接进入 ra-build）。
 
 ## Core Process
 
@@ -30,7 +30,7 @@ digraph reliable_plan {
     rankdir=TB;
     node [shape=box, style=rounded];
 
-    start [label="启动 /reliable-plan", shape=doublecircle];
+    start [label="启动 /ra-plan", shape=doublecircle];
     context_load [label="加载上下文\nCLAUDE.md+SPEC+\n.reliable-agent/\nexperiences"];
     surface [label="暴露假设\n提交用户确认"];
     grill [label="对抗式提问\n（一次一个问题）"];
@@ -41,7 +41,7 @@ digraph reliable_plan {
     self_check [label="自查\n占位符/矛盾/范围蔓延"];
     save [label="保存方案"];
     human_gate [label="人类审批", shape=diamond];
-    done [label="批准，进入\n/reliable-build", shape=doublecircle];
+    done [label="批准，进入\n/ra-build", shape=doublecircle];
     loop_back [label="修改后重来"];
 
     start -> context_load;
@@ -126,7 +126,7 @@ digraph reliable_plan {
 
 ### Step 10: 人类审批
 - 展示完整方案
-- **未经批准绝不要进入 reliable-build**
+- **未经批准绝不要进入 ra-build**
 - 完成标准: 人类明确批准
 
 <HARD-GATE>
@@ -169,8 +169,8 @@ digraph reliable_plan {
 
 ## 下一步指引
 
-**推荐路径** → `/reliable-build` — 方案已批准，按任务拆解开始 TDD 增量实现
+**推荐路径** → `/ra-build` — 方案已批准，按任务拆解开始 TDD 增量实现
 
 **其他选项**:
-- `/reliable-plan` — 方案需要调整，继续在当前阶段修改设计
-- `/reliable-auto` — 自动接管后续全流程（build→verify→log→review→doc）
+- `/ra-plan` — 方案需要调整，继续在当前阶段修改设计
+- `/ra-auto` — 自动接管后续全流程（build→verify→log→review→doc）

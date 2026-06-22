@@ -1,11 +1,11 @@
 ---
-name: reliable-auto
+name: ra-auto
 description: "自动化工作流执行——检测当前阶段并自动运行 plan→build→verify→log→request-review→receive-review→update-doc，自动处理审查反馈和验证循环，无需阶段间人工交互。在需要一键完成整个开发流程时使用。不从 spec 开始。"
 version: "1.0.0"
 license: MIT
 ---
 
-# Reliable Auto — 自动化工作流执行
+# ra-auto — 自动化工作流执行
 
 **灵活技能**: 根据检测到的阶段和上下文自适应，但内部子技能保持各自的分类（刚性的保持刚性）。
 
@@ -28,9 +28,9 @@ license: MIT
 - 处理审查反馈后想自动完成后续所有阶段
 
 **不适用**:
-- 新项目无 CLAUDE.md → 先运行 `/reliable-spec`
-- 只需运行单个阶段 → 使用对应的 `/reliable-*` 命令
-- 准备发布 → 直接使用 `/reliable-ship`（auto 不执行 ship）
+- 新项目无 CLAUDE.md → 先运行 `/ra-spec`
+- 只需运行单个阶段 → 使用对应的 `/ra-*` 命令
+- 准备发布 → 直接使用 `/ra-ship`（auto 不执行 ship）
 
 ## Core Process
 
@@ -39,20 +39,20 @@ digraph reliable_auto {
     rankdir=TB;
     node [shape=box, style=rounded];
 
-    start [label="启动 /reliable-auto", shape=doublecircle];
+    start [label="启动 /ra-auto", shape=doublecircle];
 
     /* Phase Detection */
     detect [label="检测当前阶段\n（分析项目工件）"];
     show_detection [label="展示检测结果\n列出已完成/待执行阶段"];
     confirm [label="用户确认？", shape=diamond];
-    halt_start [label="停止\n提示先运行\n/reliable-spec", shape=doublecircle];
+    halt_start [label="停止\n提示先运行\n/ra-spec", shape=doublecircle];
 
     /* Execution phases */
-    run_plan [label="Phase 1: reliable-plan\nstreamlined grill-me\n自答+自动选方案", shape=box style=filled fillcolor=lightyellow];
-    run_build [label="Phase 2: reliable-build\n顺序执行所有任务\n任务间不暂停", shape=box style=filled fillcolor=lightyellow];
-    run_verify [label="Phase 3: reliable-verify\n先自动修复简单问题\n修复失败才返回build", shape=box style=filled fillcolor=lightyellow];
-    run_log [label="Phase 4: reliable-log\n自动实现Critical/\nImportant可观测性缺口", shape=box style=filled fillcolor=lightyellow];
-    run_request [label="Phase 5: reliable-request-review\n5-agent并行扇出\n（无变化）", shape=box style=filled fillcolor=lightyellow];
+    run_plan [label="Phase 1: ra-plan\nstreamlined grill-me\n自答+自动选方案", shape=box style=filled fillcolor=lightyellow];
+    run_build [label="Phase 2: ra-build\n顺序执行所有任务\n任务间不暂停", shape=box style=filled fillcolor=lightyellow];
+    run_verify [label="Phase 3: ra-verify\n先自动修复简单问题\n修复失败才返回build", shape=box style=filled fillcolor=lightyellow];
+    run_log [label="Phase 4: ra-log\n自动实现Critical/\nImportant可观测性缺口", shape=box style=filled fillcolor=lightyellow];
+    run_request [label="Phase 5: ra-request-review\n5-agent并行扇出\n（无变化）", shape=box style=filled fillcolor=lightyellow];
 
     /* Review verdict */
     verdict [label="审查判定\nREQUEST CHANGES?", shape=diamond];
@@ -61,10 +61,10 @@ digraph reliable_auto {
     review_loop [label="审查-修复-验证循环\n（最多3次迭代）\n自动修复+重验证+重审查", shape=box style=filled fillcolor=lightcoral];
     loop_exhausted [label="循环耗尽\n报告未解决的Critical\n停止流程", shape=doublecircle style=filled fillcolor=lightcoral];
 
-    run_doc [label="Phase 6: reliable-update-doc\n自动更新所有受影响文档\ndocs单独提交", shape=box style=filled fillcolor=lightyellow];
+    run_doc [label="Phase 6: ra-update-doc\n自动更新所有受影响文档\ndocs单独提交", shape=box style=filled fillcolor=lightyellow];
 
     /* Stop */
-    stop_here [label="AUTO 模式在此停止\n\n生成自动决策报告\n提示运行:\n/reliable-ship\n/reliable-evolve", shape=doublecircle style=filled fillcolor=lightgreen];
+    stop_here [label="AUTO 模式在此停止\n\n生成自动决策报告\n提示运行:\n/ra-ship\n/ra-evolve", shape=doublecircle style=filled fillcolor=lightgreen];
 
     /* Report */
     report [label="生成自动决策报告\n（所有阶段所有决策）", shape=box style=filled fillcolor=lightcyan];
@@ -105,7 +105,7 @@ digraph reliable_auto {
 
 ```
 1. CLAUDE.md 不存在于项目根目录？
-   → 阶段: HALT — 提示用户先运行 /reliable-spec
+   → 阶段: HALT — 提示用户先运行 /ra-spec
 
 2. .reliable-agent/plans/ 目录下无方案文件（*.md）？
    → 阶段: plan — 从方案设计开始
@@ -138,14 +138,14 @@ digraph reliable_auto {
 检测到项目当前阶段: [阶段名称]
 
 已完成:
-  [✓] reliable-spec     → CLAUDE.md 已存在
-  [✓] reliable-plan     → 方案文件: 2026-06-18-my-feature-plan.md
+  [✓] ra-spec     → CLAUDE.md 已存在
+  [✓] ra-plan     → 方案文件: 2026-06-18-my-feature-plan.md
 
 待执行（auto 模式将自动完成）:
-  [ ] reliable-build    → 7 个任务待实现
-  [ ] reliable-verify   → 实现后自动验证
+  [ ] ra-build    → 7 个任务待实现
+  [ ] ra-verify   → 实现后自动验证
   ... (后续阶段)
-  [ ] reliable-update-doc
+  [ ] ra-update-doc
 
 将从此阶段开始接管: [阶段名称]
 是否继续？（一次性确认，后续阶段自动执行）
@@ -153,7 +153,7 @@ digraph reliable_auto {
 
 ## Per-Phase Auto Behavior — 各阶段自动行为
 
-### Phase 1: reliable-plan（自动模式）
+### Phase 1: ra-plan（自动模式）
 
 在自动模式下，plan 的交互步骤被 AI 自答替代：
 
@@ -167,7 +167,7 @@ digraph reliable_auto {
 - 用户在 grill-me 中未确认的假设
 - 哪些 grill-me 答案由 AI 自答 vs 标记为不确定
 
-### Phase 2: reliable-build（自动模式）
+### Phase 2: ra-build（自动模式）
 
 - **顺序执行**: 按方案中任务的依赖顺序依次执行，任务间不暂停。
 - **无需逐任务批准**: 每个任务完成 RED→GREEN→REFACTOR→COMMIT 后立即进入下一个。
@@ -180,7 +180,7 @@ digraph reliable_auto {
 - 自动解决的所有歧义
 - 重构决策
 
-### Phase 3: reliable-verify（自动模式）
+### Phase 3: ra-verify（自动模式）
 
 - **先自动修复再失败**: 遇到失败时不立即返回 build，先尝试自动修复：
   1. Lint 错误 → 运行 `eslint --fix` / `prettier --write`
@@ -193,7 +193,7 @@ digraph reliable_auto {
 - 哪些失败被自动修复及修复方式
 - 哪些失败需要人工介入
 
-### Phase 4: reliable-log（自动模式）
+### Phase 4: ra-log（自动模式）
 
 - **自动实现 Critical/Important 缺口**: 无需用户确认，自动补充结构化日志、指标、追踪。
 - **AI 自定 on-call 问题**: 基于代码变更自动生成 2-4 个 on-call 问题。
@@ -205,7 +205,7 @@ digraph reliable_auto {
 - 添加的 instrumentation
 - 延迟的 Notable 缺口及原因
 
-### Phase 5: reliable-request-review（自动模式）
+### Phase 5: ra-request-review（自动模式）
 
 - **无行为变化**: 此阶段本身已自动化（5-agent 并行扇出）。正常运行。
 - **判定路由**: APPROVE → 继续 update-doc。REQUEST CHANGES → 进入审查-修复-验证循环。
@@ -214,7 +214,7 @@ digraph reliable_auto {
 
 这是自动模式最复杂的部分。详见下方 [Review-Fix-Verify Loop](#review-fix-verify-loop) 章节。
 
-### Phase 7: reliable-update-doc（自动模式）
+### Phase 7: ra-update-doc（自动模式）
 
 - **自动更新所有受影响文档**: 扫描 git diff，识别受影响文档，全部更新。
 - **自动生成 changelog**: 如有用户可见变更，自动生成 changelog 条目。
@@ -227,7 +227,7 @@ digraph reliable_auto {
 
 ## Review-Fix-Verify Loop — 审查-修复-验证循环
 
-审查反馈自动处理的核心机制。当 `reliable-request-review` 返回 REQUEST CHANGES 时触发。最多 3 次迭代，每次迭代范围收窄。
+审查反馈自动处理的核心机制。当 `ra-request-review` 返回 REQUEST CHANGES 时触发。最多 3 次迭代，每次迭代范围收窄。
 
 ```dot
 digraph review_loop {
@@ -237,18 +237,18 @@ digraph review_loop {
     start [label="审查判定: REQUEST CHANGES", shape=doublecircle];
 
     iter1 [label="迭代 1/3:\n修复所有 Critical\n+ Important\n+ 合理 Suggestion\n→ 记录所有决策"];
-    verify1 [label="重新验证\nreliable-verify"];
-    re_review1 [label="重新审查\nreliable-request-review"];
+    verify1 [label="重新验证\nra-verify"];
+    re_review1 [label="重新审查\nra-request-review"];
     verdict1 [label="APPROVE?", shape=diamond];
 
     iter2 [label="迭代 2/3:\n修复所有 Critical\n+ Important\n→ 范围收窄"];
-    verify2 [label="重新验证\nreliable-verify"];
-    re_review2 [label="重新审查\nreliable-request-review"];
+    verify2 [label="重新验证\nra-verify"];
+    re_review2 [label="重新审查\nra-request-review"];
     verdict2 [label="APPROVE?", shape=diamond];
 
     iter3 [label="迭代 3/3:\n仅修复 Critical\n→ 最小范围"];
-    verify3 [label="重新验证\nreliable-verify"];
-    re_review3 [label="最终审查\nreliable-request-review"];
+    verify3 [label="重新验证\nra-verify"];
+    re_review3 [label="最终审查\nra-request-review"];
     verdict3 [label="APPROVE?", shape=diamond];
 
     exhausted [label="循环耗尽\n报告未解决的 Critical\n列出每条及其阻塞原因\n→ 停止流程", shape=doublecircle style=filled fillcolor=lightcoral];
@@ -318,7 +318,7 @@ digraph review_loop {
      原因: [为什么 3 次迭代无法解决]
      建议: [需要人类判断/决策的方向]
 
-建议: 先解决上述问题，然后重新运行 /reliable-auto 从 receive-review 继续。
+建议: 先解决上述问题，然后重新运行 /ra-auto 从 receive-review 继续。
 ```
 
 ## Stop Condition — 停止条件
@@ -337,19 +337,19 @@ update-doc 完成后，auto 模式必须:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 已完成的阶段:
-  [✓] reliable-plan           → 方案: 2026-06-18-my-feature-plan.md
-  [✓] reliable-build          → 7 个任务, 7 个提交
-  [✓] reliable-verify         → 全部通过 (自动修复 2 个 lint 问题)
-  [✓] reliable-log            → 3 个 on-call 问题, 12 条日志/指标
-  [✓] reliable-request-review → APPROVE (0 Critical, 0 Important)
-  [✓] reliable-update-doc     → 更新 README.md + CHANGELOG.md
+  [✓] ra-plan           → 方案: 2026-06-18-my-feature-plan.md
+  [✓] ra-build          → 7 个任务, 7 个提交
+  [✓] ra-verify         → 全部通过 (自动修复 2 个 lint 问题)
+  [✓] ra-log            → 3 个 on-call 问题, 12 条日志/指标
+  [✓] ra-request-review → APPROVE (0 Critical, 0 Important)
+  [✓] ra-update-doc     → 更新 README.md + CHANGELOG.md
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   下一步（手动运行）:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  /reliable-ship          — 最终发布门禁（提交+PR+合并，需人类批准）
-  /reliable-evolve        — Session 回顾、经验提取与进化建议
+  /ra-ship          — 最终发布门禁（提交+PR+合并，需人类批准）
+  /ra-evolve        — Session 回顾、经验提取与进化建议
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   自动决策报告已生成（见上方）
@@ -361,7 +361,7 @@ update-doc 完成后，auto 模式必须:
 在 auto 模式结束时生成，记录所有自动做出的决策。按阶段组织。
 
 ```markdown
-## 自动决策报告 — reliable-auto
+## 自动决策报告 — ra-auto
 
 ### 元信息
 - 起始阶段: [阶段]
@@ -406,8 +406,8 @@ update-doc 完成后，auto 模式必须:
 - Changelog 条目: [简述]
 
 ### 8. 下一步
-- [ ] 运行 /reliable-ship
-- [ ] 运行 /reliable-evolve（session 回顾+经验提取+进化建议）
+- [ ] 运行 /ra-ship
+- [ ] 运行 /ra-evolve（session 回顾+经验提取+进化建议）
 ```
 
 ## Common Rationalizations
@@ -423,7 +423,7 @@ update-doc 完成后，auto 模式必须:
 
 ## Red Flags
 
-- 在 auto 模式中运行 reliable-spec（规范生成永远手动）
+- 在 auto 模式中运行 ra-spec（规范生成永远手动）
 - 跳过阶段检测直接假设当前阶段
 - 审查循环 >= 3 次后仍继续
 - 在 update-doc 后自动进入 ship
@@ -433,9 +433,9 @@ update-doc 完成后，auto 模式必须:
 - 修复 Critical 无证明测试
 
 <HARD-GATE>
-绝不在 auto 模式下运行 reliable-spec（规范生成始终需要人工交互）。
-绝不在 auto 模式下执行 reliable-ship（发布始终需要人类批准）。
-绝不跳过可靠验证（reliable-verify）的完整运行——即使修复看起来简单。
+绝不在 auto 模式下运行 ra-spec（规范生成始终需要人工交互）。
+绝不在 auto 模式下执行 ra-ship（发布始终需要人类批准）。
+绝不跳过可靠验证（ra-verify）的完整运行——即使修复看起来简单。
 每个阶段必须记录所有自动决策，生成透明报告。
 审查-修复-验证循环最多 3 次。3 次后仍有 Critical 未解决 → 停止并报告未解决问题。
 如果任何阶段遇到无法自动解决的阻塞（需要人类判断的模糊性、需要人类决策的权衡）→ 停止并提示用户。
@@ -458,9 +458,9 @@ update-doc 完成后，auto 模式必须:
 
 **AUTO 模式在此停止。请手动运行:**
 
-1. **`/reliable-ship`** — 最终发布门禁：验证所有质量门禁 → 检查提交格式 → 生成 PR 描述 → 需要人类批准 push
-2. **`/reliable-evolve`** — Session 回顾与进化：提取结构化经验 → 追加到 experiences.md → 聚类分析 → 生成 Type A/B/C 建议 → 需人类批准后应用
+1. **`/ra-ship`** — 最终发布门禁：验证所有质量门禁 → 检查提交格式 → 生成 PR 描述 → 需要人类批准 push
+2. **`/ra-evolve`** — Session 回顾与进化：提取结构化经验 → 追加到 experiences.md → 聚类分析 → 生成 Type A/B/C 建议 → 需人类批准后应用
 
 **如果 auto 模式中途停止（遇到阻塞）**:
-- 解决阻塞问题后，重新运行 `/reliable-auto` — 它会从当前阶段继续
-- 或手动运行对应的 `/reliable-*` 命令继续单个阶段
+- 解决阻塞问题后，重新运行 `/ra-auto` — 它会从当前阶段继续
+- 或手动运行对应的 `/ra-*` 命令继续单个阶段

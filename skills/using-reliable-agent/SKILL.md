@@ -123,17 +123,17 @@ digraph skill_flow {
     need_doc [label="需要更新\n文档?", shape=diamond];
     need_ship [label="准备提交\n和发布?", shape=diamond];
 
-    spec_call [label="调用: reliable-spec", shape=box style=filled fillcolor=lightblue];
-    plan_call [label="调用: reliable-plan", shape=box style=filled fillcolor=lightblue];
-    auto_call [label="调用: reliable-auto\n（自动执行 plan→\nbuild→verify→log→\nreview→doc）", shape=box style=filled fillcolor=lightgreen];
-    build_call [label="调用: reliable-build", shape=box style=filled fillcolor=lightblue];
-    verify_call [label="调用: reliable-verify", shape=box style=filled fillcolor=lightblue];
-    log_call [label="调用: reliable-log", shape=box style=filled fillcolor=lightblue];
-    review_call [label="调用: reliable-request-review", shape=box style=filled fillcolor=lightblue];
-    receive_call [label="调用: reliable-receive-review", shape=box style=filled fillcolor=lightblue];
-    evolve_call [label="调用: reliable-evolve", shape=box style=filled fillcolor=lightblue];
-    doc_call [label="调用: reliable-update-doc", shape=box style=filled fillcolor=lightblue];
-    ship_call [label="调用: reliable-ship", shape=box style=filled fillcolor=lightblue];
+    spec_call [label="调用: ra-spec", shape=box style=filled fillcolor=lightblue];
+    plan_call [label="调用: ra-plan", shape=box style=filled fillcolor=lightblue];
+    auto_call [label="调用: ra-auto\n（自动执行 plan→\nbuild→verify→log→\nreview→doc）", shape=box style=filled fillcolor=lightgreen];
+    build_call [label="调用: ra-build", shape=box style=filled fillcolor=lightblue];
+    verify_call [label="调用: ra-verify", shape=box style=filled fillcolor=lightblue];
+    log_call [label="调用: ra-log", shape=box style=filled fillcolor=lightblue];
+    review_call [label="调用: ra-request-review", shape=box style=filled fillcolor=lightblue];
+    receive_call [label="调用: ra-receive-review", shape=box style=filled fillcolor=lightblue];
+    evolve_call [label="调用: ra-evolve", shape=box style=filled fillcolor=lightblue];
+    doc_call [label="调用: ra-update-doc", shape=box style=filled fillcolor=lightblue];
+    ship_call [label="调用: ra-ship", shape=box style=filled fillcolor=lightblue];
 
     done [label="完成", shape=doublecircle];
 
@@ -182,21 +182,21 @@ digraph skill_flow {
 对于完整的功能开发，典型技能序列如下：
 
 ```
- 1. reliable-spec            → 生成 CLAUDE.md + 项目宪法 + 导入代码规范到 .reliable-agent/codestyle/
- 2. reliable-plan            → 需求分析 + grill-me + 设计方案
- 3. reliable-build           → TDD 增量实现（含风格合规）
- 4. reliable-verify          → 自动化验证（测试+lint+风格检查+构建）
- 5. reliable-log             → 可观测性检查/补充
- 6. reliable-request-review  → 多角度代码审查（5-agent 并行，含 style-auditor）
- 7. reliable-receive-review  → 审查反馈处理+修复
- 8. reliable-update-doc      → 文档同步更新
- 9. reliable-ship            → 提交+PR+合并（含风格合规扫描）
-10. reliable-evolve          → Session 回顾+经验提取+进化建议
+ 1. ra-spec            → 生成 CLAUDE.md + 项目宪法 + 导入代码规范到 .reliable-agent/codestyle/
+ 2. ra-plan            → 需求分析 + grill-me + 设计方案
+ 3. ra-build           → TDD 增量实现（含风格合规）
+ 4. ra-verify          → 自动化验证（测试+lint+风格检查+构建）
+ 5. ra-log             → 可观测性检查/补充
+ 6. ra-request-review  → 多角度代码审查（5-agent 并行，含 style-auditor）
+ 7. ra-receive-review  → 审查反馈处理+修复
+ 8. ra-update-doc      → 文档同步更新
+ 9. ra-ship            → 提交+PR+合并（含风格合规扫描）
+10. ra-evolve          → Session 回顾+经验提取+进化建议
 ```
 
-并非每个任务都需要所有技能。一个 bug 修复可能只需要：`reliable-build → reliable-verify → reliable-request-review → reliable-ship → reliable-evolve`。
+并非每个任务都需要所有技能。一个 bug 修复可能只需要：`ra-build → ra-verify → ra-request-review → ra-ship → ra-evolve`。
 
-或者使用 `/reliable-auto` 一键自动执行 plan → update-doc 全流程（检测当前阶段、自动处理审查反馈和验证循环、在 ship/evolve 前停止）。
+或者使用 `/ra-auto` 一键自动执行 plan → update-doc 全流程（检测当前阶段、自动处理审查反馈和验证循环、在 ship/evolve 前停止）。
 
 ## 质量门禁
 
@@ -210,9 +210,9 @@ digraph skill_flow {
 
 ## 技能类型
 
-**刚性的**（reliable-build、reliable-verify、reliable-request-review）：严格遵循。不要偏离纪律。
+**刚性的**（ra-build、ra-verify、ra-request-review）：严格遵循。不要偏离纪律。
 
-**灵活的**（reliable-update-doc、reliable-evolve）：根据上下文调整原则。
+**灵活的**（ra-update-doc、ra-evolve）：根据上下文调整原则。
 
 技能本身会告诉你它属于哪种。
 
@@ -244,7 +244,7 @@ digraph skill_flow {
 1. **开始任何实现工作前先读 CLAUDE.md** — 它定义了项目的宪法、代码标准和边界。
 2. **在调试、审查、或修改有记录经验区域的代码前读 `.reliable-agent/experiences.md`** — 它包含结构化的过往错误模式、优化发现和审查高频问题。
 3. **关键阶段保持在同一未中断的 context window** — spec→plan→build 三个阶段在同一上下文中完成，确保思维连贯。
-4. **每个 /reliable-build 任务从干净上下文启动** — 从 plan 中获取当前任务，避免上下文污染。
+4. **每个 /ra-build 任务从干净上下文启动** — 从 plan 中获取当前任务，避免上下文污染。
 
 ## 用户指令
 

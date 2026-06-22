@@ -1,11 +1,11 @@
 ---
-name: reliable-verify
-description: "自动化验证门禁——运行完整测试套件（含覆盖率）、lint、构建和类型检查。全部零错误通过才能进入审查。在 reliable-build 阶段完成后、需要确认审查就绪时使用。"
+name: ra-verify
+description: "自动化验证门禁——运行完整测试套件（含覆盖率）、lint、构建和类型检查。全部零错误通过才能进入审查。在 ra-build 阶段完成后、需要确认审查就绪时使用。"
 version: "1.0.0"
 license: MIT
 ---
 
-# Reliable Verify — 自动化验证
+# ra-verify — 自动化验证
 
 **刚性技能**: 严格遵循。不要偏离纪律。
 
@@ -13,11 +13,11 @@ license: MIT
 
 运行项目的所有自动化验证：测试、lint、构建、类型检查。这是 G1/G2 质量门禁的实施者——任何一项失败则阻塞进入审查。
 
-**铁律**: 如果任何检查失败，STOP。返回 reliable-build。在所有检查全绿之前不要进入审查。
+**铁律**: 如果任何检查失败，STOP。返回 ra-build。在所有检查全绿之前不要进入审查。
 
 ## When to Use
 
-- reliable-build 阶段完成后
+- ra-build 阶段完成后
 - 需要确认代码审查就绪
 - 修复审查反馈后重新验证
 
@@ -28,7 +28,7 @@ digraph reliable_verify {
     rankdir=TB;
     node [shape=box, style=rounded];
 
-    start [label="启动 /reliable-verify", shape=doublecircle];
+    start [label="启动 /ra-verify", shape=doublecircle];
     read_commands [label="读取 CLAUDE.md\n获取验证命令"];
     run_tests [label="运行完整测试套件\n（含覆盖率）"];
     tests_pass [label="全部通过？\n覆盖达标？", shape=diamond];
@@ -43,8 +43,8 @@ digraph reliable_verify {
     artifact_scan [label="扫描遗留调试代码\nconsole.log/debugger/TODO"];
     clean [label="干净？", shape=diamond];
     report [label="生成验证报告\n所有通过 ✓"];
-    fail [label="返回 /reliable-build\n修复失败项", shape=doublecircle];
-    done [label="G1+G2 通过\n准备 /reliable-request-review", shape=doublecircle];
+    fail [label="返回 /ra-build\n修复失败项", shape=doublecircle];
+    done [label="G1+G2 通过\n准备 /ra-request-review", shape=doublecircle];
 
     start -> read_commands;
     read_commands -> run_tests;
@@ -122,13 +122,13 @@ digraph reliable_verify {
 - 完成标准: 报告已生成
 
 <HARD-GATE>
-如果以下任一项成立，STOP。不要进入 reliable-request-review：
+如果以下任一项成立，STOP。不要进入 ra-request-review：
 - 任何测试失败
 - lint 错误数 > 0
 - 构建失败
 - 类型检查失败
 - 新代码覆盖率低于 CLAUDE.md 阈值
-返回 reliable-build 修复失败项。
+返回 ra-build 修复失败项。
 </HARD-GATE>
 
 ## Common Rationalizations
@@ -162,9 +162,9 @@ digraph reliable_verify {
 ## 下一步指引
 
 **全部通过时**:
-- `/reliable-log` — 检查可观测性（日志/指标/追踪）是否到位
-- 或直接 `/reliable-request-review` — 跳过可观测性，直接提交 5-agent 并行审查
-- `/reliable-auto` — 自动接管后续流程（审查→修复→验证→文档），一站式完成
+- `/ra-log` — 检查可观测性（日志/指标/追踪）是否到位
+- 或直接 `/ra-request-review` — 跳过可观测性，直接提交 5-agent 并行审查
+- `/ra-auto` — 自动接管后续流程（审查→修复→验证→文档），一站式完成
 
 **有失败项时**:
-- `/reliable-build` — 返回修复测试失败、lint 错误或构建问题，修复后重新验证
+- `/ra-build` — 返回修复测试失败、lint 错误或构建问题，修复后重新验证

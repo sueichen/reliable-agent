@@ -1,11 +1,11 @@
 ---
-name: reliable-build
+name: ra-build
 description: "TDD 驱动的增量实现——红绿重构循环。一次一个测试、一个最小实现、一次重构。在从方案中实现代码、修复 bug、添加功能时使用。不要用于纯文档变更或仅配置变更。"
 version: "1.0.0"
 license: MIT
 ---
 
-# Reliable Build — TDD 增量实现
+# ra-build — TDD 增量实现
 
 **刚性技能**: 严格遵循。不要偏离纪律。
 
@@ -22,7 +22,7 @@ license: MIT
 - 添加功能
 - 重构（先确保测试覆盖）
 
-**不适用**: 仅文档变更、仅配置变更（直接进入 reliable-verify）。
+**不适用**: 仅文档变更、仅配置变更（直接进入 ra-verify）。
 
 ## Core Process
 
@@ -31,7 +31,7 @@ digraph reliable_build {
     rankdir=TB;
     node [shape=box, style=rounded];
 
-    start [label="启动 /reliable-build", shape=doublecircle];
+    start [label="启动 /ra-build", shape=doublecircle];
     select_task [label="选择下一个\n待办任务"];
     context [label="加载上下文\nCLAUDE.md+代码+\n.reliable-agent/\nexperiences"];
     red [label="RED: 编写失败测试\n（测试行为，非实现）", shape=box style=filled fillcolor="#ffcccc"];
@@ -48,7 +48,7 @@ digraph reliable_build {
     revert_refactor [label="撤销重构"];
     commit [label="原子提交\n（符合 CLAUDE.md 格式）"];
     more_tasks [label="更多任务？", shape=diamond];
-    done [label="完成，准备\n/reliable-verify", shape=doublecircle];
+    done [label="完成，准备\n/ra-verify", shape=doublecircle];
 
     start -> select_task;
     select_task -> context;
@@ -168,8 +168,8 @@ digraph reliable_build {
 
 ## 下一步指引
 
-**推荐路径** → `/reliable-verify` — 实现完成，运行完整验证（测试+lint+构建+风格）确认正确性
+**推荐路径** → `/ra-verify` — 实现完成，运行完整验证（测试+lint+构建+风格）确认正确性
 
 **其他选项**:
-- `/reliable-build` — 继续实现方案中标记为未完成的下一个任务切片
-- `/reliable-auto` — 自动接管后续全流程（verify→log→review→doc）
+- `/ra-build` — 继续实现方案中标记为未完成的下一个任务切片
+- `/ra-auto` — 自动接管后续全流程（verify→log→review→doc）

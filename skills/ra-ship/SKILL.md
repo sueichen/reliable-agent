@@ -1,11 +1,11 @@
 ---
-name: reliable-ship
+name: ra-ship
 description: "带格式校验的提交、带完整描述的 PR、验证所有质量门禁、合并。在所有前置门禁（verify、log、review、doc）通过后、变更准备发布时使用。"
 version: "1.0.0"
 license: MIT
 ---
 
-# Reliable Ship — 提交与发布
+# ra-ship — 提交与发布
 
 **刚性技能**: 严格遵循。人类批准后才能推送。
 
@@ -21,7 +21,7 @@ license: MIT
 - 变更准备合并
 - 准备提交和创建 PR
 
-**前置条件**: reliable-verify (G1/G2) + reliable-request-review (G3)。
+**前置条件**: ra-verify (G1/G2) + ra-request-review (G3)。
 
 ## Core Process
 
@@ -30,7 +30,7 @@ digraph reliable_ship {
     rankdir=TB;
     node [shape=box, style=rounded];
 
-    start [label="启动 /reliable-ship", shape=doublecircle];
+    start [label="启动 /ra-ship", shape=doublecircle];
     gate_check [label="检查所有前置门禁\nG1/G2/G3", shape=diamond];
     fail_gate [label="返回失败的门禁", shape=doublecircle];
     validate_commits [label="验证 commit 消息\n匹配 CLAUDE.md 格式"];
@@ -45,7 +45,7 @@ digraph reliable_ship {
     monitor_ci [label="监控 CI"];
     ci_pass [label="CI 通过？", shape=diamond];
     human_merge [label="人类执行合并"];
-    done [label="G4 通过\n准备 /reliable-evolve", shape=doublecircle];
+    done [label="G4 通过\n准备 /ra-evolve", shape=doublecircle];
 
     start -> gate_check;
     gate_check -> fail_gate [label="否"];
@@ -70,7 +70,7 @@ digraph reliable_ship {
 
 ### Step 1: 门禁检查
 验证所有前置门禁：
-- G1/G2: reliable-verify 已通过
+- G1/G2: ra-verify 已通过
 - G3: 所有 Critical 已修复，Optional 已记录
 - 如果任何门禁未满足→返回失败的门禁
 - 完成标准: 所有前置门禁已确认
@@ -118,7 +118,7 @@ digraph reliable_ship {
 
 ### Step 8: 监控 CI
 - 等待 CI 完成
-- 如果 CI 失败→返回 reliable-build
+- 如果 CI 失败→返回 ra-build
 - 完成标准: CI 通过
 
 ### Step 9: 人类合并
@@ -163,4 +163,4 @@ digraph reliable_ship {
 
 ## 下一步指引
 
-**推荐路径** → `/reliable-evolve` — 发布完成，回顾本次 session、提取经验教训并分析进化建议
+**推荐路径** → `/ra-evolve` — 发布完成，回顾本次 session、提取经验教训并分析进化建议

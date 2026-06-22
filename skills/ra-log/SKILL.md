@@ -1,11 +1,11 @@
 ---
-name: reliable-log
+name: ra-log
 description: "可观测性检查与补充——审计当前变更的遥测覆盖（结构化日志、指标、追踪、告警）并实现缺失的 instrumentation。在 build+verify 阶段完成后、需要确保生产可观测性时使用。"
 version: "1.0.0"
 license: MIT
 ---
 
-# Reliable Log — 可观测性检查
+# ra-log — 可观测性检查
 
 **刚性技能**: 严格遵循。不要偏离纪律。
 
@@ -28,7 +28,7 @@ digraph reliable_log {
     rankdir=TB;
     node [shape=box, style=rounded];
 
-    start [label="启动 /reliable-log", shape=doublecircle];
+    start [label="启动 /ra-log", shape=doublecircle];
     define_questions [label="定义 on-call 问题\n(2-4 个)"];
     audit [label="审计现有遥测\n(logs/metrics/traces/alerts)"];
     gaps [label="发现缺口？", shape=diamond];
@@ -130,4 +130,4 @@ digraph reliable_log {
 
 ## 下一步指引
 
-**推荐路径** → `/reliable-request-review` — 可观测性已就绪，将代码提交多方（5-agent 并行）审查
+**推荐路径** → `/ra-request-review` — 可观测性已就绪，将代码提交多方（5-agent 并行）审查
