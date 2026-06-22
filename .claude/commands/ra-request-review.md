@@ -9,10 +9,11 @@ Phase A — 并行扇出：
 2. reliable-agent:security-auditor：OWASP Top 10 + 供应链 + 密钥 + 认证验证
 3. reliable-agent:test-engineer：覆盖分析——正常路径、边界情况、错误路径、并发、缺失断言
 4. reliable-agent:performance-auditor：N+1 查询、无限操作、内存模式、算法复杂度、资源使用
-5. reliable-agent:style-auditor：代码风格审计——对照 `.reliable-agent/codestyle/` 规范文件审计命名、格式、导入、注释
+5. reliable-agent:style-auditor：代码风格审计——对照 `.reliable-agent/codestyle/`
+   规范文件审计命名、格式、导入、注释
 
 Phase B — 合并：
-综合 4 份报告的发现：
+综合 5 份报告的发现：
 - 将任何角色的 Critical 发现提升为阻塞项
 - 在审查者之间去重
 - 分类：Critical（必须修复）/ Important（应该修复）/ Suggestion（考虑）/ Optional（已记录）
