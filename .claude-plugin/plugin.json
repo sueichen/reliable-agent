@@ -34,13 +34,6 @@
     "./skills/reliable-update-doc",
     "./skills/reliable-ship"
   ],
-  "agents": [
-    "./agents/code-reviewer",
-    "./agents/security-auditor",
-    "./agents/test-engineer",
-    "./agents/performance-auditor",
-    "./agents/style-auditor"
-  ],
   "commands": [
     "./.claude/commands/reliable-spec.md",
     "./.claude/commands/reliable-plan.md",
