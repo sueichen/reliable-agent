@@ -10,7 +10,7 @@
 |------|--------|------|-----------|
 | G1 | reliable-verify | 新代码有对应测试，全部通过 | reliable-build |
 | G2 | reliable-request-review | 100% 测试通过，0 lint，构建成功，风格规范已检查 | reliable-verify |
-| G3 | reliable-ship | 所有 Critical 已修复，Optional 已记录 | reliable-receive-review |
+| G3 | reliable-ship | 所有 Critical 已修复，Important 已修复或记录，Optional 已记录 | reliable-receive-review |
 | G4 | reliable-ship | commit 格式正确，PR 描述完整 | reliable-ship |
 | G5 | reliable-evolve | 经验已提取，session 可追溯 | reliable-evolve |
 

@@ -30,10 +30,10 @@
 
 | 门禁 | 条件 |
 |------|------|
-| G1 | 新代码有测试，全部通过 |
-| G2 | 100% 测试通过，0 lint，构建成功 |
-| G3 | Critical 修复，Optional 记录 |
-| G4 | commit 格式正确，PR 完整 |
+| G1 | 新代码有对应测试，全部通过 |
+| G2 | 100% 测试通过，0 lint，构建成功，风格规范已检查 |
+| G3 | Critical 已修复，Important 已修复或记录，Optional 已记录 |
+| G4 | commit 格式正确，PR 描述完整 |
 | G5 | 经验已提取，session 可追溯 |
 
 ## 安装
@@ -109,9 +109,11 @@ claude --plugin-dir .
 skills/         → 12 个技能（1 元技能 + 1 自动化 + 10 工作流）
 agents/         → 5 个 agent 角色定义
 templates/      → 5 个项目模板
-references/     → 7 个交叉引用检查清单
+references/     → 8 个交叉引用检查清单（含严重度规范化映射）
+codestyle/      → 17 个语言的代码规范源文件
 hooks/          → SessionStart 生命周期钩子
 docs/           → 用户文档
+.reliable-agent/ → 项目级配置（codestyle/、plans/、experiences.md）
 ```
 
 ## 许可证
