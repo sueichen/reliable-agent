@@ -1,6 +1,6 @@
 # CLAUDE.md — 项目宪法模板
 
-> 此文件由 `/reliable-spec` 命令生成。它是项目的宪法——定义了代码怎么写、怎么测试、怎么提交、什么算"完成"。
+> 此文件由 `/ra-spec` 命令生成。它是项目的宪法——定义了代码怎么写、怎么测试、怎么提交、什么算"完成"。
 > 每次新 session 启动时，AI 代理会先读取此文件作为行为准则。
 
 ## 项目信息
@@ -44,7 +44,7 @@ tests/                # 测试代码
 本项目遵循 `.reliable-agent/codestyle/` 中声明的代码规范。所有代码必须符合对应语言的规范文件。
 
 ### 规范文件
-<!-- 由 reliable-spec 自动填充，例如：
+<!-- 由 ra-spec 自动填充，例如：
 - Python: .reliable-agent/codestyle/python.md
 - TypeScript: .reliable-agent/codestyle/typescript.md
 -->
@@ -84,7 +84,7 @@ export function calculateShippingCost(order: Order, destination: Address): numbe
 - 验证系统边界处的所有输入
 - 使用结构化 JSON 日志并带有关联 ID
 - 遵循 commit 格式: `[type]([scope]): [description]`
-- 在 `/reliable-request-review` 前运行 `/reliable-verify`
+- 在 `/ra-request-review` 前运行 `/ra-verify`
 
 ### Ask First（先问）:
 - 添加新依赖
@@ -97,7 +97,7 @@ export function calculateShippingCost(order: Order, destination: Address): numbe
 - 提交密钥、令牌或凭证
 - 未经人类批准删除失败的测试
 - 跳过工作流中的质量门禁
-- 未经 `/reliable-ship` 门禁直接部署到生产
+- 未经 `/ra-ship` 门禁直接部署到生产
 
 ## 安全基线
 

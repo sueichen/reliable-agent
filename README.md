@@ -14,17 +14,17 @@
 
 | 命令 | 阶段 | 功能 |
 |------|------|------|
-| `/reliable-auto` | Auto | 自动检测阶段，一次性执行 plan→update-doc |
-| `/reliable-spec` | Define | 项目初始化 — 生成 CLAUDE.md + 宪法 |
-| `/reliable-plan` | Plan | 需求分析 + grill-me + 设计方案 |
-| `/reliable-build` | Build | TDD 增量实现（红绿重构） |
-| `/reliable-verify` | Verify | 自动化验证（测试+lint+构建） |
-| `/reliable-log` | Observe | 可观测性检查与补充 |
-| `/reliable-request-review` | Review | 多角度代码审查（5-agent 并行） |
-| `/reliable-receive-review` | Review | 审查反馈处理与修复 |
-| `/reliable-update-doc` | Doc | 文档同步更新 |
-| `/reliable-ship` | Ship | 提交 + PR + 合并 |
-| `/reliable-evolve` | Evolve | Session 回顾+经验提取+进化建议 |
+| `/ra-auto` | Auto | 自动检测阶段，一次性执行 plan→update-doc |
+| `/ra-spec` | Define | 项目初始化 — 生成 CLAUDE.md + 宪法 |
+| `/ra-plan` | Plan | 需求分析 + grill-me + 设计方案 |
+| `/ra-build` | Build | TDD 增量实现（红绿重构） |
+| `/ra-verify` | Verify | 自动化验证（测试+lint+构建） |
+| `/ra-log` | Observe | 可观测性检查与补充 |
+| `/ra-request-review` | Review | 多角度代码审查（5-agent 并行） |
+| `/ra-receive-review` | Review | 审查反馈处理与修复 |
+| `/ra-update-doc` | Doc | 文档同步更新 |
+| `/ra-ship` | Ship | 提交 + PR + 合并 |
+| `/ra-evolve` | Evolve | Session 回顾+经验提取+进化建议 |
 
 ## 质量门禁
 
@@ -70,37 +70,37 @@ claude --plugin-dir .
 
 ```bash
 # 初始化项目
-/reliable-spec
+/ra-spec
 
 # 或一键自动化全流程（检测阶段并自动执行）
-/reliable-auto
+/ra-auto
 
 # 规划功能
-/reliable-plan
+/ra-plan
 
 # TDD 实现
-/reliable-build
+/ra-build
 
 # 验证
-/reliable-verify
+/ra-verify
 
 # 可观测性检查
-/reliable-log
+/ra-log
 
 # 代码审查
-/reliable-request-review
+/ra-request-review
 
 # 处理审查反馈
-/reliable-receive-review
+/ra-receive-review
 
 # 更新文档
-/reliable-update-doc
+/ra-update-doc
 
 # 发布
-/reliable-ship
+/ra-ship
 
 # Session 回顾与进化（经验提取+进化建议）
-/reliable-evolve
+/ra-evolve
 ```
 
 ## 文件结构

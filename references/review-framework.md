@@ -1,6 +1,6 @@
 # 代码审查框架
 
-> 用于 `/reliable-request-review` 的六轴审查和 5-agent 并行扇出。
+> 用于 `/ra-request-review` 的六轴审查和 5-agent 并行扇出。
 
 ## 六轴审查
 

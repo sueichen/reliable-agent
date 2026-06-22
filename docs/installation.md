@@ -62,7 +62,7 @@ You have reliable-agent installed. This plugin provides 11 phase-gated
 engineering workflow skills (including an auto-pilot mode) for reliable code engineering.
 ```
 
-输入 `/reliable-spec` 测试第一个命令是否可被发现。
+输入 `/ra-spec` 测试第一个命令是否可被发现。
 
 ## 卸载
 

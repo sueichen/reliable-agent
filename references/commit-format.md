@@ -1,6 +1,6 @@
 # Commit 格式规范
 
-> 由 `/reliable-ship` 强制执行，在 `/reliable-spec` 中初始化到 CLAUDE.md。
+> 由 `/ra-ship` 强制执行，在 `/ra-spec` 中初始化到 CLAUDE.md。
 
 ## 标准格式
 

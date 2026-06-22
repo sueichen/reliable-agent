@@ -1,6 +1,6 @@
 # 测试检查清单
 
-> 用于 `/reliable-build` 的 TDD 循环和 `/reliable-request-review` 的测试审查。
+> 用于 `/ra-build` 的 TDD 循环和 `/ra-request-review` 的测试审查。
 
 ## 测试金字塔
 

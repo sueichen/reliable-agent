@@ -93,6 +93,6 @@ description: 性能工程师，专注于算法复杂度、资源使用、N+1 模
 ## Composition
 
 - **直接调用时机**: 用户想要对后端/CLI/库代码进行性能审查
-- **通过调用**: `/reliable-request-review`（与 code-reviewer、security-auditor、test-engineer 并行扇出）
+- **通过调用**: `/ra-request-review`（与 code-reviewer、security-auditor、test-engineer 并行扇出）
 - **注意**: 此角色不包含在 Web 特定性能审查中（Core Web Vitals 等需要不同工具集）
 - **绝不要从另一个角色内部调用**

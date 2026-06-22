@@ -37,7 +37,7 @@ claude --plugin-dir .
 在项目根目录运行：
 
 ```
-/reliable-spec
+/ra-spec
 ```
 
 AI 会：
@@ -49,7 +49,7 @@ AI 会：
 ### 2. 规划功能
 
 ```
-/reliable-plan
+/ra-plan
 ```
 
 AI 会：
@@ -63,7 +63,7 @@ AI 会：
 ### 3. 实现代码
 
 ```
-/reliable-build
+/ra-build
 ```
 
 AI 会按照 TDD 循环实现：
@@ -75,13 +75,13 @@ AI 会按照 TDD 循环实现：
 
 使用 `auto` 模式可一次性实现所有任务：
 ```
-/reliable-build auto
+/ra-build auto
 ```
 
 ### 4. 验证
 
 ```
-/reliable-verify
+/ra-verify
 ```
 
 运行完整验证：测试、lint、构建、类型检查。全部通过才能进入审查。
@@ -89,7 +89,7 @@ AI 会按照 TDD 循环实现：
 ### 5. 审查
 
 ```
-/reliable-request-review
+/ra-request-review
 ```
 
 并行运行 5 个专业审查者（正确性、安全、测试覆盖、性能、代码风格），综合生成审查报告。
@@ -97,7 +97,7 @@ AI 会按照 TDD 循环实现：
 ### 6. 处理审查反馈
 
 ```
-/reliable-receive-review
+/ra-receive-review
 ```
 
 系统性修复每条发现，Critical 必须有证明测试，修复后重验证。
@@ -105,7 +105,7 @@ AI 会按照 TDD 循环实现：
 ### 7. 发布
 
 ```
-/reliable-ship
+/ra-ship
 ```
 
 提交校验 + PR 生成 + CI 监控 + 合并。等待你批准后推送。
@@ -113,7 +113,7 @@ AI 会按照 TDD 循环实现：
 ### 8. 回顾与进化
 
 ```
-/reliable-evolve
+/ra-evolve
 ```
 
 回顾 session 并提取结构化经验到 `.reliable-agent/experiences.md`（Phase 1），积累经验后自动进入聚类分析和进化建议（Phase 2-4）。
@@ -123,7 +123,7 @@ AI 会按照 TDD 循环实现：
 如果不想逐步运行上述步骤 2-7（plan 到 update-doc），可以使用自动化命令：
 
 ```
-/reliable-auto
+/ra-auto
 ```
 
 AI 会:
@@ -133,26 +133,26 @@ AI 会:
 - 自动处理审查反馈：修复 → 重验证 → 重审查（最多 3 次循环）
 - 审查通过后自动更新文档
 - 在 update-doc 完成后停止，生成自动决策报告
-- 提示手动运行 `/reliable-ship` 和 `/reliable-evolve`
+- 提示手动运行 `/ra-ship` 和 `/ra-evolve`
 
 **注意**: 此命令不从 spec 开始（规范生成始终需要人工交互），也不执行 ship（发布需要人类批准）。
 
 ## 完整流程
 
 ```
-手动:  /reliable-spec → /reliable-plan → /reliable-build
-           → /reliable-verify → /reliable-log
-           → /reliable-request-review → /reliable-receive-review
-           → /reliable-update-doc → /reliable-ship
-           → /reliable-evolve
+手动:  /ra-spec → /ra-plan → /ra-build
+           → /ra-verify → /ra-log
+           → /ra-request-review → /ra-receive-review
+           → /ra-update-doc → /ra-ship
+           → /ra-evolve
 
-自动化: /reliable-auto  → plan → build → verify → log
+自动化: /ra-auto  → plan → build → verify → log
            → request-review → [审查循环] → update-doc → STOP
            （然后手动运行 ship → evolve）
 ```
 
 ## 需要帮助？
 
-- 输入 `/reliable-spec` 开始任何新项目
-- 输入 `/reliable-plan` 规划任何新功能
+- 输入 `/ra-spec` 开始任何新项目
+- 输入 `/ra-plan` 规划任何新功能
 - AI 会在每个步骤引导你

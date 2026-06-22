@@ -1,8 +1,8 @@
 # reliable-agent — 项目宪法
 
-> 可靠工程工作流技能集 — 11 个阶段门控技能，覆盖从规范到回顾的完整可靠工程循环。
+> 可靠工程工作流技能集 — 12 个技能（1 元技能 + 1 自动化 + 10 工作流），覆盖从规范到回顾的完整可靠工程循环。
 >
-> 本文件是项目宪法，所有贡献者和 AI 智能体必须遵守。由 `/reliable-spec` 生成，`/reliable-evolve` 建议更新，人类审批后生效。
+> 本文件是项目宪法，所有贡献者和 AI 智能体必须遵守。由 `/ra-spec` 生成，`/ra-evolve` 建议更新，人类审批后生效。
 
 ---
 
@@ -33,7 +33,7 @@
 
 ### 1.2 关键能力
 
-- **11 个阶段门控技能**：spec → plan → build → verify → log → review（request + receive）→ doc → ship → evolve，外加元技能 `using-reliable-agent` 和自动化技能 `reliable-auto`
+- **12 个技能**：spec → plan → build → verify → log → review（request + receive）→ doc → ship → evolve 共 10 个工作流技能，外加元技能 `using-reliable-agent` 和自动化技能 `ra-auto`
 - **5 个可复用审查智能体**：code-reviewer、security-auditor、test-engineer、performance-auditor、style-auditor
 - **生命周期钩子**：SessionStart 自动注入元技能，确保行为准则在每次会话中生效
 - **经验驱动的进化**：Session 回顾 → 结构化经验提取 → 聚类分析 → 人类审批的进化建议
@@ -70,10 +70,10 @@
 ## 3. 项目结构
 
 ```text
-skills/         → 11 个技能目录（1 元技能 + 10 工作流技能）
+skills/         → 12 个技能目录（1 元技能 + 1 自动化 + 10 工作流技能）
 agents/         → 5 个可复用的智能体角色定义
 hooks/          → SessionStart 生命周期钩子
-.claude/commands/ → 10 个斜杠命令（用户入口点）
+.claude/commands/ → 11 个斜杠命令（用户入口点）
 templates/      → 5 个项目初始化模板
 references/     → 7 个交叉引用检查清单
 docs/           → 用户文档
@@ -89,17 +89,17 @@ codestyle/      → 17 个语言的代码规范源文件（Google Style Guide �
 | 阶段 | 技能 | 类型 | 简要说明 |
 |------|------|------|---------|
 | Bootstrap | using-reliable-agent | 元技能 | SessionStart 注入，技能发现，6 条核心行为准则 |
-| Auto | reliable-auto | 灵活 | 检测阶段并自动执行 plan→update-doc（含 review-fix-verify 循环） |
-| Define | reliable-spec | 灵活 | 项目初始化——生成 CLAUDE.md + 宪法 |
-| Plan | reliable-plan | 灵活 | 需求分析 + grill-me + 设计方案 |
-| Build | reliable-build | 刚性 | TDD 增量实现——红绿重构循环 |
-| Verify | reliable-verify | 刚性 | 自动化验证——测试+lint+构建+类型检查 |
-| Observe | reliable-log | 刚性 | 可观测性检查——日志+指标+追踪+告警 |
-| Review | reliable-request-review | 刚性 | 多角度代码审查——5-agent 并行扇出 |
-| Review | reliable-receive-review | 刚性 | 审查反馈处理+修复，重新验证 |
-| Doc | reliable-update-doc | 灵活 | 文档同步更新 |
-| Ship | reliable-ship | 刚性 | 提交+PR+合并，含格式校验 |
-| Evolve | reliable-evolve | 灵活 | Session 回顾+经验提取+进化建议 |
+| Auto | ra-auto | 灵活 | 检测阶段并自动执行 plan→update-doc（含 review-fix-verify 循环） |
+| Define | ra-spec | 灵活 | 项目初始化——生成 CLAUDE.md + 宪法 |
+| Plan | ra-plan | 灵活 | 需求分析 + grill-me + 设计方案 |
+| Build | ra-build | 刚性 | TDD 增量实现——红绿重构循环 |
+| Verify | ra-verify | 刚性 | 自动化验证——测试+lint+构建+类型检查 |
+| Observe | ra-log | 刚性 | 可观测性检查——日志+指标+追踪+告警 |
+| Review | ra-request-review | 刚性 | 多角度代码审查——5-agent 并行扇出 |
+| Review | ra-receive-review | 刚性 | 审查反馈处理+修复，重新验证 |
+| Doc | ra-update-doc | 灵活 | 文档同步更新 |
+| Ship | ra-ship | 刚性 | 提交+PR+合并，含格式校验 |
+| Evolve | ra-evolve | 灵活 | Session 回顾+经验提取+进化建议 |
 
 ### 4.1 技能类型说明
 
@@ -233,7 +233,7 @@ codestyle/      → 17 个语言的代码规范源文件（Google Style Guide �
 |------|------|
 | SessionStart hook 注入量 | ≤ 3KB 文本 |
 | 元技能加载 | 单次 Skill 调用 |
-| 斜杠命令注册 | 10 个命令，无动态加载 |
+| 斜杠命令注册 | 11 个命令，无动态加载 |
 
 ### 9.3 审查并发性能
 
@@ -313,7 +313,7 @@ Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
 ### 11.4 示例
 
 ```text
-feat(skills): add reliable-auto skill for automated workflow execution
+feat(skills): add ra-auto skill for automated workflow execution
 
 Auto-detect current phase and chain through plan→build→verify→log→
 review→doc without manual intervention. Stops before ship/evolve
@@ -381,16 +381,16 @@ Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
 对于完整的功能开发，典型技能序列如下：
 
 ```text
- 1. reliable-spec            → 生成/更新 CLAUDE.md + 项目宪法 + 导入代码规范
- 2. reliable-plan            → 需求分析 + grill-me + 设计方案
- 3. reliable-build           → TDD 增量实现（含风格合规）
- 4. reliable-verify          → 自动化验证（测试+lint+风格检查+构建）
- 5. reliable-log             → 可观测性检查/补充
- 6. reliable-request-review  → 多角度代码审查（5-agent 并行）
- 7. reliable-receive-review  → 审查反馈处理+修复
- 8. reliable-update-doc      → 文档同步更新
- 9. reliable-ship            → 提交+PR+合并（含风格合规扫描）
-10. reliable-evolve          → Session 回顾+经验提取+进化建议
+ 1. ra-spec            → 生成/更新 CLAUDE.md + 项目宪法 + 导入代码规范
+ 2. ra-plan            → 需求分析 + grill-me + 设计方案
+ 3. ra-build           → TDD 增量实现（含风格合规）
+ 4. ra-verify          → 自动化验证（测试+lint+风格检查+构建）
+ 5. ra-log             → 可观测性检查/补充
+ 6. ra-request-review  → 多角度代码审查（5-agent 并行）
+ 7. ra-receive-review  → 审查反馈处理+修复
+ 8. ra-update-doc      → 文档同步更新
+ 9. ra-ship            → 提交+PR+合并（含风格合规扫描）
+10. ra-evolve          → Session 回顾+经验提取+进化建议
 ```
 
 ### 14.2 常用快捷路径
@@ -400,7 +400,7 @@ Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
 | 新功能 | spec → plan → build → verify → log → review → doc → ship → evolve |
 | Bug 修复 | plan → build → verify → log → review → ship → evolve |
 | 纯文档 | build → verify → ship → evolve |
-| 一键自动化 | reliable-auto（自动执行 plan→update-doc，在 ship 前停止） |
+| 一键自动化 | ra-auto（自动执行 plan→update-doc，在 ship 前停止） |
 | 安全修补 | plan → build → verify → request-review（强制 security-auditor）→ ship |
 
 ### 14.3 会话上下文管理
@@ -408,9 +408,9 @@ Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
 1. **开始任何实现工作前先读本文件** — 它定义了项目的宪法、代码标准和边界
 2. **在调试、审查、或修改有记录经验区域的代码前读 `.reliable-agent/experiences.md`**
 3. **关键阶段保持在同一未中断的 context window** — spec→plan→build 三个阶段在同一上下文中完成
-4. **每个 reliable-build 任务从干净上下文启动** — 从 plan 中获取当前任务，避免上下文污染
+4. **每个 ra-build 任务从干净上下文启动** — 从 plan 中获取当前任务，避免上下文污染
 
 ---
 
 > 最后更新：2026-06-22
-> 由 reliable-spec 生成，基于项目现有约定和 7 维度访谈确认。
+> 由 ra-spec 生成，基于项目现有约定和 7 维度访谈确认。

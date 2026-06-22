@@ -6,34 +6,34 @@
 ## 门禁映射
 
 ```
-/reliable-spec ──────► CLAUDE.md 存在
+/ra-spec ──────► CLAUDE.md 存在
      │
      ▼
-/reliable-plan ──────► 方案经人类批准
+/ra-plan ──────► 方案经人类批准
      │
      ▼
-/reliable-build ─────► 每个切片测试通过
+/ra-build ─────► 每个切片测试通过
      │
      ▼
-/reliable-verify ──────► G1: 新代码有对应测试，全部通过
+/ra-verify ──────► G1: 新代码有对应测试，全部通过
      │                   G2: 100% 测试通过，0 lint，构建成功，风格规范已检查
      ▼
-/reliable-log ────────► 遥测覆盖确认
+/ra-log ────────► 遥测覆盖确认
      │
      ▼
-/reliable-request-review ─► G3: 所有 Critical 已修复，Important 已修复或记录，Optional 已记录
+/ra-request-review ─► G3: 所有 Critical 已修复，Important 已修复或记录，Optional 已记录
      │
      ▼
-/reliable-receive-review ─► 所有审查关注点已解决
+/ra-receive-review ─► 所有审查关注点已解决
      │
      ▼
-/reliable-update-doc ─► 文档同步
+/ra-update-doc ─► 文档同步
      │
      ▼
-/reliable-ship ───────► G4: commit 格式正确，PR 描述完整
+/ra-ship ───────► G4: commit 格式正确，PR 描述完整
      │
      ▼
-/reliable-evolve ───────► G5: 经验已提取，session 可追溯
+/ra-evolve ───────► G5: 经验已提取，session 可追溯
 ```
 
 ## 门禁条件
@@ -48,12 +48,12 @@
 
 ## 门禁强制示例
 
-`reliable-request-review` 检查 reliable-verify 是否通过：
-- 如果未通过：返回 "G2 未满足：reliable-verify 必须在审查前通过。先运行 /reliable-verify。"
+`ra-request-review` 检查 ra-verify 是否通过：
+- 如果未通过：返回 "G2 未满足：ra-verify 必须在审查前通过。先运行 /ra-verify。"
 - 如果已通过：继续执行审查。
 
-`reliable-ship` 检查 review 状态：
-- 如果有未解决的 Critical：返回 "G3 未满足：存在未解决的 Critical 审查发现。回到 /reliable-receive-review。"
+`ra-ship` 检查 review 状态：
+- 如果有未解决的 Critical：返回 "G3 未满足：存在未解决的 Critical 审查发现。回到 /ra-receive-review。"
 
 ## 跳过门禁
 

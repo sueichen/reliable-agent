@@ -1,6 +1,6 @@
 # 严重度规范化映射
 
-> 由 `reliable-request-review` 在合并 5 个 Agent 发现时使用。
+> 由 `ra-request-review` 在合并 5 个 Agent 发现时使用。
 > 每个 Agent 使用特定领域的严重度命名，映射到一个统一的 3 级分类。
 
 ## 统一分类

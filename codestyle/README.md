@@ -29,7 +29,7 @@
 
 ### 1. 项目初始化时导入
 
-运行 `/reliable-spec` 时，技能会自动检测项目语言，匹配合适的代码规范文件，并询问是否复制到 `.reliable-agent/codestyle/`。
+运行 `/ra-spec` 时，技能会自动检测项目语言，匹配合适的代码规范文件，并询问是否复制到 `.reliable-agent/codestyle/`。
 
 ### 2. 代码审查时引用
 

@@ -26,9 +26,9 @@
 ## 工作流
 
 ```
-reliable-spec → reliable-plan → reliable-build → reliable-verify
-    → reliable-log → reliable-request-review → reliable-receive-review
-    → reliable-update-doc → reliable-ship → reliable-evolve
+ra-spec → ra-plan → ra-build → ra-verify
+    → ra-log → ra-request-review → ra-receive-review
+    → ra-update-doc → ra-ship → ra-evolve
 ```
 
 ## 质量门禁

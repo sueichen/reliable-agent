@@ -1,6 +1,6 @@
 # 性能检查清单
 
-> 用于 `/reliable-request-review` 的性能审计阶段和 `/reliable-log` 的指标设计。
+> 用于 `/ra-request-review` 的性能审计阶段和 `/ra-log` 的指标设计。
 
 ## 1. 数据访问模式
 
