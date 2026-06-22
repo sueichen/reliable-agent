@@ -79,11 +79,11 @@ digraph reliable_request_review {
 - 完成标准: 审查范围已确定
 
 ### Step 3: 并行扇出（单轮，所有 Agent 调用同时）
-- **code-reviewer**: 五轴审查（正确性、可读性、架构、安全性、性能）
-- **security-auditor**: OWASP Top 10 + 密钥处理 + auth/authz + 依赖 CVE + 输入验证 + AI/LLM 特性
-- **test-engineer**: 覆盖分析——正常路径、边界、错误、并发、缺失断言
-- **performance-auditor**: N+1 查询、无限操作、内存模式、算法复杂度、资源使用
-	- **style-auditor**: 代码风格审计——定位 `.reliable-agent/codestyle/` 规范文件 → 对照声明规则审计命名、格式、导入、注释、文件组织 → 违反声明规则 = Important（阻塞合并），无声明规则 = Suggestion，无规范文件 = Skip
+- **reliable-agent:code-reviewer**: 五轴审查（正确性、可读性、架构、安全性、性能）
+- **reliable-agent:security-auditor**: OWASP Top 10 + 密钥处理 + auth/authz + 依赖 CVE + 输入验证 + AI/LLM 特性
+- **reliable-agent:test-engineer**: 覆盖分析——正常路径、边界、错误、并发、缺失断言
+- **reliable-agent:performance-auditor**: N+1 查询、无限操作、内存模式、算法复杂度、资源使用
+	- **reliable-agent:style-auditor**: 代码风格审计——定位 `.reliable-agent/codestyle/` 规范文件 → 对照声明规则审计命名、格式、导入、注释、文件组织 → 违反声明规则 = Important（阻塞合并），无声明规则 = Suggestion，无规范文件 = Skip
 
 ### Step 4: 合并与分类
 参照 `references/severity-normalization.md` 将各 Agent 的特定领域严重度映射为统一分类：

@@ -5,11 +5,11 @@ Invoke the reliable-agent:ra-request-review skill.
 
 Phase A — 并行扇出：
 并发派发 5 个子智能体角色（单轮，所有 Agent 工具调用同时发出）：
-1. code-reviewer：五轴审查（正确性、可读性、架构、安全性、性能）
-2. security-auditor：OWASP Top 10 + 供应链 + 密钥 + 认证验证
-3. test-engineer：覆盖分析——正常路径、边界情况、错误路径、并发、缺失断言
-4. performance-auditor：N+1 查询、无限操作、内存模式、算法复杂度、资源使用
-5. style-auditor：代码风格审计——对照 `.reliable-agent/codestyle/` 规范文件审计命名、格式、导入、注释
+1. reliable-agent:code-reviewer：五轴审查（正确性、可读性、架构、安全性、性能）
+2. reliable-agent:security-auditor：OWASP Top 10 + 供应链 + 密钥 + 认证验证
+3. reliable-agent:test-engineer：覆盖分析——正常路径、边界情况、错误路径、并发、缺失断言
+4. reliable-agent:performance-auditor：N+1 查询、无限操作、内存模式、算法复杂度、资源使用
+5. reliable-agent:style-auditor：代码风格审计——对照 `.reliable-agent/codestyle/` 规范文件审计命名、格式、导入、注释
 
 Phase B — 合并：
 综合 4 份报告的发现：
