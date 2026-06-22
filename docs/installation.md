@@ -1,28 +1,57 @@
 # 安装指南
 
-## Claude Code 插件市场安装
+## 方式一：官方 Marketplace（推荐）
+
+> 如插件尚未发布到官方市场，请使用方式二或方式三。
 
 ```bash
-claude plugins install reliable-agent
+claude plugin install reliable-agent
 ```
 
-## 本地开发安装
+或在 Claude Code 交互模式中：`/plugin install reliable-agent`
+
+可通过 `--scope` 控制安装范围：
 
 ```bash
+claude plugin install reliable-agent --scope user     # 用户级（默认）
+claude plugin install reliable-agent --scope project  # 项目级
+```
+
+## 方式二：Git 克隆 + CLI 启动参数（推荐本地开发）
+
+```bash
+# 克隆仓库
 git clone https://github.com/reliable-agent/reliable-agent.git
-cd your-project
-claude plugins install /path/to/reliable-agent
+cd reliable-agent
+
+# 启动时加载插件
+claude --plugin-dir .
 ```
 
-## 手动安装（无需 Claude Code 插件系统）
+> **注意**：`--plugin-dir` 仅在当前 session 生效（CLI 帮助明确标注 "for this session only"），关闭 Claude Code 后插件不会保留。如需持久化，请使用方式一或方式三。
 
-复制技能到 Claude Code skills 目录：
+支持同时加载多个插件：
 
 ```bash
-cp -r skills/* ~/.claude/skills/
-cp -r agents/* ~/.claude/agents/
-cp -r .claude/commands/* ~/.claude/commands/
+claude --plugin-dir ./plugin-a --plugin-dir ./plugin-b
 ```
+
+也可加载 `.zip` 格式的插件：
+
+```bash
+claude --plugin-dir /path/to/plugin.zip
+```
+
+## 方式三：交互模式注册本地 Marketplace
+
+在 Claude Code 交互模式中执行（斜杠命令，非 shell 命令）：
+
+```
+/plugin marketplace add /path/to/reliable-agent
+/plugin install reliable-agent
+```
+
+此方式安装的插件会持久保留，重启后依然可用。卸载方式与方式一相同。
 
 ## 验证安装
 
@@ -38,8 +67,14 @@ engineering workflow skills (including an auto-pilot mode) for reliable code eng
 ## 卸载
 
 ```bash
-claude plugins uninstall reliable-agent
+# 通过 CLI
+claude plugin uninstall reliable-agent
+
+# 或在交互模式中
+/plugin uninstall reliable-agent
 ```
+
+> **注意**：如果通过方式二（`--plugin-dir`）加载插件，无需卸载 — 只需去掉启动参数即可。
 
 ## 依赖
 

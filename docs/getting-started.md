@@ -2,9 +2,33 @@
 
 ## 安装
 
+### 官方 Marketplace（推荐，如已发布）
+
+> 如插件尚未发布到官方市场，请使用下方的本地安装方式。
+
 ```bash
-claude plugins install reliable-agent
+claude plugin install reliable-agent
 ```
+
+或在 Claude Code 交互模式中：`/plugin install reliable-agent`
+
+### 本地开发安装
+
+```bash
+# 克隆仓库
+git clone https://github.com/reliable-agent/reliable-agent.git
+cd reliable-agent
+
+# 启动时加载插件（仅当前 session 有效，关闭后需重新指定）
+claude --plugin-dir .
+```
+
+> `--plugin-dir` 仅在当前 session 生效。如需持久化，在 Claude Code 交互模式中执行：
+>
+> ```
+> /plugin marketplace add .
+> /plugin install reliable-agent
+> ```
 
 ## 第一次使用
 
