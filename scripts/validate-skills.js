@@ -7,10 +7,12 @@
  */
 
 import { readFileSync, readdirSync, statSync } from 'fs';
-import { join, resolve } from 'path';
+import { join, resolve, dirname } from 'path';
+import { fileURLToPath } from 'url';
 
-const SKILLS_DIR = resolve(import.meta.dirname || '.', '../skills');
-const AGENTS_DIR = resolve(import.meta.dirname || '.', '../agents');
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const SKILLS_DIR = resolve(__dirname, '../skills');
+const AGENTS_DIR = resolve(__dirname, '../agents');
 
 function findSkillFiles(dir) {
     const results = [];
@@ -104,6 +106,21 @@ for (const file of skillFiles) {
     if (!content.includes('## Common Rationalizations')) {
         console.warn(`  WARN: ${relative} — missing '## Common Rationalizations' section`);
         warnings++;
+    }
+
+    // Check rigid/flexible type label consistency (skip meta-skill)
+    if (fm.name !== 'using-reliable-agent') {
+        const isRigid = content.includes('**刚性技能**');
+        const isFlexible = content.includes('**灵活技能**');
+        const hasHardGate = content.includes('<HARD-GATE>');
+
+        if (!isRigid && !isFlexible) {
+            console.warn(`  WARN: ${relative} — missing rigid/flexible type label (**刚性技能** or **灵活技能**)`);
+            warnings++;
+        } else if (isRigid && !hasHardGate) {
+            console.error(`  ERROR: ${relative} — declared as **刚性技能** but missing <HARD-GATE> block`);
+            errors++;
+        }
     }
 
     // Check for next steps guidance (skip using-reliable-agent meta-skill)

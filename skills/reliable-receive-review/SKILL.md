@@ -7,6 +7,8 @@ license: MIT
 
 # Reliable Receive Review — 审查反馈处理
 
+**刚性技能**: 严格遵循。不要偏离纪律。
+
 ## Overview
 
 系统性处理代码审查的每一条反馈。按严重度排序修复——Critical 必须有证明测试、Important 必须修复、Suggestion 评估后决策。修复后重跑完整验证。

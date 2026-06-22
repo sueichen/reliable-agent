@@ -9,13 +9,13 @@ license: MIT
 如果你是作为子智能体被分派来执行特定任务的，跳过此技能。
 </SUBAGENT-STOP>
 
-<EXTREMELY-IMPORTANT>
+<HARD-GATE>
 如果你认为哪怕只有 1% 的可能性某个技能适用于你正在做的事情，你绝对必须调用该技能。
 
 如果一个技能适用于你的任务，你没有选择。你必须使用它。
 
 这不可协商。这不是可选的。你不能通过合理化来逃避。
-</EXTREMELY-IMPORTANT>
+</HARD-GATE>
 
 ## 指令优先级
 
@@ -204,7 +204,7 @@ digraph skill_flow {
 |------|-------|------|--------|
 | G1 | build→verify | 新代码有对应测试，全部通过 | 是 |
 | G2 | verify→review | 100% 测试通过，0 lint 错误，构建成功，风格规范已检查 | 是 |
-| G3 | review→ship | 所有 Critical 已修复，Optional 已记录 | 是 |
+| G3 | review→ship | 所有 Critical 已修复，Important 已修复或记录，Optional 已记录 | 是 |
 | G4 | ship→evolve | commit 格式符合规范，PR 描述完整 | 是 |
 | G5 | evolve 结束 | 经验已提取，session 可追溯 | 是 |
 

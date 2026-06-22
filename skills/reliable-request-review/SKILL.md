@@ -7,6 +7,8 @@ license: MIT
 
 # Reliable Request Review — 多角度代码审查
 
+**刚性技能**: 严格遵循。不要偏离纪律。
+
 ## Overview
 
 运行 5 个专业审查角色的并行扇出，每个角色从不同维度审查代码。综合发现、去重、按严重度分类，生成结构化审查报告。这是 G3 门禁的实施者。
@@ -84,14 +86,14 @@ digraph reliable_request_review {
 	- **style-auditor**: 代码风格审计——定位 `.reliable-agent/codestyle/` 规范文件 → 对照声明规则审计命名、格式、导入、注释、文件组织 → 违反声明规则 = Important（阻塞合并），无声明规则 = Suggestion，无规范文件 = Skip
 
 ### Step 4: 合并与分类
-- 角色间去重
-- 每条发现按严重度分类：
-  - **Critical**: 安全漏洞、数据丢失、功能损坏——阻塞合并
+参照 `references/severity-normalization.md` 将各 Agent 的特定领域严重度映射为统一分类：
+- 角色间去重（同一发现被多 Agent 报告时取最严重统一级别）
+- 每条发现映射到统一严重度（见 `references/severity-normalization.md` 映射表）：
+  - **Critical**: 安全漏洞、数据丢失、功能损坏、声明规则违反——阻塞合并
   - **Important**: 缺少测试、错误抽象、糟糕的错误处理——合并前修复
   - **Suggestion**: 命名、风格观察（无声明规则时）、可选优化——评估后决定
-  - **Optional**: 未来考虑——记录即可
-- 每条发现含: file:line、描述、影响、修复建议
-- 完成标准: 所有发现已去重和分类
+- 每条发现含: file:line、描述、影响、修复建议、原始 Agent 和级别
+- 完成标准: 所有发现已去重和按统一严重度分类
 
 ### Step 5: 输出审查报告
 包含：
