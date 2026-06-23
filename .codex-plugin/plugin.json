@@ -1,0 +1,39 @@
+{
+  "name": "reliable-agent",
+  "version": "1.0.0",
+  "description": "可靠工程工作流技能集：12 个阶段门控工作流，覆盖 规范 → 计划 → 构建 → 验证 → 日志 → 评审 → 文档 → 发布 → 回顾/进化 的完整可靠工程循环",
+  "author": {
+    "name": "reliable-agent",
+    "url": "https://github.com/reliable-agent"
+  },
+  "homepage": "https://github.com/reliable-agent/reliable-agent",
+  "repository": "https://github.com/reliable-agent/reliable-agent",
+  "license": "MIT",
+  "keywords": [
+    "reliable-engineering",
+    "tdd",
+    "code-review",
+    "observability",
+    "evolution",
+    "chinese",
+    "zh-CN"
+  ],
+  "skills": "./skills",
+  "interface": {
+    "displayName": "Reliable Agent 可靠工程",
+    "shortDescription": "面向 AI 编码智能体的可靠工程工作流技能集（中文）",
+    "longDescription": "12 个阶段门控工程技能，覆盖规范→计划→构建→验证→日志→评审→文档→发布→回顾/进化的完整可靠工程循环。含 5 个可复用审查智能体和 SessionStart 生命周期钩子。",
+    "developerName": "reliable-agent",
+    "category": "Coding",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "帮我设计一个新功能",
+      "审查我的代码变更"
+    ],
+    "websiteURL": "https://github.com/reliable-agent/reliable-agent",
+    "brandColor": "#10B981"
+  }
+}

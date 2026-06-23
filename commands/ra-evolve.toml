@@ -1,0 +1,23 @@
+description = "Session 回顾与经验驱动的进化——回顾 session、提取结构化经验并追加到 experiences.md，聚类分析重复模式，生成三类进化建议（全部需人类审查后应用）：CLAUDE.md 规则变更、技能行为变更、规格修订"
+
+prompt = """
+Invoke the ra-evolve skill.
+
+Phase 1 — Session 回顾与经验提取：
+1. 回顾当前 session 对话记录
+2. 对每个重要的学习，提取结构化的经验记录
+3. 追加新经验到 .reliable-agent/experiences.md
+4. 标记需要进化的经验（FLAG-EVOLVE）
+5. 总结 session
+
+Phase 2 — 经验分析：
+6. 读取 .reliable-agent/experiences.md，收集所有经验记录
+7. 按领域聚类经验
+8. 识别重复模式
+9. 与 CLAUDE.md 规则和技能定义交叉引用寻找缺口
+
+Phase 3 — 生成三类建议：CLAUDE.md 规则变更、技能行为变更、规格修订
+
+Phase 4 — 提交人类审查：每条建议必须包含触发经验、确切变更、理由、应用风险。
+绝不自动应用任何建议。等待每条建议的人类明确批准。
+"""
