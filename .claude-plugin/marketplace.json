@@ -9,10 +9,7 @@
   "plugins": [
     {
       "name": "reliable-agent",
-      "source": {
-        "source": "github",
-        "repo": "reliable-agent/reliable-agent"
-      },
+      "source": "./",
       "description": "可靠工程工作流技能集：12 个技能（1 元技能 + 1 自动化 + 10 工作流），覆盖 规范 → 计划 → 构建 → 验证 → 日志 → 评审 → 文档 → 发布 → 回顾/进化 的完整可靠工程循环。含 5 个可复用审查智能体和 SessionStart 生命周期钩子。",
       "homepage": "https://github.com/reliable-agent/reliable-agent",
       "license": "MIT",

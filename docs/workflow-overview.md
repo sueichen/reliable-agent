@@ -1,37 +1,37 @@
 # 工作流概览
 
-> **自动化模式**: `/ra-auto` 可自动检测当前阶段并一次性执行从 plan 到 update-doc 的完整流程，自动处理审查反馈和验证循环。详见下方手动流程中的每个阶段。
+> **自动化模式**: `reliable-agent:ra-auto` 可自动检测当前阶段并一次性执行从 plan 到 update-doc 的完整流程，自动处理审查反馈和验证循环。详见下方手动流程中的每个阶段。
 
 ## 完整生命周期
 ```
-/ra-spec ──────► CLAUDE.md 存在（项目宪法）
+reliable-agent:ra-spec ──────► CLAUDE.md 存在（项目宪法）
      │
      ▼
-/ra-plan ──────► 方案经人类批准
+reliable-agent:ra-plan ──────► 方案经人类批准
      │
      ▼
-/ra-build ─────► TDD 增量实现，每个切片测试通过
+reliable-agent:ra-build ─────► TDD 增量实现，每个切片测试通过
      │
      ▼
-/ra-verify ──────► G1: 新代码有对应测试，全部通过
+reliable-agent:ra-verify ──────► G1: 新代码有对应测试，全部通过
      │                   G2: 100% 测试通过，0 lint，构建成功，风格规范已检查
      ▼
-/ra-log ────────► 遥测覆盖确认
+reliable-agent:ra-log ────────► 遥测覆盖确认
      │
      ▼
-/ra-request-review ─► G3: 所有 Critical 已修复，Important 已修复或记录，Optional 已记录
+reliable-agent:ra-request-review ─► G3: 所有 Critical 已修复，Important 已修复或记录，Optional 已记录
      │
      ▼
-/ra-receive-review ─► 所有审查关注点已解决
+reliable-agent:ra-receive-review ─► 所有审查关注点已解决
      │
      ▼
-/ra-update-doc ─► 文档同步
+reliable-agent:ra-update-doc ─► 文档同步
      │
      ▼
-/ra-ship ───────► G4: commit 格式正确，PR 描述完整
+reliable-agent:ra-ship ───────► G4: commit 格式正确，PR 描述完整
      │
      ▼
-/ra-evolve ───────► G5: 经验已提取，session 可追溯
+reliable-agent:ra-evolve ───────► G5: 经验已提取，session 可追溯
 ```
 
 ## 质量门禁
@@ -59,7 +59,7 @@
 ## 循环
 
 完成一个完整周期后：
-1. `/ra-evolve` 回顾 session 并提取经验（Phase 1）
+1. `reliable-agent:ra-evolve` 回顾 session 并提取经验（Phase 1）
 2. 积累多条经验后自动进入聚类分析和进化建议（Phase 2-4）
 3. evolve 生成的建议经人类审批后应用
 4. 下一轮 session 受益于改进的技能和规则

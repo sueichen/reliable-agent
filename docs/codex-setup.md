@@ -53,5 +53,5 @@ rm -rf ~/.codex/reliable-agent
 
 ```
 use skill tool to list skills
-use skill tool to load reliable-agent/ra-plan
+use skill tool to load reliable-agent:ra-plan
 ```

@@ -13,19 +13,19 @@
 
 ## 技能列表
 
-| 命令 | 阶段 | 功能 |
+| 技能 | 阶段 | 功能 |
 |------|------|------|
-| `/ra-auto` | Auto | 自动检测阶段，一次性执行 plan→update-doc |
-| `/ra-spec` | Define | 项目初始化 — 生成 CLAUDE.md + 宪法 |
-| `/ra-plan` | Plan | 需求分析 + grill-me + 设计方案 |
-| `/ra-build` | Build | TDD 增量实现（红绿重构） |
-| `/ra-verify` | Verify | 自动化验证（测试+lint+构建） |
-| `/ra-log` | Observe | 可观测性检查与补充 |
-| `/ra-request-review` | Review | 多角度代码审查（5-agent 并行） |
-| `/ra-receive-review` | Review | 审查反馈处理与修复 |
-| `/ra-update-doc` | Doc | 文档同步更新 |
-| `/ra-ship` | Ship | 提交 + PR + 合并 |
-| `/ra-evolve` | Evolve | Session 回顾+经验提取+进化建议 |
+| `reliable-agent:ra-auto` | Auto | 自动检测阶段，一次性执行 plan→update-doc |
+| `reliable-agent:ra-spec` | Define | 项目初始化 — 生成 CLAUDE.md + 宪法 |
+| `reliable-agent:ra-plan` | Plan | 需求分析 + grill-me + 设计方案 |
+| `reliable-agent:ra-build` | Build | TDD 增量实现（红绿重构） |
+| `reliable-agent:ra-verify` | Verify | 自动化验证（测试+lint+构建） |
+| `reliable-agent:ra-log` | Observe | 可观测性检查与补充 |
+| `reliable-agent:ra-request-review` | Review | 多角度代码审查（5-agent 并行） |
+| `reliable-agent:ra-receive-review` | Review | 审查反馈处理与修复 |
+| `reliable-agent:ra-update-doc` | Doc | 文档同步更新 |
+| `reliable-agent:ra-ship` | Ship | 提交 + PR + 合并 |
+| `reliable-agent:ra-evolve` | Evolve | Session 回顾+经验提取+进化建议 |
 
 ## 质量门禁
 
@@ -56,27 +56,20 @@
 git clone https://github.com/reliable-agent/reliable-agent.git
 claude --plugin-dir /path/to/reliable-agent
 
-# 2. 初始化项目
-/ra-spec
-
-# 3. 一键自动化（或按需使用下方各命令）
-/ra-auto
-
-# 4. 按需使用各阶段命令
-/ra-plan           # 方案设计
-/ra-build          # TDD 实现
-/ra-verify         # 验证
-/ra-request-review # 代码审查
-/ra-ship           # 发布
-/ra-evolve         # 回顾与进化
+# 2. 使用技能（通过 Skill 工具调用全限定名）
+#     对 AI 说："使用 reliable-agent:ra-spec 初始化项目宪法"
+#     对 AI 说："使用 reliable-agent:ra-plan 设计实现方案"
+#     对 AI 说："使用 reliable-agent:ra-build 开始 TDD 实现"
+#     对 AI 说："使用 reliable-agent:ra-auto 一键自动化"
 ```
+
+详细用法参见 [用户文档](docs/getting-started.md)。
 
 ## 文件结构
 
 ```
 skills/            → 12 个技能目录（1 元技能 + 1 自动化 + 10 工作流）
 agents/            → 5 个可复用智能体角色定义
-.claude/commands/  → 11 个斜杠命令（Claude Code，MD 格式）
 .gemini/commands/  → 11 个斜杠命令（Gemini CLI，TOML 格式）
 commands/          → 11 个斜杠命令（Antigravity CLI，TOML 格式）
 .claude-plugin/    → Claude Code 插件清单 + Marketplace

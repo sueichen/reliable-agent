@@ -52,16 +52,16 @@ Gemini CLI 自动将 skill 名称和描述注入提示。当识别到匹配任�
 
 ### 始终加载（GEMINI.md）
 
-- `ra-build` — TDD 增量实现
-- `ra-request-review` — 多角度代码审查
+- `reliable-agent:ra-build` — TDD 增量实现
+- `reliable-agent:ra-request-review` — 多角度代码审查
 
 ### 按需（Skills）
 
-- `ra-spec` — 初始化项目时激活
-- `ra-plan` — 规划功能时激活
-- `ra-verify` — 验证代码时激活
-- `ra-log` — 补充可观测性时激活
-- `ra-evolve` — Session 回顾时激活
+- `reliable-agent:ra-spec` — 初始化项目时激活
+- `reliable-agent:ra-plan` — 规划功能时激活
+- `reliable-agent:ra-verify` — 验证代码时激活
+- `reliable-agent:ra-log` — 补充可观测性时激活
+- `reliable-agent:ra-evolve` — Session 回顾时激活
 
 ## 斜杠命令
 
@@ -69,17 +69,17 @@ Gemini CLI 自动将 skill 名称和描述注入提示。当识别到匹配任�
 
 | 命令 | 作用 |
 |------|------|
-| `/ra-spec` | 初始化项目宪法 |
-| `/ra-plan` | 需求分析与方案设计 |
-| `/ra-auto` | 一键自动化工作流 |
-| `/ra-build` | TDD 增量实现 |
-| `/ra-verify` | 自动化验证 |
-| `/ra-log` | 可观测性检查 |
-| `/ra-request-review` | 多角度代码审查 |
-| `/ra-receive-review` | 审查反馈处理 |
-| `/ra-update-doc` | 文档同步更新 |
-| `/ra-ship` | 提交+PR+合并 |
-| `/ra-evolve` | Session 回顾+进化 |
+| `reliable-agent:ra-spec` | 初始化项目宪法 |
+| `reliable-agent:ra-plan` | 需求分析与方案设计 |
+| `reliable-agent:ra-auto` | 一键自动化工作流 |
+| `reliable-agent:ra-build` | TDD 增量实现 |
+| `reliable-agent:ra-verify` | 自动化验证 |
+| `reliable-agent:ra-log` | 可观测性检查 |
+| `reliable-agent:ra-request-review` | 多角度代码审查 |
+| `reliable-agent:ra-receive-review` | 审查反馈处理 |
+| `reliable-agent:ra-update-doc` | 文档同步更新 |
+| `reliable-agent:ra-ship` | 提交+PR+合并 |
+| `reliable-agent:ra-evolve` | Session 回顾+进化 |
 
 每个命令自动调用对应 skill。
 

@@ -21,7 +21,6 @@
     "chinese"
   ],
   "skills": "./skills",
-  "commands": "./.claude/commands",
   "agents": [
     "./agents/code-reviewer.md",
     "./agents/security-auditor.md",

@@ -34,7 +34,7 @@ cp skills/ra-request-review/SKILL.md .cursor/rules/
 对于阶段特定的技能，在聊天中引用：
 
 ```
-Use the ra-plan skill from the reliable-agent plugin to break down this feature into tasks.
+Use the reliable-agent:ra-plan skill to break down this feature into tasks.
 ```
 
 ## 注意事项
