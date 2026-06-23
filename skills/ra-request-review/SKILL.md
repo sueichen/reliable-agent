@@ -35,11 +35,11 @@ digraph reliable_request_review {
     reject [label="拒绝审查\n返回 /ra-verify", shape=doublecircle];
     scope [label="收集审查范围\n（staged changes / diff）"];
     parallel [label="并行扇出 5 个角色", shape=box style=filled fillcolor=lightyellow];
-    reviewer [label="code-reviewer\n五轴审查", shape=box];
-    security [label="security-auditor\n漏洞检测", shape=box];
-    test_eng [label="test-engineer\n覆盖分析", shape=box];
-    perf [label="performance-auditor\n资源/复杂度", shape=box];
-    style [label="style-auditor\n代码风格审计", shape=box];
+    reviewer [label="reliable-agent:code-reviewer\n五轴审查", shape=box];
+    security [label="reliable-agent:security-auditor\n漏洞检测", shape=box];
+    test_eng [label="reliable-agent:test-engineer\n覆盖分析", shape=box];
+    perf [label="reliable-agent:performance-auditor\n资源/复杂度", shape=box];
+    style [label="reliable-agent:style-auditor\n代码风格审计", shape=box];
     merge [label="合并去重\n+ 严重度分类"];
     any_critical [label="任何 Critical？", shape=diamond];
     any_important [label="任何 Important？", shape=diamond];
