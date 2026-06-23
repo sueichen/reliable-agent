@@ -1,6 +1,20 @@
 # 快速开始
 
-## 安装
+## 选择你的平台
+
+Reliable Agent 支持多个 AI 编码平台：
+
+| 平台 | 安装指南 | 斜杠命令 |
+|------|---------|:---:|
+| **Claude Code** | [安装指南](installation.md) | ✅ `/ra-*` |
+| **Gemini CLI** | [Gemini CLI 安装](gemini-cli-setup.md) | ✅ `/ra-*` |
+| **Antigravity CLI** | [Antigravity CLI 安装](#antigravity-cli-安装) | ✅ `/ra-*` |
+| **OpenCode** | [OpenCode 安装](opencode-setup.md) | ❌ (agent-driven) |
+| **Codex** | [Codex 安装](codex-setup.md) | ❌ (agent-driven) |
+| **Cursor** | [Cursor 安装](cursor-setup.md) | ❌ (rules-based) |
+| **GitHub Copilot** | [Copilot 安装](copilot-setup.md) | ❌ (agent-driven) |
+
+## Claude Code 安装
 
 ### 官方 Marketplace（推荐，如已发布）
 
@@ -29,6 +43,19 @@ claude --plugin-dir .
 > /plugin marketplace add ./
 > /plugin install reliable-agent
 > ```
+
+## Antigravity CLI 安装
+
+```bash
+# 从远程仓库安装
+agy plugin install https://github.com/reliable-agent/reliable-agent.git
+
+# 或从本地克隆安装
+git clone https://github.com/reliable-agent/reliable-agent.git
+agy plugin install /path/to/reliable-agent
+```
+
+安装后验证：`agy plugin list` 应显示 `reliable-agent`。
 
 ## 第一次使用
 

@@ -70,16 +70,27 @@
 ## 3. 项目结构
 
 ```text
-skills/         → 12 个技能目录（1 元技能 + 1 自动化 + 10 工作流技能）
-agents/         → 5 个可复用的智能体角色定义
-hooks/          → SessionStart 生命周期钩子
-.claude/commands/ → 11 个斜杠命令（用户入口点）
-templates/      → 5 个项目初始化模板
-references/     → 7 个交叉引用检查清单
-docs/           → 用户文档
-scripts/        → 验证和管理脚本
-codestyle/      → 17 个语言的代码规范源文件（Google Style Guide 提炼版）
-.reliable-agent/ → 本地化配置文件（codestyle/、experiences.md）
+skills/            → 12 个技能目录（1 元技能 + 1 自动化 + 10 工作流技能）
+agents/            → 5 个可复用的智能体角色定义
+hooks/             → SessionStart 生命周期钩子
+.claude/commands/  → 11 个斜杠命令（Claude Code，MD 格式）
+.gemini/commands/  → 11 个斜杠命令（Gemini CLI，TOML 格式）
+commands/          → 11 个斜杠命令（Antigravity CLI，TOML 格式）
+.claude-plugin/    → Claude Code 插件清单 + Marketplace 配置
+.codex-plugin/     → Codex 插件清单
+.cursor-plugin/    → Cursor 插件清单
+.codex/            → Codex 安装指引
+.opencode/         → OpenCode 安装指引
+templates/         → 5 个项目初始化模板
+references/        → 7 个交叉引用检查清单
+docs/              → 用户文档（含 7 个平台安装指南）
+scripts/           → 验证和管理脚本
+codestyle/         → 17 个语言的代码规范源文件（Google Style Guide 提炼版）
+plugin.json        → Antigravity CLI 插件清单
+gemini-extension.json → Gemini CLI 扩展清单
+GEMINI.md          → Gemini CLI 上下文文件
+AGENTS.md          → OpenCode 意图映射
+.reliable-agent/   → 本地化配置文件（codestyle/、experiences.md）
 ```
 
 ---
@@ -233,7 +244,7 @@ codestyle/      → 17 个语言的代码规范源文件（Google Style Guide �
 |------|------|
 | SessionStart hook 注入量 | ≤ 3KB 文本 |
 | 元技能加载 | 单次 Skill 调用 |
-| 斜杠命令注册 | 11 个命令，无动态加载 |
+| 斜杠命令注册 | 11 个命令 × 3 格式（.md + .toml × 2），无动态加载 |
 
 ### 9.3 审查并发性能
 
