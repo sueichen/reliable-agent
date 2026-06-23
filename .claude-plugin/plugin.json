@@ -1,6 +1,6 @@
 {
   "name": "reliable-agent",
-  "description": "可靠工程工作流技能集：10 个阶段门控工作流，覆盖 规范 → 计划 → 构建 → 验证 → 日志 → 评审 → 文档 → 发布 → 回顾/进化 的完整可靠工程循环",
+  "description": "可靠工程工作流技能集：12 个阶段门控工作流，覆盖 规范 → 计划 → 构建 → 验证 → 日志 → 评审 → 文档 → 发布 → 回顾/进化 的完整可靠工程循环",
   "version": "1.0.0",
   "author": {
     "name": "reliable-agent",
@@ -20,31 +20,13 @@
     "quality-gates",
     "chinese"
   ],
-  "skills": [
-    "./skills/using-reliable-agent",
-    "./skills/ra-auto",
-    "./skills/ra-spec",
-    "./skills/ra-plan",
-    "./skills/ra-build",
-    "./skills/ra-verify",
-    "./skills/ra-log",
-    "./skills/ra-request-review",
-    "./skills/ra-receive-review",
-    "./skills/ra-evolve",
-    "./skills/ra-update-doc",
-    "./skills/ra-ship"
-  ],
-  "commands": [
-    "./.claude/commands/ra-spec.md",
-    "./.claude/commands/ra-plan.md",
-    "./.claude/commands/ra-auto.md",
-    "./.claude/commands/ra-build.md",
-    "./.claude/commands/ra-verify.md",
-    "./.claude/commands/ra-log.md",
-    "./.claude/commands/ra-request-review.md",
-    "./.claude/commands/ra-receive-review.md",
-    "./.claude/commands/ra-evolve.md",
-    "./.claude/commands/ra-update-doc.md",
-    "./.claude/commands/ra-ship.md"
+  "skills": "./skills",
+  "commands": "./.claude/commands",
+  "agents": [
+    "./agents/code-reviewer.md",
+    "./agents/security-auditor.md",
+    "./agents/test-engineer.md",
+    "./agents/performance-auditor.md",
+    "./agents/style-auditor.md"
   ]
 }
