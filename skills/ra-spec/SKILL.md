@@ -62,7 +62,6 @@ digraph reliable_spec {
     approved -> generate [label="否（修改后重生成）"];
     save -> scaffold;
     scaffold -> create_dirs [label="是"];
-    scaffold -> create_commands [label="是"];
     scaffold -> done [label="否（已有项目\n无需搭建）"];
     create_dirs -> create_commands;
     create_commands -> done;
@@ -128,14 +127,14 @@ digraph reliable_spec {
 
 ### Step 7: 搭建 `.reliable-agent/` 和 `.claude/commands/`
 
-#### 7a: `.reliable-agent/` 目录结构
+**7a: `.reliable-agent/` 目录结构**
 - 创建 `.reliable-agent/plans/` 目录
 - 创建 `.reliable-agent/adrs/` 目录
 - 创建 `.reliable-agent/codestyle/` 目录（如已导入规范）
 - 初始化空的 `.reliable-agent/experiences.md`
 - 完成标准: `.reliable-agent/` 目录结构就位
 
-#### 7b: `.claude/commands/` 短命令别名（Claude Code 平台）
+**7b: `.claude/commands/` 短命令别名（Claude Code 平台）**
 - 创建 `.claude/commands/` 目录
 - 为 11 个工作流技能各创建一个命令文件：
 
@@ -153,7 +152,7 @@ digraph reliable_spec {
 | `ra-ship.md` | reliable-agent:ra-ship |
 | `ra-evolve.md` | reliable-agent:ra-evolve |
 
-- 每个文件格式（与插件 `.claude/commands/` 一致）：
+- 每个文件格式（与插件自带 `.claude/commands/` 文件格式一致）：
 
 ```markdown
 ---
@@ -161,14 +160,20 @@ description: <技能简短描述>
 ---
 Invoke the reliable-agent:<skill-name> skill.
 
-<技能工作流简述>
+<技能工作流简述 — 与插件 `.claude/commands/<name>.md` 文件中 Invoke 行之后的内容一致>
 ```
 
+- **内容来源**：
+  - `description` 使用当前上下文中已加载的技能描述（系统提示/Skill 工具已提供），与插件命令文件 frontmatter 中的 description 一致
+  - `Invoke` 行确保技能名完全匹配上表的技能列
+  - `简述` 部分与插件命令文件正文保持一致（复制原文，不摘要、不意译、不修改）
 - **幂等规则**：
-  - 新项目初始化模式：创建全部 11 个文件
-  - 已有 CLAUDE.md 的更新模式：检查 `.claude/commands/`，缺失则补全，已存在则覆盖（保持与插件版本同步）
-  - 文件内容的 description 和简述从插件的 `.claude/commands/` 对应文件中读取
-- 完成标准: `.claude/commands/` 包含 11 个命令文件，每个格式正确
+  - 模式选择由 Step 1 决定：CLAUDE.md 不存在 → 新项目初始化模式（创建全部 11 个文件）；CLAUDE.md 已存在 → 更新模式
+  - 新项目初始化模式：直接创建全部 11 个文件（无需检查已有文件）
+  - 更新模式：使用 `ls .claude/commands/` 检查已有文件，缺失则补全，已存在则覆盖（保持与插件版本同步）
+  - 覆盖行为由用户在方案阶段确认（Q1 结论），无需每次询问
+- **排除说明**：`using-reliable-agent` 元技能不需要命令文件——它由 SessionStart hook 自动注入，用户无需手动调用
+- 完成标准: `.claude/commands/` 包含 11 个命令文件，每个格式正确（有效 YAML frontmatter + description 键存在 + Invoke 行技能名正确）
 
 <HARD-GATE>
 在 CLAUDE.md 被保存之前，不要开始任何实现工作。在人类批准之前，不要保存 CLAUDE.md。
@@ -201,7 +206,9 @@ Invoke the reliable-agent:<skill-name> skill.
 - [ ] Commands 部分列出实际可执行命令含参数
 - [ ] Boundaries 部分有具体的 Always/Ask First/Never 条目
 - [ ] Commit 格式模板存在且可匹配
-- [ ] `.claude/commands/` 已创建 11 个短命令文件（Step 7b，Claude Code 平台）
+- [ ] `.claude/commands/` 已创建全部 11 个短命令文件（Step 7b，Claude Code 平台）
+- [ ] 每个命令文件 YAML frontmatter 有效且 description 键非空
+- [ ] 每个命令文件包含正确的 `Invoke the reliable-agent:<name> skill.` 行（技能名与文件名一致）
 - [ ] `.reliable-agent/` 目录结构完整（plans/、adrs/、codestyle/、experiences.md）
 - [ ] 人类审查并批准了完整的 CLAUDE.md
 
