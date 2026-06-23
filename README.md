@@ -68,9 +68,12 @@ claude --plugin-dir .
 
 ## 快速开始
 
+> **前提**：已按上方说明安装插件。首次初始化需使用完全限定名 `/reliable-agent:ra-spec`。
+> `ra-spec` 初始化后，项目 `.claude/commands/` 下会自动创建短命令别名，之后可直接使用 `/ra-spec` 等短命令。
+
 ```bash
-# 初始化项目
-/ra-spec
+# 初始化项目（首次使用完全限定名；初始化后可用短命令 /ra-spec）
+/reliable-agent:ra-spec
 
 # 或一键自动化全流程（检测阶段并自动执行）
 /ra-auto

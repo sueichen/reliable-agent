@@ -44,6 +44,7 @@ digraph reliable_spec {
     save [label="保存 CLAUDE.md\n到项目根目录"];
     scaffold [label="新项目？\n搭建目录结构", shape=diamond];
     create_dirs [label="创建 src/\ntests/ docs/"];
+    create_commands [label="创建 .claude/commands/\n11 个短命令文件"];
     done [label="完成", shape=doublecircle];
 
     start -> check_existing;
@@ -61,8 +62,10 @@ digraph reliable_spec {
     approved -> generate [label="否（修改后重生成）"];
     save -> scaffold;
     scaffold -> create_dirs [label="是"];
-    scaffold -> done [label="否"];
-    create_dirs -> done;
+    scaffold -> create_commands [label="是"];
+    scaffold -> done [label="否（已有项目\n无需搭建）"];
+    create_dirs -> create_commands;
+    create_commands -> done;
 }
 ```
 
@@ -123,12 +126,49 @@ digraph reliable_spec {
 - 写入项目根目录 CLAUDE.md
 - 完成标准: 文件已保存
 
-### Step 7: 搭建 `.reliable-agent/`
+### Step 7: 搭建 `.reliable-agent/` 和 `.claude/commands/`
+
+#### 7a: `.reliable-agent/` 目录结构
 - 创建 `.reliable-agent/plans/` 目录
 - 创建 `.reliable-agent/adrs/` 目录
 - 创建 `.reliable-agent/codestyle/` 目录（如已导入规范）
 - 初始化空的 `.reliable-agent/experiences.md`
 - 完成标准: `.reliable-agent/` 目录结构就位
+
+#### 7b: `.claude/commands/` 短命令别名（Claude Code 平台）
+- 创建 `.claude/commands/` 目录
+- 为 11 个工作流技能各创建一个命令文件：
+
+| 文件名 | 技能 |
+|--------|------|
+| `ra-spec.md` | reliable-agent:ra-spec |
+| `ra-plan.md` | reliable-agent:ra-plan |
+| `ra-auto.md` | reliable-agent:ra-auto |
+| `ra-build.md` | reliable-agent:ra-build |
+| `ra-verify.md` | reliable-agent:ra-verify |
+| `ra-log.md` | reliable-agent:ra-log |
+| `ra-request-review.md` | reliable-agent:ra-request-review |
+| `ra-receive-review.md` | reliable-agent:ra-receive-review |
+| `ra-update-doc.md` | reliable-agent:ra-update-doc |
+| `ra-ship.md` | reliable-agent:ra-ship |
+| `ra-evolve.md` | reliable-agent:ra-evolve |
+
+- 每个文件格式（与插件 `.claude/commands/` 一致）：
+
+```markdown
+---
+description: <技能简短描述>
+---
+Invoke the reliable-agent:<skill-name> skill.
+
+<技能工作流简述>
+```
+
+- **幂等规则**：
+  - 新项目初始化模式：创建全部 11 个文件
+  - 已有 CLAUDE.md 的更新模式：检查 `.claude/commands/`，缺失则补全，已存在则覆盖（保持与插件版本同步）
+  - 文件内容的 description 和简述从插件的 `.claude/commands/` 对应文件中读取
+- 完成标准: `.claude/commands/` 包含 11 个命令文件，每个格式正确
 
 <HARD-GATE>
 在 CLAUDE.md 被保存之前，不要开始任何实现工作。在人类批准之前，不要保存 CLAUDE.md。
@@ -161,6 +201,8 @@ digraph reliable_spec {
 - [ ] Commands 部分列出实际可执行命令含参数
 - [ ] Boundaries 部分有具体的 Always/Ask First/Never 条目
 - [ ] Commit 格式模板存在且可匹配
+- [ ] `.claude/commands/` 已创建 11 个短命令文件（Step 7b，Claude Code 平台）
+- [ ] `.reliable-agent/` 目录结构完整（plans/、adrs/、codestyle/、experiences.md）
 - [ ] 人类审查并批准了完整的 CLAUDE.md
 
 ## 下一步指引
