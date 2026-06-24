@@ -73,8 +73,7 @@
 skills/            → 13 个技能目录（1 元技能 + 1 自动化 + 11 工作流技能）
 agents/            → 5 个可复用的智能体角色定义
 hooks/             → SessionStart 生命周期钩子
-.claude/commands/  → 11 个斜杠命令（Claude Code，MD 格式）
-.gemini/commands/  → 11 个斜杠命令（Gemini CLI，TOML 格式）
+.gemini/commands/  → 12 个斜杠命令（Gemini CLI，TOML 格式）
 commands/          → 12 个斜杠命令（Antigravity CLI，TOML 格式）
 .claude-plugin/    → Claude Code 插件清单 + Marketplace 配置
 .codex-plugin/     → Codex 插件清单

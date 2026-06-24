@@ -65,7 +65,7 @@ Gemini CLI 自动将 skill 名称和描述注入提示。当识别到匹配任�
 
 ## 斜杠命令
 
-本仓库在 `.gemini/commands/` 下提供了 11 个斜杠命令。Gemini CLI 从项目根目录运行时自动发现。
+本仓库在 `.gemini/commands/` 下提供了 12 个斜杠命令。Gemini CLI 从项目根目录运行时自动发现。
 
 | 命令 | 作用 |
 |------|------|
@@ -80,6 +80,7 @@ Gemini CLI 自动将 skill 名称和描述注入提示。当识别到匹配任�
 | `ra-update-doc` | 文档同步更新 |
 | `ra-ship` | 提交+PR+合并 |
 | `ra-evolve` | Session 回顾+进化 |
+| `ra-perf` | 数据驱动性能优化 |
 
 每个命令自动调用对应 skill。
 

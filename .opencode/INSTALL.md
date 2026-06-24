@@ -35,7 +35,7 @@ Reliable Agent 会在你重启 OpenCode 时自动更新。
 
 ```json
 {
-  "plugin": ["reliable-agent@git+https://github.com/reliable-agent/reliable-agent.git#v1.0.0"]
+  "plugin": ["reliable-agent@git+https://github.com/reliable-agent/reliable-agent.git#v1.1.0"]
 }
 ```
 

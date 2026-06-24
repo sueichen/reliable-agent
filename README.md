@@ -24,6 +24,7 @@
 | `ra-request-review` | Review | 多角度代码审查（5-agent 并行） |
 | `ra-receive-review` | Review | 审查反馈处理与修复 |
 | `ra-update-doc` | Doc | 文档同步更新 |
+| `ra-perf` | Perf | 数据驱动性能优化 — 五维遍历+TMA+技法匹配 |
 | `ra-ship` | Ship | 提交 + PR + 合并 |
 | `ra-evolve` | Evolve | Session 回顾+经验提取+进化建议 |
 
