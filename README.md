@@ -1,6 +1,6 @@
 # Reliable-Agent
 
-可靠工程工作流技能集 — 12 个阶段门控工作流，覆盖从规范到回顾的完整可靠工程循环。支持 **Claude Code、Gemini CLI、Antigravity CLI、OpenCode、Codex、Cursor、GitHub Copilot** 等 7 个平台。
+可靠工程工作流技能集 — 13 个阶段门控工作流，覆盖从规范到回顾的完整可靠工程循环。支持 **Claude Code、Gemini CLI、Antigravity CLI、OpenCode、Codex、Cursor、GitHub Copilot** 等 7 个平台。
 
 ## 核心理念
 
@@ -68,10 +68,10 @@ claude --plugin-dir /path/to/reliable-agent
 ## 文件结构
 
 ```
-skills/            → 12 个技能目录（1 元技能 + 1 自动化 + 10 工作流）
+skills/            → 13 个技能目录（1 元技能 + 1 自动化 + 11 工作流）
 agents/            → 5 个可复用智能体角色定义
-.gemini/commands/  → 11 个斜杠命令（Gemini CLI，TOML 格式）
-commands/          → 11 个斜杠命令（Antigravity CLI，TOML 格式）
+.gemini/commands/  → 12 个斜杠命令（Gemini CLI，TOML 格式）
+commands/          → 12 个斜杠命令（Antigravity CLI，TOML 格式）
 .claude-plugin/    → Claude Code 插件清单 + Marketplace
 .codex-plugin/     → Codex 插件清单
 .cursor-plugin/    → Cursor 插件清单

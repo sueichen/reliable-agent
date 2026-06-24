@@ -33,7 +33,7 @@
 
 ### 1.2 关键能力
 
-- **12 个技能**：spec → plan → build → verify → log → review（request + receive）→ doc → ship → evolve 共 10 个工作流技能，外加元技能 `using-reliable-agent` 和自动化技能 `ra-auto`
+- **13 个技能**：spec → plan → build → perf → verify → log → review（request + receive）→ doc → ship → evolve 共 11 个工作流技能，外加元技能 `using-reliable-agent` 和自动化技能 `ra-auto`
 - **5 个可复用审查智能体**：code-reviewer、security-auditor、test-engineer、performance-auditor、style-auditor
 - **生命周期钩子**：SessionStart 自动注入元技能，确保行为准则在每次会话中生效
 - **经验驱动的进化**：Session 回顾 → 结构化经验提取 → 聚类分析 → 人类审批的进化建议
@@ -70,7 +70,7 @@
 ## 3. 项目结构
 
 ```text
-skills/            → 12 个技能目录（1 元技能 + 1 自动化 + 10 工作流技能）
+skills/            → 13 个技能目录（1 元技能 + 1 自动化 + 11 工作流技能）
 agents/            → 5 个可复用的智能体角色定义
 hooks/             → SessionStart 生命周期钩子
 .claude/commands/  → 11 个斜杠命令（Claude Code，MD 格式）

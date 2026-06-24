@@ -4,7 +4,7 @@ This file provides guidance to AI coding agents (Claude Code, Cursor, Copilot, A
 
 ## Repository Overview
 
-可靠工程工作流技能集（reliable-agent）——为 AI 编码智能体提供 12 个阶段门控工程技能，覆盖从规范到回顾的完整可靠工程循环。
+可靠工程工作流技能集（reliable-agent）——为 AI 编码智能体提供 13 个阶段门控工程技能，覆盖从规范到回顾的完整可靠工程循环。
 
 ## OpenCode Integration
 
