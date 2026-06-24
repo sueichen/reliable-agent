@@ -8,31 +8,31 @@
 
 | 门禁 | 实施者 | 条件 | 失败时返回 |
 |------|--------|------|-----------|
-| G1 | reliable-agent:ra-verify | 新代码有对应测试，全部通过 | reliable-agent:ra-build |
-| G2 | reliable-agent:ra-request-review | 100% 测试通过，0 lint，构建成功，风格规范已检查 | reliable-agent:ra-verify |
-| G3 | reliable-agent:ra-ship | 所有 Critical 已修复，Important 已修复或记录，Optional 已记录 | reliable-agent:ra-receive-review |
-| G4 | reliable-agent:ra-ship | commit 格式正确，PR 描述完整 | reliable-agent:ra-ship |
-| G5 | reliable-agent:ra-evolve | 经验已提取，session 可追溯 | reliable-agent:ra-evolve |
+| G1 | ra-verify | 新代码有对应测试，全部通过 | ra-build |
+| G2 | ra-request-review | 100% 测试通过，0 lint，构建成功，风格规范已检查 | ra-verify |
+| G3 | ra-ship | 所有 Critical 已修复，Important 已修复或记录，Optional 已记录 | ra-receive-review |
+| G4 | ra-ship | commit 格式正确，PR 描述完整 | ra-ship |
+| G5 | ra-evolve | 经验已提取，session 可追溯 | ra-evolve |
 
 ## 门禁强制示例
 
 ### G2 强制
 
-当你在 reliable-agent:ra-verify 尚未通过时尝试运行 reliable-agent:ra-request-review：
+当你在 ra-verify 尚未通过时尝试运行 ra-request-review：
 
 ```
-G2 未满足：reliable-agent:ra-verify 必须在审查前通过。
+G2 未满足：ra-verify 必须在审查前通过。
 当前状态：
   - 测试：? (未运行)
   - Lint：? (未运行)
   - 构建：? (未运行)
 
-请先运行 reliable-agent:ra-verify。
+请先运行 ra-verify。
 ```
 
 ### G3 强制
 
-当存在未解决的 Critical 发现时尝试运行 reliable-agent:ra-ship：
+当存在未解决的 Critical 发现时尝试运行 ra-ship：
 
 ```
 G3 未满足：存在未解决的 Critical 审查发现。
@@ -40,7 +40,7 @@ G3 未满足：存在未解决的 Critical 审查发现。
   - [file:line] SQL 注入漏洞 (Critical)
   - [file:line] 密钥硬编码 (Critical)
 
-请回到 reliable-agent:ra-receive-review 处理这些发现。
+请回到 ra-receive-review 处理这些发现。
 ```
 
 ## 跳过门禁

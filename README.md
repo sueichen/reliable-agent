@@ -15,17 +15,17 @@
 
 | 技能 | 阶段 | 功能 |
 |------|------|------|
-| `reliable-agent:ra-auto` | Auto | 自动检测阶段，一次性执行 plan→update-doc |
-| `reliable-agent:ra-spec` | Define | 项目初始化 — 生成 CLAUDE.md + 宪法 |
-| `reliable-agent:ra-plan` | Plan | 需求分析 + grill-me + 设计方案 |
-| `reliable-agent:ra-build` | Build | TDD 增量实现（红绿重构） |
-| `reliable-agent:ra-verify` | Verify | 自动化验证（测试+lint+构建） |
-| `reliable-agent:ra-log` | Observe | 可观测性检查与补充 |
-| `reliable-agent:ra-request-review` | Review | 多角度代码审查（5-agent 并行） |
-| `reliable-agent:ra-receive-review` | Review | 审查反馈处理与修复 |
-| `reliable-agent:ra-update-doc` | Doc | 文档同步更新 |
-| `reliable-agent:ra-ship` | Ship | 提交 + PR + 合并 |
-| `reliable-agent:ra-evolve` | Evolve | Session 回顾+经验提取+进化建议 |
+| `ra-auto` | Auto | 自动检测阶段，一次性执行 plan→update-doc |
+| `ra-spec` | Define | 项目初始化 — 生成 CLAUDE.md + 宪法 |
+| `ra-plan` | Plan | 需求分析 + grill-me + 设计方案 |
+| `ra-build` | Build | TDD 增量实现（红绿重构） |
+| `ra-verify` | Verify | 自动化验证（测试+lint+构建） |
+| `ra-log` | Observe | 可观测性检查与补充 |
+| `ra-request-review` | Review | 多角度代码审查（5-agent 并行） |
+| `ra-receive-review` | Review | 审查反馈处理与修复 |
+| `ra-update-doc` | Doc | 文档同步更新 |
+| `ra-ship` | Ship | 提交 + PR + 合并 |
+| `ra-evolve` | Evolve | Session 回顾+经验提取+进化建议 |
 
 ## 质量门禁
 
@@ -56,11 +56,11 @@
 git clone https://github.com/reliable-agent/reliable-agent.git
 claude --plugin-dir /path/to/reliable-agent
 
-# 2. 使用技能（通过 Skill 工具调用全限定名）
-#     对 AI 说："使用 reliable-agent:ra-spec 初始化项目宪法"
-#     对 AI 说："使用 reliable-agent:ra-plan 设计实现方案"
-#     对 AI 说："使用 reliable-agent:ra-build 开始 TDD 实现"
-#     对 AI 说："使用 reliable-agent:ra-auto 一键自动化"
+# 2. 使用技能（通过斜杠命令或 Skill 工具调用）
+#     对 AI 说："使用 ra-spec 初始化项目宪法"
+#     对 AI 说："使用 ra-plan 设计实现方案"
+#     对 AI 说："使用 ra-build 开始 TDD 实现"
+#     对 AI 说："使用 ra-auto 一键自动化"
 ```
 
 详细用法参见 [用户文档](docs/getting-started.md)。

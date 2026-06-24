@@ -246,14 +246,18 @@ try {
             console.error(`  ERROR: .claude/commands/${f} — missing 'description' in frontmatter`);
             errors++;
         }
-        if (!content.includes('Invoke the reliable-agent:')) {
-            console.warn(`  WARN: .claude/commands/${f} — missing 'Invoke the reliable-agent:' directive`);
+        if (!content.includes('Invoke the ra-')) {
+            console.warn(`  WARN: .claude/commands/${f} — missing 'Invoke the ra-' directive`);
             warnings++;
         }
     }
 } catch (e) {
-    console.error(`  ERROR: .claude/commands/ not found`);
-    errors++;
+    if (e.code === 'ENOENT') {
+        console.log(`  .claude/commands/: not present (optional)`);
+    } else {
+        console.error(`  ERROR: .claude/commands/ — ${e.message}`);
+        errors++;
+    }
 }
 
 // Check .gemini/commands/ .toml files (shared validation)

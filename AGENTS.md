@@ -39,15 +39,15 @@ OpenCode 不支持类似 `/ra-spec` 或 `/ra-plan` 的斜杠命令。
 
 智能体必须在内部遵循此生命周期：
 
-- DEFINE → `reliable-agent:ra-spec`
-- PLAN → `reliable-agent:ra-plan`
-- BUILD → `reliable-agent:ra-build`
-- VERIFY → `reliable-agent:ra-verify`
-- OBSERVE → `reliable-agent:ra-log`
-- REVIEW → `reliable-agent:ra-request-review` + `reliable-agent:ra-receive-review`
-- DOC → `reliable-agent:ra-update-doc`
-- SHIP → `reliable-agent:ra-ship`
-- EVOLVE → `reliable-agent:ra-evolve`
+- DEFINE → `ra-spec`
+- PLAN → `ra-plan`
+- BUILD → `ra-build`
+- VERIFY → `ra-verify`
+- OBSERVE → `ra-log`
+- REVIEW → `ra-request-review` + `ra-receive-review`
+- DOC → `ra-update-doc`
+- SHIP → `ra-ship`
+- EVOLVE → `ra-evolve`
 
 ### Execution Model
 

@@ -43,26 +43,26 @@ OpenCode 智能体被指示（通过 `AGENTS.md`）：
 
 智能体评估每个请求并映射到适当的 skill：
 
-- "构建一个功能" → `reliable-agent:ra-spec` → `reliable-agent:ra-build`
-- "修复一个 bug" → `reliable-agent:ra-plan` → `reliable-agent:ra-build`
-- "审查这段代码" → `reliable-agent:ra-request-review`
+- "构建一个功能" → `ra-spec` → `ra-build`
+- "修复一个 bug" → `ra-plan` → `ra-build`
+- "审查这段代码" → `ra-request-review`
 
 用户**不需要**显式请求 skills。
 
 ### 生命周期映射
 
-- DEFINE → `reliable-agent:ra-spec`
-- PLAN → `reliable-agent:ra-plan`
-- BUILD → `reliable-agent:ra-build`
-- VERIFY → `reliable-agent:ra-verify`
-- REVIEW → `reliable-agent:ra-request-review`
-- SHIP → `reliable-agent:ra-ship`
+- DEFINE → `ra-spec`
+- PLAN → `ra-plan`
+- BUILD → `ra-build`
+- VERIFY → `ra-verify`
+- REVIEW → `ra-request-review`
+- SHIP → `ra-ship`
 
 ## 使用示例
 
-**功能开发：** 用户说 "Add authentication to this app"，智能体会检测到功能工作，调用 `reliable-agent:ra-spec`，在写代码前生成规范。
+**功能开发：** 用户说 "Add authentication to this app"，智能体会检测到功能工作，调用 `ra-spec`，在写代码前生成规范。
 
-**Bug 修复：** 用户说 "This endpoint is returning 500 errors"，智能体会调用 `reliable-agent:ra-plan` 分析问题、生成修复方案。
+**Bug 修复：** 用户说 "This endpoint is returning 500 errors"，智能体会调用 `ra-plan` 分析问题、生成修复方案。
 
 ## 智能体期望（关键）
 
