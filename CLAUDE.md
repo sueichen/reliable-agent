@@ -1,6 +1,6 @@
 # reliable-agent — 项目宪法
 
-> 可靠工程工作流技能集 — 12 个技能（1 元技能 + 1 自动化 + 10 工作流），覆盖从规范到回顾的完整可靠工程循环。
+> 可靠工程工作流技能集 — 13 个技能（1 元技能 + 1 自动化 + 11 工作流），覆盖从规范到回顾的完整可靠工程循环。
 >
 > 本文件是项目宪法，所有贡献者和 AI 智能体必须遵守。由 `/ra-spec` 生成，`/ra-evolve` 建议更新，人类审批后生效。
 
@@ -75,14 +75,14 @@ agents/            → 5 个可复用的智能体角色定义
 hooks/             → SessionStart 生命周期钩子
 .claude/commands/  → 11 个斜杠命令（Claude Code，MD 格式）
 .gemini/commands/  → 11 个斜杠命令（Gemini CLI，TOML 格式）
-commands/          → 11 个斜杠命令（Antigravity CLI，TOML 格式）
+commands/          → 12 个斜杠命令（Antigravity CLI，TOML 格式）
 .claude-plugin/    → Claude Code 插件清单 + Marketplace 配置
 .codex-plugin/     → Codex 插件清单
 .cursor-plugin/    → Cursor 插件清单
 .codex/            → Codex 安装指引
 .opencode/         → OpenCode 安装指引
 templates/         → 5 个项目初始化模板
-references/        → 7 个交叉引用检查清单
+references/        → 8 个交叉引用检查清单（含 perf/ 性能优化参考文件）
 docs/              → 用户文档（含 7 个平台安装指南）
 scripts/           → 验证和管理脚本
 codestyle/         → 17 个语言的代码规范源文件（Google Style Guide 提炼版）
@@ -110,11 +110,12 @@ AGENTS.md          → OpenCode 意图映射
 | Review | ra-receive-review | 刚性 | 审查反馈处理+修复，重新验证 |
 | Doc | ra-update-doc | 灵活 | 文档同步更新 |
 | Ship | ra-ship | 刚性 | 提交+PR+合并，含格式校验 |
+| Analyze | ra-perf | 刚性 | 数据驱动性能优化——五维遍历+TMA+技法匹配+行动计划 |
 | Evolve | ra-evolve | 灵活 | Session 回顾+经验提取+进化建议 |
 
 ### 4.1 技能类型说明
 
-- **刚性技能**：严格遵循，不可偏离纪律。包括 build、verify、log、request-review、receive-review、ship
+- **刚性技能**：严格遵循，不可偏离纪律。包括 build、verify、log、perf、request-review、receive-review、ship
 - **灵活技能**：根据上下文调整原则，但不可跳过。包括 spec、plan、update-doc、evolve
 
 ---
@@ -395,6 +396,7 @@ Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
  1. ra-spec            → 生成/更新 CLAUDE.md + 项目宪法 + 导入代码规范
  2. ra-plan            → 需求分析 + grill-me + 设计方案
  3. ra-build           → TDD 增量实现（含风格合规）
+ 3b. ra-perf            → 性能瓶颈诊断与优化（五维遍历+TMA+行动计划）
  4. ra-verify          → 自动化验证（测试+lint+风格检查+构建）
  5. ra-log             → 可观测性检查/补充
  6. ra-request-review  → 多角度代码审查（5-agent 并行）
@@ -413,6 +415,7 @@ Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
 | 纯文档 | build → verify → ship → evolve |
 | 一键自动化 | ra-auto（自动执行 plan→update-doc，在 ship 前停止） |
 | 安全修补 | plan → build → verify → request-review（强制 security-auditor）→ ship |
+| 性能优化 | ra-perf → build（如有代码修改）→ verify → review → ship |
 
 ### 14.3 会话上下文管理
 

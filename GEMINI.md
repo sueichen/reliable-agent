@@ -2,7 +2,7 @@
 
 # Reliable Agent 可靠工程技能
 
-本项目已安装 reliable-agent 可靠工程技能框架（12 个 skills）。
+本项目已安装 reliable-agent 可靠工程技能框架（13 个 skills）。
 
 ## 核心规则
 
@@ -30,6 +30,7 @@ Skills 位于 `skills/` 目录，每个 skill 有独立的 `SKILL.md` 文件。
 - **ra-update-doc**: 同步文档与代码变更
 - **ra-ship**: 提交+PR+合并，含格式校验
 - **ra-evolve**: Session 回顾+经验提取+进化建议
+- **ra-perf**: 数据驱动的性能优化——五维遍历检查（CPU/内存/IO/网络/多线程），TMA 自顶向下定位瓶颈，技法匹配生成行动计划
 
 ## 如何使用
 

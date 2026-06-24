@@ -31,6 +31,7 @@ OpenCode 使用基于 `skill` 工具和本仓库 `/skills` 目录的**技能驱�
 - 文档 → `ra-update-doc`
 - 发布 → `ra-ship`
 - Session 回顾 → `ra-evolve`
+- 性能优化 / 瓶颈分析 → `ra-perf`
 - 一键自动化 → `ra-auto`
 
 ### Lifecycle Mapping (Implicit Commands)
@@ -47,6 +48,7 @@ OpenCode 不支持类似 `/ra-spec` 或 `/ra-plan` 的斜杠命令。
 - REVIEW → `ra-request-review` + `ra-receive-review`
 - DOC → `ra-update-doc`
 - SHIP → `ra-ship`
+- PERF → `ra-perf`
 - EVOLVE → `ra-evolve`
 
 ### Execution Model

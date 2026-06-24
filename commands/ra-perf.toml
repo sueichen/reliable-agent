@@ -1,0 +1,11 @@
+description = "在怀疑性能问题、需要系统性优化时使用。覆盖 CPU/内存/IO/网络/多线程五维诊断"
+
+prompt = """
+Invoke the ra-perf skill.
+
+Phase 1: 问题定性 + 安全评估 + 环境能力摸底（工具降级链）
+Phase 2: 五维分级遍历（CPU/内存 TMA 自顶向下，IO/网络/多线程工具驱动）
+Phase 3: 根因验证（假设→实验→确认）
+Phase 4: 技法匹配（读取 references/perf/）+ 行动计划（含恢复命令）
+Phase 5: 验证闭环（before/after 对比，未改善则回退重诊）
+"""
