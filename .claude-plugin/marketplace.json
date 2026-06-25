@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
   "name": "reliable-agent-marketplace",
-  "description": "可靠工程工作流技能集 — 13 个阶段门控工作流，覆盖从规范到回顾的完整可靠工程循环",
+  "description": "可靠工程工作流技能集 — 14 个阶段门控工作流，覆盖从规范到回顾的完整可靠工程循环",
   "owner": {
     "name": "reliable-agent",
     "url": "https://github.com/reliable-agent"
@@ -10,7 +10,7 @@
     {
       "name": "reliable-agent",
       "source": "./",
-      "description": "可靠工程工作流技能集：13 个技能（1 元技能 + 1 自动化 + 11 工作流），覆盖 规范 → 计划 → 构建 → 性能 → 验证 → 日志 → 评审 → 文档 → 发布 → 回顾/进化 的完整可靠工程循环。含 5 个可复用审查智能体和 SessionStart 生命周期钩子。",
+      "description": "可靠工程工作流技能集：14 个技能（1 元技能 + 1 自动化 + 12 工作流），覆盖 规范 → 计划 → 构建 → 性能 → 调试 → 验证 → 日志 → 评审 → 文档 → 发布 → 回顾/进化 的完整可靠工程循环。含 5 个可复用审查智能体和 SessionStart 生命周期钩子。",
       "homepage": "https://github.com/reliable-agent/reliable-agent",
       "license": "MIT",
       "keywords": ["skills", "agents", "engineering", "reliable-engineering", "tdd", "code-review", "observability", "evolution", "chinese", "zh-CN"]
