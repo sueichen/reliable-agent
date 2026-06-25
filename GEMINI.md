@@ -31,6 +31,7 @@ Skills 位于 `skills/` 目录，每个 skill 有独立的 `SKILL.md` 文件。
 - **ra-ship**: 提交+PR+合并，含格式校验
 - **ra-evolve**: Session 回顾+经验提取+进化建议
 - **ra-perf**: 数据驱动的性能优化——五维遍历检查（CPU/内存/IO/网络/多线程），TMA 自顶向下定位瓶颈，技法匹配生成行动计划
+- **ra-debug**: 结构化根因排查——crash/死锁/内存泄露/竞态等系统级问题，通过 gdb/coredumpctl/valgrind/ASan/TSan 等工具正向排查，5 Whys 穿透到第 5 层根因
 
 ## 如何使用
 

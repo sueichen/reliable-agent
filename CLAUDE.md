@@ -1,6 +1,6 @@
 # reliable-agent — 项目宪法
 
-> 可靠工程工作流技能集 — 13 个技能（1 元技能 + 1 自动化 + 11 工作流），覆盖从规范到回顾的完整可靠工程循环。
+> 可靠工程工作流技能集 — 14 个技能（1 元技能 + 1 自动化 + 12 工作流），覆盖从规范到回顾的完整可靠工程循环。
 >
 > 本文件是项目宪法，所有贡献者和 AI 智能体必须遵守。由 `/ra-spec` 生成，`/ra-evolve` 建议更新，人类审批后生效。
 
@@ -33,7 +33,7 @@
 
 ### 1.2 关键能力
 
-- **13 个技能**：spec → plan → build → perf → verify → log → review（request + receive）→ doc → ship → evolve 共 11 个工作流技能，外加元技能 `using-reliable-agent` 和自动化技能 `ra-auto`
+- **14 个技能**：spec → plan → build → perf → debug → verify → log → review（request + receive）→ doc → ship → evolve 共 12 个工作流技能，外加元技能 `using-reliable-agent` 和自动化技能 `ra-auto`
 - **5 个可复用审查智能体**：code-reviewer、security-auditor、test-engineer、performance-auditor、style-auditor
 - **生命周期钩子**：SessionStart 自动注入元技能，确保行为准则在每次会话中生效
 - **经验驱动的进化**：Session 回顾 → 结构化经验提取 → 聚类分析 → 人类审批的进化建议
@@ -70,11 +70,11 @@
 ## 3. 项目结构
 
 ```text
-skills/            → 13 个技能目录（1 元技能 + 1 自动化 + 11 工作流技能）
+skills/            → 14 个技能目录（1 元技能 + 1 自动化 + 12 工作流技能）
 agents/            → 5 个可复用的智能体角色定义
 hooks/             → SessionStart 生命周期钩子
-.gemini/commands/  → 12 个斜杠命令（Gemini CLI，TOML 格式）
-commands/          → 12 个斜杠命令（Antigravity CLI，TOML 格式）
+.gemini/commands/  → 13 个斜杠命令（Gemini CLI，TOML 格式）
+commands/          → 13 个斜杠命令（Antigravity CLI，TOML 格式）
 .claude-plugin/    → Claude Code 插件清单 + Marketplace 配置
 .codex-plugin/     → Codex 插件清单
 .cursor-plugin/    → Cursor 插件清单
@@ -110,11 +110,12 @@ AGENTS.md          → OpenCode 意图映射
 | Doc | ra-update-doc | 灵活 | 文档同步更新 |
 | Ship | ra-ship | 刚性 | 提交+PR+合并，含格式校验 |
 | Analyze | ra-perf | 刚性 | 数据驱动性能优化——五维遍历+TMA+技法匹配+行动计划 |
+| Analyze | ra-debug | 刚性 | 结构化根因排查——crash/死锁/内存泄露/竞态等系统级问题诊断 |
 | Evolve | ra-evolve | 灵活 | Session 回顾+经验提取+进化建议 |
 
 ### 4.1 技能类型说明
 
-- **刚性技能**：严格遵循，不可偏离纪律。包括 build、verify、log、perf、request-review、receive-review、ship
+- **刚性技能**：严格遵循，不可偏离纪律。包括 build、verify、log、perf、debug、request-review、receive-review、ship
 - **灵活技能**：根据上下文调整原则，但不可跳过。包括 spec、plan、update-doc、evolve
 
 ---
@@ -244,7 +245,7 @@ AGENTS.md          → OpenCode 意图映射
 |------|------|
 | SessionStart hook 注入量 | ≤ 3KB 文本 |
 | 元技能加载 | 单次 Skill 调用 |
-| 斜杠命令注册 | 11 个命令 × 3 格式（.md + .toml × 2），无动态加载 |
+| 斜杠命令注册 | 13 个命令 × 3 格式（.md + .toml × 2），无动态加载 |
 
 ### 9.3 审查并发性能
 
@@ -396,6 +397,7 @@ Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
  2. ra-plan            → 需求分析 + grill-me + 设计方案
  3. ra-build           → TDD 增量实现（含风格合规）
  3b. ra-perf            → 性能瓶颈诊断与优化（五维遍历+TMA+行动计划）
+ 3c. ra-debug           → 系统级问题根因排查（crash/死锁/内存泄露/竞态等）
  4. ra-verify          → 自动化验证（测试+lint+风格检查+构建）
  5. ra-log             → 可观测性检查/补充
  6. ra-request-review  → 多角度代码审查（5-agent 并行）
@@ -415,6 +417,7 @@ Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
 | 一键自动化 | ra-auto（自动执行 plan→update-doc，在 ship 前停止） |
 | 安全修补 | plan → build → verify → request-review（强制 security-auditor）→ ship |
 | 性能优化 | ra-perf → build（如有代码修改）→ verify → review → ship |
+| 问题排查 | ra-debug → ra-build（修复实现）→ ra-verify → ra-log → review → ship |
 
 ### 14.3 会话上下文管理
 
@@ -425,5 +428,5 @@ Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
 
 ---
 
-> 最后更新：2026-06-22
+> 最后更新：2026-06-25
 > 由 ra-spec 生成，基于项目现有约定和 7 维度访谈确认。

@@ -170,11 +170,11 @@ for (const file of agentFiles) {
 console.log('\n--- Infrastructure Files ---');
 
 const ROOT_DIR = resolve(__dirname, '..');
-const EXPECTED_COMMANDS = 12;
+const EXPECTED_COMMANDS = 13;
 const COMMAND_NAMES = [
     'ra-spec', 'ra-plan', 'ra-auto', 'ra-build', 'ra-verify',
     'ra-log', 'ra-request-review', 'ra-receive-review',
-    'ra-update-doc', 'ra-ship', 'ra-evolve', 'ra-perf'
+    'ra-update-doc', 'ra-ship', 'ra-evolve', 'ra-perf', 'ra-debug'
 ];
 
 // Shared TOML validation for both .gemini/commands/ and commands/
@@ -337,7 +337,7 @@ if (!existsSync(join(ROOT_DIR, 'AGENTS.md'))) {
             allFound = false;
         }
     }
-    if (allFound) console.log('  AGENTS.md: OK (all 12 skills referenced)');
+    if (allFound) console.log('  AGENTS.md: OK (all 13 skills referenced)');
 }
 
 // Check GEMINI.md + gemini-extension.json

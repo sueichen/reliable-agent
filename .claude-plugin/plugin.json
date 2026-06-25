@@ -1,7 +1,7 @@
 {
   "name": "reliable-agent",
   "description": "可靠工程工作流技能集：13 个阶段门控工作流，覆盖 规范 → 计划 → 构建 → 性能 → 验证 → 日志 → 评审 → 文档 → 发布 → 回顾/进化 的完整可靠工程循环",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "author": {
     "name": "reliable-agent",
     "url": "https://github.com/reliable-agent/reliable-agent"
