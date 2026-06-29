@@ -166,6 +166,43 @@ for (const file of agentFiles) {
     console.log(`  OK: ${relative} (${fm.name})`);
 }
 
+// Validate references/ files (check existence and structure for skill reference docs)
+const REFERENCES_DIR = resolve(__dirname, '../references');
+console.log('\n--- References Files ---');
+try {
+    const refFiles = readdirSync(REFERENCES_DIR).filter(f => f.endsWith('.md'));
+    console.log(`  Found ${refFiles.length} reference files`);
+    for (const f of refFiles) {
+        const content = readFileSync(join(REFERENCES_DIR, f), 'utf-8');
+        if (!content.match(/^# /m)) {
+            console.error(`  ERROR: references/${f} — missing H1 heading`);
+            errors++;
+        } else {
+            console.log(`  OK: references/${f}`);
+        }
+        // grill-me-guide.md specific: check 6 required sections
+        if (f === 'grill-me-guide.md') {
+            const requiredSections = [
+                'Grill 维度定义', '候选选项生成规则', '动态轮数逻辑',
+                '敷衍回答处理', '平台适配', '记录格式'
+            ];
+            for (const section of requiredSections) {
+                if (!content.includes(section)) {
+                    console.error(`  ERROR: references/${f} — missing required section '${section}'`);
+                    errors++;
+                }
+            }
+        }
+    }
+} catch (e) {
+    if (e.code === 'ENOENT') {
+        console.log('  references/: not present');
+    } else {
+        console.error(`  ERROR: references/ — ${e.message}`);
+        errors++;
+    }
+}
+
 // Validate infrastructure files
 console.log('\n--- Infrastructure Files ---');
 
