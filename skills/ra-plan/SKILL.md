@@ -33,8 +33,34 @@ digraph reliable_plan {
     start [label="启动 /ra-plan", shape=doublecircle];
     context_load [label="加载上下文\nCLAUDE.md+SPEC+\n.reliable-agent/\nexperiences"];
     surface [label="暴露假设\n提交用户确认"];
-    grill [label="对抗式提问\n（一次一个问题）"];
     propose [label="提出 2-3 个方案\n含权衡+推荐"];
+
+    subgraph cluster_grill {
+        label="Grill-Me 对抗式提问";
+        style=rounded;
+        node [shape=box, style=rounded];
+
+        grill_start [label="评估需求复杂度\n估计轮数范围"];
+        grill_pick [label="选择下一个维度\n（跳过不相关的）"];
+        grill_ask [label="生成问题+候选选项\n调用 AskUserQuestion\n（优先）或降级文本"];
+        grill_wait [label="等待用户回答", shape=hexagon];
+        grill_judge [label="回答是否敷衍?", shape=diamond];
+        grill_auto [label="LLM 自主\n选择最佳方案"];
+        grill_record [label="记录问答到\nplan 文件"];
+        grill_more [label="继续?", shape=diamond];
+        grill_end [label="结束 grill-me", shape=doublecircle];
+
+        grill_start -> grill_pick;
+        grill_pick -> grill_ask;
+        grill_ask -> grill_wait;
+        grill_wait -> grill_judge;
+        grill_judge -> grill_auto [label="敷衍"];
+        grill_judge -> grill_record [label="实质性"];
+        grill_auto -> grill_record;
+        grill_record -> grill_more;
+        grill_more -> grill_pick [label="是"];
+        grill_more -> grill_end [label="否"];
+    }
     design [label="详细架构设计"];
     test_strategy [label="定义测试策略"];
     tasks [label="任务拆解\n含验收标准+依赖"];
@@ -46,8 +72,8 @@ digraph reliable_plan {
 
     start -> context_load;
     context_load -> surface;
-    surface -> grill;
-    grill -> propose;
+    surface -> grill_start;
+    grill_end -> propose;
     propose -> design;
     design -> test_strategy;
     test_strategy -> tasks;
@@ -63,6 +89,7 @@ digraph reliable_plan {
 ### Step 1: 加载上下文
 - 读取 CLAUDE.md（项目宪法）
 - 读取 SPEC.md（如存在）
+- 读取 `references/grill-me-guide.md`（grill-me 详细执行规范）——Step 3 依赖此文件
 - 读取 `.reliable-agent/experiences.md`（如存在）——检查过往相关经验
 - 搜索项目中类似的过往工作
 - 完成标准: 已确认所有相关上下文已加载
@@ -74,14 +101,29 @@ digraph reliable_plan {
 - 完成标准: 用户确认或纠正了所有假设
 
 ### Step 3: Grill-Me — 对抗式提问
-**一次一个问题，等待用户反馈后才问下一个。** 覆盖：
-- **边界情况**: null/empty/零值/并发/过载场景
-- **失败模式**: 网络断/超时/部分成功/数据损坏
-- **一致性**: 需求之间有无矛盾？与已有代码有无冲突？
-- **范围**: 明确"不构建什么"——防止范围蔓延
-- **安全**: 此功能引入了什么新攻击面？
-- **性能**: 预期负载下有无瓶颈？
-- 完成标准: 所有 grill 维度已覆盖，用户对答案满意
+
+<HARD-GATE>
+**绝对禁止以下行为，违反即视为 grill-me 无效：**
+1. 在同一响应中提问后又自己回答（自问自答）—— 每次提问后必须等待用户输入
+2. 一次列出多个问题 —— 每次只提一个问题
+3. 提问时不给候选选项 —— 每个问题必须提供 2-4 个方向互斥的候选选项
+
+**流程违规的处理：** 如果在 Verification 中发现上述违规，该次 grill-me 无效，必须重新执行。
+</HARD-GATE>
+
+将 `references/grill-me-guide.md` 中定义的 6 个维度（边界情况、失败模式、一致性、范围、安全、性能）作为检查清单。
+
+**执行规则（详细规范见 grill-me-guide.md 各节）：**
+
+1. **评估复杂度** → 估计轮数范围（guide §3）
+2. **逐轮循环** → 每轮一个维度、一个问题（guide §1）
+3. **候选选项** → 2-4 个方向互斥的选项，含最小化/放弃选项（guide §2）
+4. **提问** → 优先 `AskUserQuestion`，降级用纯文本 + 停止标记（guide §5）；若两者均不可用（如 CI 环境），终止 grill-me 并记录"环境不支持交互式 grill-me，以下维度未覆盖：[列表]"
+5. **处理** → 实质性回答按选择继续；敷衍回答 LLM 自主决策（安全维度除外——必须追问确认）（guide §4）
+6. **记录** → 按格式写入 plan 文件（guide §6）
+7. **终止** → 维度覆盖 / 连续 3 轮无新决策 / 用户要求 / 达硬上限（≤12 轮）（guide §3.2）
+
+- 完成标准: 所有相关 grill 维度已覆盖或被显式跳过（含理由），每轮决策已记录
 
 ### Step 4: 提出 2-3 个方案
 - 每个方案含：描述、优点、缺点、推荐理由
@@ -144,10 +186,17 @@ digraph reliable_plan {
 | "一个方案就够了，这是明显的那个" | "明显的"方案通常是未经检验的假设最多的方案。 |
 | "任务拆解可以边做边完善" | 没有拆解的方案是模糊承诺，不是可执行计划。先想清楚再动手。 |
 | "这个功能太小不需要方案" | 两行方案也是方案。大小决定方案的详细程度，不是是否需要方案。 |
+| "我一次列出所有问题效率更高" | 批量提问导致用户选择性回答，关键维度被遗漏。逐个问题确保每个维度都得到充分思考。 |
+| "用户敷衍了，我随便选个默认项" | 敷衍回答不等于默认选项正确。LLM 应基于上下文自主选择最佳方案，而非机械选默认项。 |
+| "这个问题答案很明显，我替用户回答" | 自问自答剥夺了用户发现盲点的机会。Grill-me 的价值在对抗，不在效率。 |
 
 ## Red Flags
 
 - 跳过 grill-me 对抗式提问
+- 在同一响应中提问后又自己回答（自问自答）—— grill-me 无效
+- 一次列出多个问题等待批量回答 —— 每次只提一个问题
+- 提问时不给候选选项（必须 2-4 个方向互斥的选项）
+- grill-me 结束后 plan 文件中无决策记录（每轮必须记录）
 - 只提一个方案且无替代方案讨论
 - 任务触及超过 10 个文件
 - 任务无验收标准
@@ -156,9 +205,16 @@ digraph reliable_plan {
 
 ## Verification
 
-- [ ] CLAUDE.md 和相关规范已读取
+- [ ] CLAUDE.md 和相关规范已读取（含 references/grill-me-guide.md）
 - [ ] 假设已暴露并被用户确认/纠正
-- [ ] Grill-me 覆盖了：边界情况、失败模式、一致性、范围、安全、性能
+- [ ] Grill-me 逐问题执行，无自问自答（每轮提问后等待用户输入）
+- [ ] 每个 grill 问题提供了 2-4 个候选选项，方向互斥（检查：无"本质上都是 X"的选项），含最小化/放弃选项
+- [ ] 优先使用 AskUserQuestion 工具提问（或降级为纯文本 + `[等待用户回答 — 不要继续]` 停止标记）
+- [ ] Grill-me 覆盖了所有相关维度（边界/失败/一致性/范围/安全/性能），跳过的维度有理由记录
+- [ ] 需求复杂度已评估，轮数范围已估计（参见 grill-me-guide.md §3）
+- [ ] 用户敷衍回答时 LLM 自主决策（不追问），安全维度除外（必须追问确认）
+- [ ] 终止条件已满足（维度覆盖 / 连续 3 轮无新决策 / 用户要求结束 / 达硬上限），终止原因已记录
+- [ ] 每轮决策已按格式记录在 plan 文件中（含维度列 + 跳过的维度表）
 - [ ] 至少 2 个方案已展示，含权衡
 - [ ] 选定方案有详细架构设计
 - [ ] 测试策略已定义
