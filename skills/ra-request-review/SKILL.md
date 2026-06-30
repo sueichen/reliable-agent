@@ -40,6 +40,7 @@ digraph reliable_request_review {
     test_eng [label="reliable-agent:test-engineer\n覆盖分析", shape=box];
     perf [label="reliable-agent:performance-auditor\n资源/复杂度", shape=box];
     style [label="reliable-agent:style-auditor\n代码风格审计", shape=box];
+    pcc [label="reliable-agent:plan-completeness-checker\n实现完整度审计", shape=box style=filled fillcolor=lightgreen];
     merge [label="合并去重\n+ 严重度分类"];
     any_critical [label="任何 Critical？", shape=diamond];
     any_important [label="任何 Important？", shape=diamond];
@@ -55,11 +56,13 @@ digraph reliable_request_review {
     parallel -> test_eng [style=dashed];
     parallel -> perf [style=dashed];
     parallel -> style [style=dashed];
+    parallel -> pcc [style=dashed];
     reviewer -> merge;
     security -> merge;
     test_eng -> merge;
     perf -> merge;
     style -> merge;
+    pcc -> merge;
     merge -> any_critical;
     any_critical -> verdict_changes [label="是"];
     any_critical -> any_important [label="否"];
@@ -85,6 +88,7 @@ digraph reliable_request_review {
 - **reliable-agent:test-engineer**: 覆盖分析——正常路径、边界、错误、并发、缺失断言
 - **reliable-agent:performance-auditor**: N+1 查询、无限操作、内存模式、算法复杂度、资源使用
 - **reliable-agent:style-auditor**: 代码风格审计——定位 `.reliable-agent/codestyle/` 规范文件 → 对照声明规则审计命名、格式、导入、注释、文件组织 → 违反声明规则 = Important（阻塞合并），无声明规则 = Suggestion，无规范文件 = Skip
+- **reliable-agent:plan-completeness-checker**: 实现完整度审计——四维检查（Presence存在性/Depth深度/Proof测试证明/Scale规模合理性）→ 对照 plan 验收标准逐条核对 → 检测空壳代码/TODO/占位符/偷懒简化 → Critical 发现阻塞合并
 
 ### Step 4: 合并与分类
 参照 `references/severity-normalization.md` 将各 Agent 的特定领域严重度映射为统一分类：
@@ -128,7 +132,7 @@ digraph reliable_request_review {
 ## Verification
 
 - [ ] ra-verify 已通过（在开始前确认）
-- [ ] 5 个角色并行运行（单轮派发）
+- [ ] 6 个角色并行运行（单轮派发）
 - [ ] 每个角色返回了结构化报告
 - [ ] 发现已去重和按严重度分类
 - [ ] 每条 Critical/Important 发现含 file:line + 建议
