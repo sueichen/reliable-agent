@@ -140,9 +140,9 @@ digraph reliable_build {
   - 是否有对应实现代码？
   - 实现代码是否有测试覆盖？
   - 是否存在 TODO/FIXME/HACK/XXX 占位符？
-- 运行 `grep -rn "TODO\|FIXME\|HACK\|XXX\|not implemented\|placeholder\|stub"` 在变更文件中
+- 运行 `grep -rn -e "TODO" -e "FIXME" -e "HACK" -e "XXX" -e "not implemented" -e "placeholder" -e "stub"` 在变更文件中
 - 检查 patch 规模与任务复杂度是否匹配（L ≥ 15 行，M ≥ 5 行）
-- 全部 AC 通过 → 进入 Step 7 Commit，任务完成
+- 全部 AC 通过 → 标记任务完成，进入更多任务判断（more_tasks）
 - 任一 AC 未通过 → 标注"未完成"，列出未满足的 AC，回到 Step 3 RED 补全该 AC
 - **此门禁是源头预防——在偷懒简化发生时就阻断，不等 review 才发现**
 - 完成标准: 所有 AC 已满足，无 TODO/FIXME/空壳代码，测试覆盖充分
@@ -166,7 +166,6 @@ digraph reliable_build {
 | "顺便把这个功能也加上吧" | 范围纪律。那个功能没有失败测试、验收标准或任务。它不属于这里。 |
 | "这个任务基本完成了，剩下的是细节" | 细节 = 验收标准。AC 未满足就是未完成。核对 plan，回 RED 补全。 |
 | "实现很简单，看一眼就知道对了" | 你能看一眼知道对了≠三个月后的你能知道。测试是执行的规格。 |
-| "这个任务基本完成了，剩下的是细节" | 细节 = 验收标准。AC 未满足就是未完成。核对 plan，回 RED 补全。 |
 | "TODO 后面再处理" | TODO 是未完成的正式声明。Step 8 按 HARD-GATE 阻断——回到 RED 补全。 |
 
 ## Red Flags

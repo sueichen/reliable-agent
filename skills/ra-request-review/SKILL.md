@@ -1,6 +1,6 @@
 ---
 name: ra-request-review
-description: "多角度代码审查——并行扇出 5 个专业角色（code-reviewer、security-auditor、test-engineer、performance-auditor、style-auditor），综合发现生成结构化审查报告含严重度分类。在 ra-verify 通过后、需要全面审查才能发布时使用。"
+description: "多角度代码审查——多角度代码审查——并行扇出 6 个专业审查角色，综合发现生成结构化审查报告含严重度分类。在 ra-verify 通过后、需要全面审查才能发布时使用。"
 version: "1.0.0"
 license: MIT
 ---
@@ -11,7 +11,7 @@ license: MIT
 
 ## Overview
 
-运行 5 个专业审查角色的并行扇出，每个角色从不同维度审查代码。综合发现、去重、按严重度分类，生成结构化审查报告。这是 G3 门禁的实施者。
+运行 6 个专业审查角色的并行扇出，每个角色从不同维度审查代码。综合发现、去重、按严重度分类，生成结构化审查报告。这是 G3 门禁的实施者。
 
 **核心理念**: 不同专业领域捕捉不同问题。一个审查者看到的东西另一个可能完全错过。风格合规性由 style-auditor 专门审计。
 
@@ -34,7 +34,7 @@ digraph reliable_request_review {
     preflight [label="检查前置条件\nra-verify 已通过？", shape=diamond];
     reject [label="拒绝审查\n返回 /ra-verify", shape=doublecircle];
     scope [label="收集审查范围\n（staged changes / diff）"];
-    parallel [label="并行扇出 5 个角色", shape=box style=filled fillcolor=lightyellow];
+    parallel [label="并行扇出 6 个角色", shape=box style=filled fillcolor=lightyellow];
     reviewer [label="reliable-agent:code-reviewer\n五轴审查", shape=box];
     security [label="reliable-agent:security-auditor\n漏洞检测", shape=box];
     test_eng [label="reliable-agent:test-engineer\n覆盖分析", shape=box];
