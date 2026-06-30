@@ -58,6 +58,15 @@
 | Suggestion | **Important** — 风格观察但无对应声明规则 |
 | Info | **Suggestion** — 跳过信息、缺失规范提示 |
 
+### plan-completeness-checker (Critical / High / Medium / Low)
+
+| Agent 级别 | 统一级别 |
+|-----------|---------|
+| Critical | **Critical** — AC 完全无对应代码 / 空壳实现 → 阻塞合并 |
+| High | **Critical** — 实现存在但无测试 → 阻塞合并 |
+| Medium | **Important** — 规模异常 / 次要 AC 未覆盖 → 合并前修复 |
+| Low | **Suggestion** — 日志/注释缺失 → 评估后决定 |
+
 ## 合并规则
 
 1. 同一发现被多个 Agent 报告时，取最严重的统一级别
