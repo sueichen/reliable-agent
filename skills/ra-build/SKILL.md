@@ -47,6 +47,9 @@ digraph reliable_build {
     tests_still_green [label="测试仍绿色？", shape=diamond];
     revert_refactor [label="撤销重构"];
     commit [label="原子提交\n（符合 CLAUDE.md 格式）"];
+    completeness_check [label="Step 8:\nPlan Completeness Check\n对照AC逐项核对\n扫描TODO/FIXME/空壳", shape=box style=filled fillcolor=lightyellow];
+    check_pass [label="全部AC\n满足？", shape=diamond];
+    back_to_red [label="标注未完成\n回到 RED 补全"];
     more_tasks [label="更多任务？", shape=diamond];
     done [label="完成，准备\n/ra-verify", shape=doublecircle];
 
@@ -69,7 +72,11 @@ digraph reliable_build {
     tests_still_green -> revert_refactor [label="破坏测试"];
     revert_refactor -> refactor;
     tests_still_green -> commit [label="仍绿色"];
-    commit -> more_tasks;
+    commit -> completeness_check;
+    completeness_check -> check_pass;
+    check_pass -> back_to_red [label="否"];
+    check_pass -> more_tasks [label="是"];
+    back_to_red -> red;
     more_tasks -> select_task [label="是"];
     more_tasks -> done [label="否"];
 }
@@ -126,11 +133,27 @@ digraph reliable_build {
 - 一个任务一个提交
 - 完成标准: 提交完成，消息符合格式
 
+### Step 8: Plan Completeness Check — 完整性门禁
+- **在提交后、标记任务完成前执行**
+- 重新读取 plan 文件中当前任务的验收标准（AC）
+- 逐条 AC 核对：
+  - 是否有对应实现代码？
+  - 实现代码是否有测试覆盖？
+  - 是否存在 TODO/FIXME/HACK/XXX 占位符？
+- 运行 `grep -rn "TODO\|FIXME\|HACK\|XXX\|not implemented\|placeholder\|stub"` 在变更文件中
+- 检查 patch 规模与任务复杂度是否匹配（L ≥ 15 行，M ≥ 5 行）
+- 全部 AC 通过 → 进入 Step 7 Commit，任务完成
+- 任一 AC 未通过 → 标注"未完成"，列出未满足的 AC，回到 Step 3 RED 补全该 AC
+- **此门禁是源头预防——在偷懒简化发生时就阻断，不等 review 才发现**
+- 完成标准: 所有 AC 已满足，无 TODO/FIXME/空壳代码，测试覆盖充分
+
 <HARD-GATE>
 绝不在 RED 时重构。
 绝不在 GREEN 前提交。
 绝不跳过 Verify 步骤（完整套件+构建）。
 每个切片不超过 ~100 行变更。
+任何验收标准未满足 → 绝不允许标记任务完成或进入下一个任务。
+检测到 TODO/FIXME/空壳代码 → 必须回到 RED 补全。
 </HARD-GATE>
 
 ## Common Rationalizations
@@ -141,7 +164,10 @@ digraph reliable_build {
 | "我先把所有测试写好再实现" | 水平切片产生想象的测试，非现实的。垂直切片保持测试与真实行为关联。 |
 | "重构可以等做完功能再说" | 技术债务复利比你想的快。趁代码在脑子里新鲜时重构。 |
 | "顺便把这个功能也加上吧" | 范围纪律。那个功能没有失败测试、验收标准或任务。它不属于这里。 |
+| "这个任务基本完成了，剩下的是细节" | 细节 = 验收标准。AC 未满足就是未完成。核对 plan，回 RED 补全。 |
 | "实现很简单，看一眼就知道对了" | 你能看一眼知道对了≠三个月后的你能知道。测试是执行的规格。 |
+| "这个任务基本完成了，剩下的是细节" | 细节 = 验收标准。AC 未满足就是未完成。核对 plan，回 RED 补全。 |
+| "TODO 后面再处理" | TODO 是未完成的正式声明。Step 8 按 HARD-GATE 阻断——回到 RED 补全。 |
 
 ## Red Flags
 
@@ -152,6 +178,9 @@ digraph reliable_build {
 - 提交消息不符合 CLAUDE.md 格式
 - 超过 100 行未运行测试
 - 在同一次提交中混合重构和功能代码
+- 跳过 Step 8 完整性门禁直接标记任务完成
+- AC 未全部满足但声明"基本完成"
+- 变更文件中残留 TODO/FIXME/占位符
 
 ## Verification
 
@@ -165,6 +194,9 @@ digraph reliable_build {
 - [ ] 代码符合 `.reliable-agent/codestyle/` 中的声明规范（如存在）
 - [ ] 提交消息遵循 CLAUDE.md 格式
 - [ ] 任务在方案中标记为完成
+- [ ] Step 8 完整性门禁已执行——所有 AC 已满足
+- [ ] 无残留 TODO/FIXME/HACK/占位符代码
+- [ ] patch 规模与任务复杂度匹配（L ≥ 15 行，M ≥ 5 行）
 
 ## 下一步指引
 
