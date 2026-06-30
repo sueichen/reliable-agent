@@ -1,203 +1,114 @@
 # reliable-agent — 项目宪法
 
-> 可靠工程工作流技能集 — 14 个技能（1 元技能 + 1 自动化 + 12 工作流），覆盖从规范到回顾的完整可靠工程循环。
+> 可靠工程工作流技能集 — 14 个技能，覆盖从规范到回顾的完整可靠工程循环。
 >
-> 本文件是项目宪法，所有贡献者和 AI 智能体必须遵守。由 `/ra-spec` 生成，`/ra-evolve` 建议更新，人类审批后生效。
+> 本文件是项目宪法（规则+约束+边界），所有贡献者和 AI 智能体必须遵守。由 `/ra-spec` 生成，`/ra-evolve` 建议更新，人类审批后生效。非规则类内容（教程、示例、操作配置）不在此文件中。
 
 ---
 
 ## 目录
 
-1. [项目目标](#1-项目目标)
-2. [技术栈](#2-技术栈)
-3. [项目结构](#3-项目结构)
-4. [技能组织](#4-技能组织)
-5. [团队约定](#5-团队约定)
-6. [代码规范](#6-代码规范)
-7. [测试策略](#7-测试策略)
-8. [安全基线](#8-安全基线)
-9. [性能基线](#9-性能基线)
-10. [可观测性要求](#10-可观测性要求)
-11. [Commit 格式](#11-commit-格式)
-12. [质量门禁](#12-质量门禁)
-13. [边界与红线](#13-边界与红线)
-14. [下一步指引](#14-下一步指引)
+1. [核心使命](#1-核心使命)
+2. [技术约束](#2-技术约束)
+3. [结构与约定](#3-结构与约定)
+4. [代码规范](#4-代码规范)
+5. [测试策略](#5-测试策略)
+6. [安全基线](#6-安全基线)
+7. [性能基线](#7-性能基线)
+8. [可观测性要求](#8-可观测性要求)
+9. [Commit 格式](#9-commit-格式)
+10. [质量门禁](#10-质量门禁)
+11. [边界与红线](#11-边界与红线)
 
 ---
 
-## 1. 项目目标
+## 1. 核心使命
 
-### 1.1 核心使命
-
-为 Claude Code 提供一套**可靠工程工作流技能集**，通过阶段门控和自动化质量门禁确保代码变更的纪律性、可追溯性和持续改进。
-
-### 1.2 关键能力
-
-- **14 个技能**：spec → plan → build → perf → debug → verify → log → review（request + receive）→ doc → ship → evolve 共 12 个工作流技能，外加元技能 `using-reliable-agent` 和自动化技能 `ra-auto`
-- **5 个可复用审查智能体**：code-reviewer、security-auditor、test-engineer、performance-auditor、style-auditor
-- **生命周期钩子**：SessionStart 自动注入元技能，确保行为准则在每次会话中生效
-- **经验驱动的进化**：Session 回顾 → 结构化经验提取 → 聚类分析 → 人类审批的进化建议
-
-### 1.3 目标用户
-
-使用 Claude Code 进行软件开发的工程师，要求：
-- 遵循 TDD 和增量交付
-- 接受自动化质量门禁
-- 参与经验驱动的流程改进
+为 Claude Code 提供可靠工程工作流技能集，通过阶段门控和自动化质量门禁确保代码变更的纪律性、可追溯性和持续改进。
 
 ---
 
-## 2. 技术栈
+## 2. 技术约束
 
-| 组件 | 技术 | 用途 |
-|------|------|------|
-| 技能定义 | Markdown + YAML frontmatter | 所有技能和智能体定义 |
-| 自动化脚本 | Shell（bash 5+） | 生命周期钩子、管理脚本 |
-| 验证工具 | Node.js/JavaScript（ES Module） | 技能结构校验 |
-| 配置格式 | JSON | 插件清单、hooks 配置 |
-| 版本控制 | Git | 代码管理 |
-
-### 2.1 语言运行时要求
-
-| 语言 | 最低版本 | 用途 |
-|------|---------|------|
-| Bash | 5.0+ | hooks 脚本 |
-| Node.js | 18+ | 验证脚本 |
-| Markdown | — | 全部技能和文档 |
+| 约束 | 要求 |
+|------|------|
+| Bash | 5.0+ |
+| Node.js | 18+ |
+| 版本控制 | Git |
+| 技能定义 | Markdown + YAML frontmatter |
+| 配置格式 | JSON |
 
 ---
 
-## 3. 项目结构
+## 3. 结构与约定
 
-```text
-skills/            → 14 个技能目录（1 元技能 + 1 自动化 + 12 工作流技能）
-agents/            → 5 个可复用的智能体角色定义
-hooks/             → SessionStart 生命周期钩子
-.gemini/commands/  → 13 个斜杠命令（Gemini CLI，TOML 格式）
-commands/          → 13 个斜杠命令（Antigravity CLI，TOML 格式）
-.claude-plugin/    → Claude Code 插件清单 + Marketplace 配置
-.codex-plugin/     → Codex 插件清单
-.cursor-plugin/    → Cursor 插件清单
-.codex/            → Codex 安装指引
-.opencode/         → OpenCode 安装指引
-templates/         → 5 个项目初始化模板
-references/        → 8 个交叉引用检查清单（含 perf/ 性能优化参考文件）
-docs/              → 用户文档（含 7 个平台安装指南）
-scripts/           → 验证和管理脚本
-codestyle/         → 17 个语言的代码规范源文件（Google Style Guide 提炼版）
-plugin.json        → Antigravity CLI 插件清单
-gemini-extension.json → Gemini CLI 扩展清单
-GEMINI.md          → Gemini CLI 上下文文件
-AGENTS.md          → OpenCode 意图映射
-.reliable-agent/   → 本地化配置文件（codestyle/、experiences.md）
-```
+### 3.1 技能文件约定
 
----
-
-## 4. 技能组织
-
-| 阶段 | 技能 | 类型 | 简要说明 |
-|------|------|------|---------|
-| Bootstrap | using-reliable-agent | 元技能 | SessionStart 注入，技能发现，6 条核心行为准则 |
-| Auto | ra-auto | 灵活 | 检测阶段并自动执行 plan→update-doc（含 review-fix-verify 循环） |
-| Define | ra-spec | 灵活 | 项目初始化——生成 CLAUDE.md + 宪法 |
-| Plan | ra-plan | 灵活 | 需求分析 + grill-me + 设计方案 |
-| Build | ra-build | 刚性 | TDD 增量实现——红绿重构循环 |
-| Verify | ra-verify | 刚性 | 自动化验证——测试+lint+构建+类型检查 |
-| Observe | ra-log | 刚性 | 可观测性检查——日志+指标+追踪+告警 |
-| Review | ra-request-review | 刚性 | 多角度代码审查——5-agent 并行扇出 |
-| Review | ra-receive-review | 刚性 | 审查反馈处理+修复，重新验证 |
-| Doc | ra-update-doc | 灵活 | 文档同步更新 |
-| Ship | ra-ship | 刚性 | 提交+PR+合并，含格式校验 |
-| Analyze | ra-perf | 刚性 | 数据驱动性能优化——五维遍历+TMA+技法匹配+行动计划 |
-| Analyze | ra-debug | 刚性 | 结构化根因排查——crash/死锁/内存泄露/竞态等系统级问题诊断 |
-| Evolve | ra-evolve | 灵活 | Session 回顾+经验提取+进化建议 |
-
-### 4.1 技能类型说明
-
-- **刚性技能**：严格遵循，不可偏离纪律。包括 build、verify、log、perf、debug、request-review、receive-review、ship
-- **灵活技能**：根据上下文调整原则，但不可跳过。包括 spec、plan、update-doc、evolve
-
----
-
-## 5. 团队约定
-
-### 5.1 技能文件约定
-
-- 每个技能在 `skills/<name>/SKILL.md` 中
-- YAML frontmatter 包含 `name`、`description`、`version`、`license`
+- 每个技能在 `skills/<name>/SKILL.md`；YAML frontmatter 含 `name`、`description`、`version`、`license`
 - `description` 只写触发条件，不写流程细节（防止 AI 从 description 中编造响应）
 - 每个技能包含：Overview、When to Use、Core Process（含 DOT 图）、Common Rationalizations、Red Flags、Verification、下一步指引
-- DOT digraph 是权威流程定义，文字为辅助
-- `<HARD-GATE>` XML 块标记不可违反的规则
-- 共享引用在 `references/` 中，不在技能目录内
-- 辅助文件仅在内容超过 100 行时创建
+- DOT digraph 是权威流程定义，文字为辅助；`<HARD-GATE>` XML 块标记不可违反的规则
+- 共享引用在 `references/` 中；辅助文件仅在内容超过 100 行时创建
 
-### 5.2 智能体角色约定
+### 3.2 智能体角色约定
 
-- 角色在 `agents/` 目录中，YAML frontmatter 有 `name` 和 `description`
-- Persona + Operations 双层架构（Identity 层 + Operation 层分离）
+- 角色在 `agents/` 目录中，Persona + Operations 双层架构
 - 角色不得调用其他角色（**角色隔离铁律**）
-- 角色可以调用 Skill 工具
 - 角色包含硬性规则（Critical Rules）和量化成功指标
 
-### 5.3 进化与审批
+### 3.3 技能类型
+
+- **刚性技能**（严格遵循，不可偏离）：ra-build、ra-verify、ra-log、ra-perf、ra-debug、ra-request-review、ra-receive-review、ra-ship
+- **灵活技能**（根据上下文调整原则，不可跳过）：ra-spec、ra-plan、ra-update-doc、ra-evolve、ra-auto、using-reliable-agent
+
+### 3.4 经验管理
+
+- `.reliable-agent/experiences.md` — 集中式经验文件（跨技能模式），所有技能必读
+- `.reliable-agent/<skill>/experiences.md` — 技能专属经验，该技能必读
+- 经验写入必须遵守精简三原则（详见 `skills/ra-evolve/evolution-rules.md`）
+- 硬上限 800 行，水位线 600 行；超水位触发凝练
+- 经验记录由 ra-evolve 提取和写入，各 skill 自行加载
+
+### 3.5 进化与审批
 
 - 所有行为变更需人类审批后才应用
-- 进化建议分为三类：CLAUDE.md 规则变更、技能行为变更、规格修订
-- 经验记录写入 `reliable-agent/experiences.md`
+- 进化建议分为两类：CLAUDE.md 规则变更（Type A）、规格修订（Type C）
+- 绝不对 SKILL.md 文件进行直接修改——技能行为改进由各技能从专属经验文件自行加载
 
 ---
 
-## 6. 代码规范
+## 4. 代码规范
 
-本项目遵循 [Google Style Guide](https://google.github.io/styleguide/) 提炼版规范。规范文件位于 `.reliable-agent/codestyle/`，由 `style-auditor` 在代码审查阶段强制执行。
-
-### 6.1 适用的代码规范
-
-| 规范文件 | 适用对象 | 关键规则 |
-|---------|---------|---------|
-| [markdown.md](.reliable-agent/codestyle/markdown.md) | 所有 `.md` 文件（技能、文档、智能体） | 80 字符行宽、单 H1、层级不跳跃、围栏式代码块 |
-| [shell.md](.reliable-agent/codestyle/shell.md) | 所有 `.sh` 脚本（hooks、管理脚本） | `set -euo pipefail`、双中括号、`$(...)` 命令替换、`local` 变量 |
-| [javascript.md](.reliable-agent/codestyle/javascript.md) | 所有 `.js` 脚本（验证工具） | 命名导入/导出、分号必须、`const`/`let` 禁止 `var`、JSDoc 类型注解 |
-| [json.md](.reliable-agent/codestyle/json.md) | 所有 `.json` 文件（配置） | lowerCamelCase 键名、2 空格缩进、禁止注释、禁止尾逗号 |
-
-### 6.2 代码规范门禁
+本项目遵循 [Google Style Guide](https://google.github.io/styleguide/) 提炼版规范。规范文件位于 `.reliable-agent/codestyle/`，由 `style-auditor` 强制执行。
 
 违反 `.reliable-agent/codestyle/` 中声明的规则将被 `style-auditor` 标记为 **Important**，阻塞合并。未在规范文件中声明的风格偏好降级为 `code-reviewer` 的 Suggestion 级别。
 
 ---
 
-## 7. 测试策略
+## 5. 测试策略
 
-### 7.1 测试层次
+### 5.1 测试层次
 
-| 层次 | 覆盖目标 | 工具 | 门禁要求 | 自动化？ |
-|------|---------|------|---------|:---:|
-| 技能结构验证 | 所有 SKILL.md 的 YAML frontmatter 完整性和格式 | `scripts/validate-skills.js` | 0 错误 | ✅ automated |
-| 技能验证步骤 | 每个技能自带的 Verification 部分 | 按技能定义执行 | 必须存在且可通过 | 人工/AI 执行 |
-| Shell 静态分析 | 所有 Shell 脚本 | ShellCheck（需单独安装） | 0 错误 | 待集成 CI |
-| JS 语法检查 | 所有 JavaScript 脚本 | `node --check` | 0 错误 | 待集成 CI |
+| 层次 | 门禁要求 |
+|------|---------|
+| 技能结构验证（`scripts/validate-skills.js`） | 0 错误 |
+| 技能 Verification 步骤（按技能定义执行） | 必须存在且可通过 |
+| Shell 静态分析（ShellCheck） | 0 错误 |
+| JS 语法检查（`node --check`） | 0 错误 |
 
-> **注意**：ShellCheck 和 `node --check` 是声明的质量要求，但当前依赖贡献者本地执行。CI 集成（参见 P1-7 plan）待添加自动化执行。
-
-### 7.2 测试哲学
+### 5.2 测试要求
 
 1. **技能即规格**：技能的 Verification 部分是强制性检查清单，不可跳过
 2. **验证先于信任**：每个变更在合并前必须通过所有自动化验证
-3. **防御性验证**：`validate-skills.js` 需手动执行（`node scripts/validate-skills.js`），CI 集成待 P1-7 plan 实现
-
-### 7.3 测试编写要求
-
-- 新增技能必须包含可执行的 Verification 步骤
-- 修改技能流程后必须更新对应 Verification
-- 新增脚本必须通过 ShellCheck 或 `node --check`
+3. 新增技能必须包含可执行的 Verification 步骤
+4. 修改技能流程后必须更新对应 Verification
+5. 新增脚本必须通过 ShellCheck 或 `node --check`
 
 ---
 
-## 8. 安全基线
+## 6. 安全基线
 
-### 8.1 代码安全
+### 6.1 代码安全
 
 | 要求 | 适用对象 | 门禁 |
 |------|---------|------|
@@ -207,72 +118,59 @@ AGENTS.md          → OpenCode 意图映射
 | 无动态代码执行 | `.js` 文件 | Critical |
 | 文件操作使用安全路径 | 所有脚本 | Important |
 
-### 8.2 数据传输
+### 6.2 数据传输
 
-| 要求 | 说明 |
-|------|------|
-| 内部引用使用相对路径 | 无外部网络依赖 |
-| 技能文件完整性 | Git 版本控制保证完整性 |
-| HTTPS 引用 | 文档中所有外部链接使用 HTTPS |
+- 内部引用使用相对路径，无外部网络依赖
+- 技能文件完整性由 Git 保证
+- 文档中所有外部链接使用 HTTPS
 
-### 8.3 插件安全
+### 6.3 插件安全
 
-- 插件清单（`.claude-plugin/plugin.json`）不包含可执行路径
-- hooks 脚本运行在用户权限下，不请求提权
+- 插件清单不包含可执行路径
+- hooks 脚本不请求提权
 - 技能不执行未经人类审批的系统级操作
 
-### 8.4 安全审查
+### 6.4 安全审查
 
-- `security-auditor` 在每次代码审查中自动检查以上所有项
-- Critical 级别安全发现阻塞合并
+`security-auditor` 在每次代码审查中自动检查以上所有项。Critical 级别发现阻塞合并。
 
 ---
 
-## 9. 性能基线
+## 7. 性能基线
 
-### 9.1 上下文窗口效率
+### 7.1 文件大小硬限制
 
-| 指标 | 目标 | 说明 |
-|------|------|------|
-| 技能文件大小 | ≤ 500 行 | 超限时拆分辅助文件 |
-| 模板文件大小 | ≤ 200 行 | 保持紧凑 |
-| 引用文件大小 | ≤ 300 行 | 聚焦可执行检查清单 |
-| DOT 图复杂度 | ≤ 15 节点 | 保持流程可理解 |
+| 文件 | 硬上限 | 水位线 |
+|------|--------|--------|
+| CLAUDE.md | 500 行 | — |
+| 技能 SKILL.md | 500 行 | — |
+| `.reliable-agent/experiences.md` | 800 行 | 600 行 |
+| `.reliable-agent/<skill>/experiences.md` | 800 行 | 600 行 |
+| 模板文件 | 200 行 | — |
+| 引用文件 | 300 行 | — |
 
-### 9.2 插件启动性能
+### 7.2 上下文窗口效率
 
 | 指标 | 目标 |
 |------|------|
-| SessionStart hook 注入量 | ≤ 3KB 文本 |
-| 元技能加载 | 单次 Skill 调用 |
-| 斜杠命令注册 | 13 个命令 × 3 格式（.md + .toml × 2），无动态加载 |
+| SessionStart hook 注入量 | ≤ 3KB |
+| DOT 图复杂度 | ≤ 15 节点 |
 
-### 9.3 审查并发性能
+### 7.3 性能反模式
 
-- 5-agent 并行审查使用 `Workflow` 工具的原生并发
-- 不自行实现并发控制
-- 审查结果由主智能体合并，避免重复工作
-
-### 9.4 性能反模式
-
-| 反模式 | 说明 |
-|--------|------|
-| 技能文件过大 | 超过 500 行必须拆分辅助文件 |
-| 重复加载 | 共享内容在 `references/` 中，通过交叉引用避免重复 |
-| 无限制循环 | 技能中的循环必须有明确的终止条件 |
-| 上下文污染 | 共享引用不在技能目录内，保持单一事实来源 |
+- 技能文件超过 500 行必须拆分辅助文件
+- 共享内容在 `references/` 中，通过交叉引用避免重复
+- 技能中的循环必须有明确的终止条件
 
 ---
 
-## 10. 可观测性要求
+## 8. 可观测性要求
 
-### 10.1 技能执行可追溯
+### 8.1 技能执行可追溯
 
-每个技能执行后应产生：
-- **日志**：关键决策点和门禁结果
-- **产物**：技能定义的输出文件（如 plan 文件、审查报告）
+每个技能执行后必须产生可审计的产物（plan 文件、审查报告、经验记录）。
 
-### 10.2 质量门禁可审计
+### 8.2 质量门禁审计
 
 | 门禁 | 记录内容 |
 |------|---------|
@@ -281,16 +179,16 @@ AGENTS.md          → OpenCode 意图映射
 | review→ship | Critical/Important/Optional 计数和处理状态 |
 | ship→evolve | commit SHA、PR 链接 |
 
-### 10.3 经验记录
+### 8.3 经验记录
 
-- `.reliable-agent/experiences.md` 记录所有结构化经验
-- 每条经验包含：时间戳、触发阶段、错误模式、解决方案、相关文件
+- 双层结构：`.reliable-agent/experiences.md`（集中式） + `.reliable-agent/<skill>/experiences.md`（技能专属）
+- 每条经验包含：时间戳、触发阶段、类别、上下文、症状、根因、解决方案、预防
 
 ---
 
-## 11. Commit 格式
+## 9. Commit 格式
 
-### 11.1 格式规范
+### 9.1 格式规范
 
 ```text
 [type]([scope]): [简洁描述]
@@ -300,7 +198,7 @@ AGENTS.md          → OpenCode 意图映射
 Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
 ```
 
-### 11.2 类型
+### 9.2 类型
 
 | 类型 | 用途 |
 |------|------|
@@ -314,7 +212,7 @@ Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
 | `security` | 安全相关变更 |
 | `revert` | 回滚之前的提交 |
 
-### 11.3 规则
+### 9.3 规则
 
 1. 描述用祈使语气，小写开头（"add" 而非 "Added" 或 "adding"）
 2. 描述简洁（建议 72 字符以内）
@@ -322,21 +220,9 @@ Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
 4. 一个提交一个关注点（原子提交）
 5. 不超过 ~100 行变更（超过 1000 行必须拆分）
 
-### 11.4 示例
-
-```text
-feat(skills): add ra-auto skill for automated workflow execution
-
-Auto-detect current phase and chain through plan→build→verify→log→
-review→doc without manual intervention. Stops before ship/evolve
-for human approval.
-
-Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
-```
-
 ---
 
-## 12. 质量门禁
+## 10. 质量门禁
 
 | 门禁 | 阶段转换 | 条件 | 阻塞？ |
 |------|---------|------|--------|
@@ -346,70 +232,13 @@ Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
 | G4 | ship→evolve | commit 格式符合规范，PR 描述完整 | 是 |
 | G5 | evolve 结束 | 经验已提取，session 可追溯 | 是 |
 
-### 12.1 ra-verify 配置（可选）
-
-以下配置项可在本文件中自定义 ra-verify 的编译器警告检测行为：
-
-| 配置项 | 类型 | 默认值 | 说明 |
-|--------|------|--------|------|
-| `verify.build.enabled` | `boolean` | `true` | 设为 `false` 显式声明项目无构建步骤，跳过所有构建相关验证（含 compiler warning 检测）。未定义构建命令时等同于 `false`。 |
-| `verify.build.warningAllowlist` | `object[]` | `[]` | 豁免的 warning 列表。每个条目为结构化对象（见下方格式）。匹配项不阻塞验证，但在报告中标明 "whitelisted"。 |
-| `verify.build.warningExcludes` | `string[]` | 见下方 | 额外的路径 glob 排除模式，追加到默认过滤列表。**禁止**将项目源目录（如 `src/`、`lib/`、`app/`）添加至此列表。 |
-
-**白名单条目格式（结构化）：**
-
-每个条目必须包含以下字段：
-
-| 字段 | 类型 | 必填 | 说明 |
-|------|------|:--:|------|
-| `file` | `string` | ✅ | 适用文件范围的 glob 模式（如 `src/legacy/*.c`），**禁止**使用 `.*` 或 `*` 等通配全部的模式 |
-| `warningCode` | `string` | ✅ | 具体警告代码（如 `-Wdeprecated-declarations`、`TS6133`、`E0502`） |
-| `reason` | `string` | ✅ | 豁免理由，必须引用跟踪 issue（如 `Issue #1234`） |
-| `expires` | `string` | ✅ | 过期日期（`YYYY-MM-DD`）或 `"permanent"`；过期条目自动失效并触发警告 |
-
-**默认排除路径：** `node_modules/`、`vendor/`、`*.d.ts`、`/usr/include/`、`/usr/local/include/`、`third_party/`、`thirdparty/`、`.venv/`、`venv/`、`virtualenv/`、`__pycache__/`、`build/`、`dist/`、`target/`、`out/`、`cmake-build-*/`、`bazel-*/`、`.git/`、`/lib/`、`/lib64/`、`/System/Library/`
-
-**配置示例：**
-
-```markdown
-## verify.build 配置
-
-- `verify.build.warningAllowlist`:
-  - file: "src/legacy/module.c"
-    warningCode: "-Wdeprecated-declarations"
-    reason: "遗留 API，计划 Q3 2026 移除 (Issue #1234)"
-    expires: "2026-09-30"
-  - file: "src/compat/*.ts"
-    warningCode: "TS6133"
-    reason: "接口占位符，外部 API 兼容性要求 (Issue #567)"
-    expires: "permanent"
-
-- `verify.build.warningExcludes`:
-  - "generated/"    # 自动生成的代码目录
-  - "submodules/"   # git submodule
-```
-
-> **建议**：优先在构建命令中使用 `-Werror`（GCC/Clang）、`--deny warnings`（Rust）等 flag，让编译器在 warning 时直接返回非零 exit code。ra-verify 的输出扫描是安全网，不应替代编译器的严格模式。白名单条目建议不超过 20 条——超过时应在编译配置中使用 `-Wno-*` 等 flag 在源头禁用 warning。
-
-### 12.2 构建命令建议
-
-为启用编译器严格模式，建议 CLAUDE.md 中的构建命令包含严格的 warning flag：
-
-| 语言/工具 | 推荐 flag | 效果 |
-|----------|----------|------|
-| GCC/Clang (C/C++) | `-Wall -Wextra -Werror` | 启用大多数 warning，并将其提升为 error |
-| Clang 额外 | `-Weverything -Werror`（谨慎使用） | 启用所有 warning |
-| TypeScript | `--noUnusedLocals --noUnusedParameters --noEmit` | 启用未使用变量/参数检查 |
-| Rust | `--deny warnings` 或 `#![deny(warnings)]` | 所有 warning 变为 error |
-| Go | `go vet ./...`（非标准但推荐） | 静态分析（Go 本身无编译 warning 概念） |
-| MSVC | `/W4 /WX` | 启用 level-4 warning，并作为 error |
-| Java (javac) | `-Xlint:all -Werror` | 启用所有 lint warning，作为 error |
+> ra-verify 的编译器警告配置和编译器严格模式 flag 详见 [`references/ra-verify-config.md`](references/ra-verify-config.md)。
 
 ---
 
-## 13. 边界与红线
+## 11. 边界与红线
 
-### 13.1 Always
+### 11.1 Always
 
 - 遵循本文件中定义的标准结构
 - 新技能包含 DOT 图（权威流程定义）
@@ -417,75 +246,39 @@ Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
 - 使用 `references/` 中的共享引用
 - 对所有技能执行 Verification 步骤
 - 人类审批所有行为变更
+- 写入经验前执行去重和水位线检查
 
-### 13.2 Never
+### 11.2 Never
 
 - 添加模糊建议而非可执行流程的技能
 - 在技能之间重复内容——改用交叉引用（`references/`）
 - 自动应用进化建议——所有行为变更需人类审批
+- 直接修改 SKILL.md 文件——技能行为改进由各技能从专属经验文件自行加载
 - 删除你不理解的注释
 - "清理"与任务无关的代码
 - 作为附带效果重构相邻系统
 - 添加不在规格中的功能因为"它们看起来有用"
 - 角色调用其他角色（违反角色隔离铁律）
+- CLAUDE.md 超过 500 行不精简
+- 经验文件超过 800 行不凝练
 
-### 13.3 红线思想
+### 11.3 红线思想
 
 这些想法意味着停下——你在合理化：
 
 | 想法 | 现实 |
 |------|------|
-| "这只是一个简单的技能修改" | 技能修改影响所有用户。完整走 spec→plan→build→verify→review 流程 |
-| "让我先做这一件事" | 在任何操作之前先检查技能发现流程 |
-| "这不需要正式的技能" | 如果技能存在，就使用它 |
-| "我记得这个技能" | 技能会迭代更新。阅读当前版本 |
-| "太简单了不需要规范" | 简单恰恰是未检验假设造成最大浪费的地方 |
-| "审查可以等，先发布" | 发布后修复比发布前修复贵 10 倍 |
-| "可观测性对这么小的技能是过度设计" | 你无法诊断的 bug 总是在没有遥测的技能上 |
+| "这只是一个简单的技能修改" | 技能修改影响所有用户。完整走 spec→plan→build→verify→review 流程。 |
+| "让我先做这一件事" | 在任何操作之前先检查技能发现流程。 |
+| "这不需要正式的技能" | 如果技能存在，就使用它。 |
+| "我记得这个技能" | 技能会迭代更新。阅读当前版本。 |
+| "太简单了不需要规范" | 简单恰恰是未检验假设造成最大浪费的地方。 |
+| "审查可以等，先发布" | 发布后修复比发布前修复贵 10 倍。 |
+| "可观测性对这么小的技能是过度设计" | 你无法诊断的 bug 总是在没有遥测的技能上。 |
+| "这条经验跟已有的差不多" | 说明是重复模式，更新已有条目，不跳过。 |
+| "经验文件快满了跳过这次" | 超水位线正是凝练时机。越积越难处理。 |
 
 ---
 
-## 14. 下一步指引
-
-### 14.1 完整生命周期序列
-
-对于完整的功能开发，典型技能序列如下：
-
-```text
- 1. ra-spec            → 生成/更新 CLAUDE.md + 项目宪法 + 导入代码规范
- 2. ra-plan            → 需求分析 + grill-me + 设计方案
- 3. ra-build           → TDD 增量实现（含风格合规）
- 3b. ra-perf            → 性能瓶颈诊断与优化（五维遍历+TMA+行动计划）
- 3c. ra-debug           → 系统级问题根因排查（crash/死锁/内存泄露/竞态等）
- 4. ra-verify          → 自动化验证（测试+lint+风格检查+构建）
- 5. ra-log             → 可观测性检查/补充
- 6. ra-request-review  → 多角度代码审查（5-agent 并行）
- 7. ra-receive-review  → 审查反馈处理+修复
- 8. ra-update-doc      → 文档同步更新
- 9. ra-ship            → 提交+PR+合并（含风格合规扫描）
-10. ra-evolve          → Session 回顾+经验提取+进化建议
-```
-
-### 14.2 常用快捷路径
-
-| 场景 | 推荐序列 |
-|------|---------|
-| 新功能 | spec → plan → build → verify → log → review → doc → ship → evolve |
-| Bug 修复 | plan → build → verify → log → review → ship → evolve |
-| 纯文档 | build → verify → ship → evolve |
-| 一键自动化 | ra-auto（自动执行 plan→update-doc，在 ship 前停止） |
-| 安全修补 | plan → build → verify → request-review（强制 security-auditor）→ ship |
-| 性能优化 | ra-perf → build（如有代码修改）→ verify → review → ship |
-| 问题排查 | ra-debug → ra-build（修复实现）→ ra-verify → ra-log → review → ship |
-
-### 14.3 会话上下文管理
-
-1. **开始任何实现工作前先读本文件** — 它定义了项目的宪法、代码标准和边界
-2. **在调试、审查、或修改有记录经验区域的代码前读 `.reliable-agent/experiences.md`**
-3. **关键阶段保持在同一未中断的 context window** — spec→plan→build 三个阶段在同一上下文中完成
-4. **每个 ra-build 任务从干净上下文启动** — 从 plan 中获取当前任务，避免上下文污染
-
----
-
-> 最后更新：2026-06-25
-> 由 ra-spec 生成，基于项目现有约定和 7 维度访谈确认。
+> 最后更新：2026-06-29
+> 由 ra-spec 生成，ra-plan 精简（491→本行），所有非宪法内容已删除或迁移至 references/。
