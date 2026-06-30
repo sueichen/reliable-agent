@@ -1,6 +1,6 @@
 ---
 name: ra-evolve
-description: "Session 回顾与经验驱动的进化——回顾当前 session、提取结构化经验并追加到 experiences.md，聚类分析重复模式，生成三类进化建议（CLAUDE.md 规则变更、技能行为变更、规格修订）。所有建议需人类明确批准后才应用。在每个重要工程 session 结束时或积累多条经验后使用。"
+description: "Session 回顾与经验驱动的进化——回顾当前 session、提取结构化经验并追加到双层经验文件（集中式 + 技能专属），聚类分析重复模式，生成两类进化建议（CLAUDE.md 规则变更、规格修订）。所有建议需人类明确批准后才应用。在每个重要工程 session 结束时或积累多条经验后使用。"
 version: "1.0.0"
 license: MIT
 ---
@@ -11,7 +11,7 @@ license: MIT
 
 ## Overview
 
-这是可靠工程循环的最后一步，合并了 session 回顾和经验驱动的进化。**Phase 1** 回顾当前 session 并提取结构化经验记录（追加到 `.reliable-agent/experiences.md`，只追加不删除）。**Phase 2-4** 读取经验文件，通过聚类分析识别重复模式，生成三类变更建议。所有建议不经人类批准绝不自动应用。
+这是可靠工程循环的最后一步，合并了 session 回顾和经验驱动的进化。**Phase 1** 回顾当前 session 并提取结构化经验记录，写入双层经验文件（`.reliable-agent/experiences.md` 集中式 + `.reliable-agent/<skill>/experiences.md` 技能专属）。**Phase 2-4** 读取经验文件，通过聚类分析识别重复模式，生成两类变更建议（CLAUDE.md 规则变更、规格修订）。所有建议不经人类批准绝不自动应用。
 
 **核心理念**: 新鲜的经验是最详细和准确的经验。延迟的回顾含糊且不完整。进化不是自动的——AI 可以做模式识别和建议生成，但改变行为的决定权在人类。
 
@@ -41,7 +41,8 @@ digraph reliable_evolve {
     filter [label="筛选可提取的经验\n诊断价值？决策价值？\n新发现？预防了问题？"];
     for_each [label="对每个提取的经验"];
     structure [label="结构化经验记录\n类别+上下文+症状\n+根因+解决方案+预防"];
-    append [label="追加到\n.reliable-agent/\nexperiences.md\n（只追加不删除）"];
+    gate [label="Step 3.5: 必要性门禁\n去重+精简+必要性三问\n+水位线凝练检查"];
+    append [label="写入双层\n.reliable-agent/\nexperiences.md\n+ <skill>/experiences.md\n（只追加不删除）"];
     more [label="更多经验？", shape=diamond];
     session_summary [label="输出 session 摘要\n任务/测试/提交/经验数"];
     g5 [label="G5 通过\nSession 可追溯", shape=doublecircle];
@@ -52,7 +53,6 @@ digraph reliable_evolve {
     identify [label="识别重复模式\n（>= 2 次）"];
     cross_ref [label="交叉引用\nCLAUDE.md+Skills+Specs\n找缺口"];
     gen_a [label="Phase 3: 生成 Type A\nCLAUDE.md 规则变更建议"];
-    gen_b [label="生成 Type B:\nSkill 行为变更建议"];
     gen_c [label="生成 Type C:\nSpec 修订建议"];
     present [label="Phase 4: 提交所有建议\n（含触发经验+理由+风险）"];
     human_review [label="人类逐条审批", shape=diamond];
@@ -65,7 +65,8 @@ digraph reliable_evolve {
     review -> filter;
     filter -> for_each;
     for_each -> structure;
-    structure -> append;
+    structure -> gate;
+    gate -> append;
     append -> more;
     more -> for_each [label="是"];
     more -> session_summary [label="否"];
@@ -79,10 +80,8 @@ digraph reliable_evolve {
     cluster -> identify;
     identify -> cross_ref;
     cross_ref -> gen_a;
-    cross_ref -> gen_b;
     cross_ref -> gen_c;
     gen_a -> present;
-    gen_b -> present;
     gen_c -> present;
     present -> human_review;
     human_review -> apply [label="批准的条目"];
@@ -133,14 +132,45 @@ digraph reliable_evolve {
 - **严重度**: critical | important | notable
 - **标签**: [逗号分隔的关键词，便于搜索]
 ```
-- 如果经验明确暗示需要 CLAUDE.md 规则变更或 skill 修改：添加 `[FLAG-EVOLVE]` 标记
+- 如果经验明确暗示需要 CLAUDE.md 规则变更或 Spec 修订：添加 `[FLAG-EVOLVE]` 标记
 - 完成标准: 经验已按格式结构化
 
-### Step 4: 追加到 `.reliable-agent/experiences.md`
+### Step 3.5: 必要性门禁与精简
 
+写入前对每条经验执行三项检查：
+
+**去重**: 扫描已有经验。相同根因 + 相同技能上下文 → 更新已有条目，不新增。
+
+**精简**: 每条经验 ≤15 行；能否与已有条目合并？能否用更少的文字表达？
+
+**必要性门禁（三问）**:
+1. 已有条目是否已覆盖此经验？
+2. 能否合并到已有条目？
+3. 此经验不可或缺吗？（缺少会导致未来重复踩坑？）
+
+**必要性门禁豁免**：以下经验绕过门禁，必须无条件写入：
+- 类别为 `security-finding` 的经验
+- 严重度为 `critical` 的经验
+- 带 `[FLAG-EVOLVE]` 标记的经验
+
+**水位线与凝练**:
+- `.reliable-agent/experiences.md` ≥ 600 行或 `.reliable-agent/<skill>/experiences.md` ≥ 600 行 → 触发凝练模式：合并同根因条目（保留所有相关文件路径）、提炼冗长条目为紧凑格式
+- **凝练删除限制**：禁止删除以下条目——
+  - 类别为 `security-finding` 的经验
+  - 带 `[FLAG-EVOLVE]` 标记的经验
+  - 创建不足 90 天的条目
+  - 仅当条目类别为 `workflow-friction` 或 `optimization-discovery` 且创建超过 180 天且相关文件已不存在时，方可删除
+- 任一文件 ≥ 800 行 → 拒绝追加，必须先完成凝练才能写入
+- 凝练原则：非必要不增加、增加必精简、非必要不重复
+- 完成标准: 经验通过必要性门禁，水位线未超标
+
+### Step 4: 写入双层经验文件
+
+- 写入 `.reliable-agent/experiences.md`（集中式，跨技能模式）
+- 写入 `.reliable-agent/<skill>/experiences.md`（技能专属）
 - **始终追加**（绝不删除或重写已有记录）
 - 添加在适当的类别标题下
-- 完成标准: 经验已持久化
+- 完成标准: 经验已持久化到双层文件
 
 ### Step 5: Session 摘要
 
@@ -156,7 +186,8 @@ digraph reliable_evolve {
 
 ### Step 6: 加载经验
 
-- 读取 `.reliable-agent/experiences.md`
+- 读取 `.reliable-agent/experiences.md`（集中式）
+- 读取 `.reliable-agent/<skill>/experiences.md`（各技能专属）
 - 收集所有经验记录（重点关注 >= 3 条新记录或带 `[FLAG-EVOLVE]` 标记的记录）
 - 完成标准: 所有经验已加载
 
@@ -185,19 +216,11 @@ digraph reliable_evolve {
 - 新的边界规则（Always/Never/Ask First）
 - 变更的代码规范
 - 更新的安全或性能基线
+- **大小检查**: CLAUDE.md 当前 ≥500 行 → Type A 建议只能以"替换已有规则"形式生成，不得新增
 - 每条建议包含: 触发经验、确切规则文字、理由、应用风险
-- 完成标准: Type A 建议已生成
+- 完成标准: Type A 建议已生成（且不违反大小限制）
 
-### Step 10: 生成 Type B — Skill 变更建议
-
-- 新增 skill 步骤
-- 修改的验证检查清单
-- 额外的借口反驳条目
-- 变更的门禁条件
-- 每条建议包含: 触发经验、确切变更 diff、理由、对流程的影响
-- 完成标准: Type B 建议已生成
-
-### Step 11: 生成 Type C — Spec 修订建议
+### Step 10: 生成 Type C — Spec 修订建议
 
 - 架构模式变更
 - API 合约更新
@@ -229,11 +252,19 @@ digraph reliable_evolve {
 - 完成标准: 变更已提交
 
 <HARD-GATE>
-绝不删除或重写 `.reliable-agent/experiences.md` 中已有的经验记录（追加模式）。
+绝不删除或重写 `.reliable-agent/experiences.md` 或 `.reliable-agent/<skill>/experiences.md` 中已有的经验记录（追加模式）。
 Session 有代码修改时必须运行 Phase 1（经验提取），不要跳过。
 绝不自动应用任何进化建议——全部需人类明确批准。
 拒绝的建议记录但不应用。
 批准的变更逐一提交，不混合在一次提交中。
+
+**精简三原则（不可违反）**：详见 [`evolution-rules.md`](evolution-rules.md#精简三原则)
+
+**大小硬限制（不可违反）**:
+- CLAUDE.md 硬上限 500 行，超限时 Type A 建议只能以替换形式生成
+- 集中式 experiences.md 上限 800 行（水位线 600 行），超水位必须凝练
+- 技能专属 experiences.md 上限 800 行（水位线 600 行），超水位必须凝练
+- 任一文件超过 800 行 → 拒绝追加，必须先凝练
 </HARD-GATE>
 
 ## Common Rationalizations
@@ -247,6 +278,8 @@ Session 有代码修改时必须运行 Phase 1（经验提取），不要跳过�
 | "这个经验只发生过一次，不需要进化" | 一次严重事件就够了。重复阈值存在是为了置信度，不是必需性。 |
 | "让我自动应用这些改进" | 进化改变代理行为。人类审查是非预期后果的安全机制。 |
 | "改动很小，直接应用就行" | 小改动在聚合时可能有重大影响。每条建议独立审查。 |
+| "这条经验跟已有的差不多，跳过吧" | 说明这是重复模式——更新已有条目加重复计数，不跳过。 |
+| "经验文件快满了，先跳过这次" | 超水位线正是凝练的时机。越积越难处理。 |
 
 ## Red Flags
 
@@ -258,6 +291,8 @@ Session 有代码修改时必须运行 Phase 1（经验提取），不要跳过�
 - 生成建议但不链接到具体经验记录
 - 建议移除已有的安全检查
 - 为未实际发生的问题生成建议
+- 经验文件超过 800 行硬上限仍未凝练
+- 写入前未执行去重检查（相同根因+上下文重复出现）
 
 ## Verification
 
@@ -265,19 +300,20 @@ Session 有代码修改时必须运行 Phase 1（经验提取），不要跳过�
 - [ ] Session 对话已回顾
 - [ ] 至少一条经验被记录（代码变更的 session）
 - [ ] 每条经验有: 类别、上下文、症状、根因、解决方案、预防
-- [ ] 经验已追加到 .reliable-agent/experiences.md（非覆写）
+- [ ] 经验已写入双层文件：集中式 + 技能专属（非覆写）
 - [ ] 经验已加标签关键词便于搜索
-- [ ] FLAG-EVOLVE 标记已为需要规则/skill 变更的经验添加
+- [ ] FLAG-EVOLVE 标记已为需要规则/Spec 变更的经验添加
 - [ ] Session 摘要已输出: 任务、测试、提交、经验数
 
 ### Phase 2-4（经验分析与进化）
-- [ ] .reliable-agent/experiences.md 已读取且所有经验已编录
+- [ ] 双层经验文件已读取且所有经验已编录
 - [ ] 重复模式（>= 2 次）已识别
 - [ ] 每条建议链接到具体触发经验
 - [ ] 每条建议包含: 触发、确切变更文字、理由、风险
 - [ ] 未经人类批准未自动应用任何建议
 - [ ] 批准的建议逐一提交
 - [ ] 应用的 CLAUDE.md 变更通过 ra-spec 验证
+- [ ] 写入前已执行去重和水位线检查
 
 ### 综合
 - [ ] G5: 经验已提取，session 可追溯
