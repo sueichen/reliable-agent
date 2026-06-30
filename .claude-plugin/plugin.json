@@ -26,6 +26,7 @@
     "./agents/security-auditor.md",
     "./agents/test-engineer.md",
     "./agents/performance-auditor.md",
-    "./agents/style-auditor.md"
+    "./agents/style-auditor.md",
+    "./agents/plan-completeness-checker.md"
   ]
 }
