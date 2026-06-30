@@ -32,6 +32,11 @@ digraph reliable_receive_review {
     parse [label="解析审查报告\n提取所有发现"];
     sort [label="按严重度排序\nCritical→Important→Suggestion"];
     next [label="处理下一条发现"];
+    is_completeness [label="完整性发现？", shape=diamond];
+    secondary_confirm [label="二次确认\n(验证agent发现\n是否真实)"];
+    confirmed_real [label="确认真实？", shape=diamond];
+    implement_missing [label="补全缺失实现\n+ 补全测试"];
+    dismiss_false [label="记录驳回理由"];
     is_critical [label="Critical？", shape=diamond];
     write_proving_test [label="写证明测试\n（必须失败）"];
     fix_critical [label="实现修复"];
@@ -53,7 +58,14 @@ digraph reliable_receive_review {
     start -> parse;
     parse -> sort;
     sort -> next;
-    next -> is_critical;
+    next -> is_completeness;
+    is_completeness -> secondary_confirm [label="是"];
+    is_completeness -> is_critical [label="否"];
+    secondary_confirm -> confirmed_real;
+    confirmed_real -> implement_missing [label="是"];
+    confirmed_real -> dismiss_false [label="否"];
+    implement_missing -> more;
+    dismiss_false -> more;
     is_critical -> write_proving_test [label="是"];
     write_proving_test -> fix_critical;
     fix_critical -> more;
@@ -89,6 +101,10 @@ digraph reliable_receive_review {
 - 完成标准: 处理顺序已确定
 
 ### Step 3: 修复循环（每条发现）
+- **完整性发现（来自 plan-completeness-checker）**: 先执行二次确认——读取 plan 文件和代码，独立判断 agent 发现是否真实
+  - **确认真实缺口** → 读取 plan 中缺失任务的验收标准 → 按 TDD 补全缺失实现（先写证明测试 → 最小实现 → 验证）→ 补全缺失测试 → 确认所有 AC 满足
+  - **确认误报** → 记录驳回理由（为何 agent 判定不准确，实际实现已满足 AC）
+  - **完成标准**: 完整性发现已二次确认，真实缺口已补全实现和测试，误报已记录理由
 - **Critical**: 写一个证明问题的测试（必须失败）→ 实现修复 → 确认测试通过
 - **Important**: 用针对性变更修复 → 验证修复解决关注点
 - **Suggestion**: 评估 → 如果改善代码且不引入风险就实现 → 如果不做，记录理由
@@ -119,6 +135,8 @@ digraph reliable_receive_review {
 修复 Critical 必须有证明测试（先失败→修复→通过）。
 修复后必须重跑完整验证。
 未经再次验证不要标记审查为"已处理"。
+所有完整性 Critical 发现必须解决（补全缺失实现和测试，或记录合理驳回理由）。
+补全缺失实现必须遵循 TDD（先写证明测试 → 最小实现 → 验证）。
 </HARD-GATE>
 
 ## Common Rationalizations
@@ -128,7 +146,8 @@ digraph reliable_receive_review {
 | "这个 Critical 发现是误报" | 误报可能但罕见。驳回前先验证。如果确实误报，在修复摘要中记录为什么。 |
 | "我可以一次提交修复多个发现" | 每个发现一个提交使回滚精确。仅合并琐碎的关联修复。 |
 | "Suggestion 不值得实现" | 记录的拒绝是好的。无声的忽略意味着审查者得不到结果。 |
-| "修复很简单，不需要验证" | 简单修复破坏其他东西是经典回归模式。始终重新验证。 |
+| "这个完整性发现是误报，不用管" | 完整性误报确实存在。但必须执行二次确认并记录驳回理由——无声忽略导致 plan 漂移。 |
+| "补全缺失实现太花时间，下一版再做" | 未实现的 AC = 未交付的功能。如果确实要推迟，更新 plan 而非静默跳过。 |
 
 ## Red Flags
 
@@ -136,6 +155,8 @@ digraph reliable_receive_review {
 - 修复 Critical 无证明测试
 - 修复后跳过重新验证
 - 修复一个东西破坏另一个（被 ra-verify 捕捉到）
+- 完整性发现未经二次确认就直接驳回
+- 补全缺失实现时跳过 TDD（未写证明测试）
 - "看起来没问题了"替代实际验证
 
 ## Verification
@@ -145,6 +166,9 @@ digraph reliable_receive_review {
 - [ ] Critical 修复有证明测试
 - [ ] 修复摘要清楚地将每条发现链接到其解决方案
 - [ ] ra-verify 在修复后重新运行并通过
+- [ ] 每条完整性发现已二次确认（真实缺口或误报）
+- [ ] 真实完整性缺口已补全实现（含证明测试）
+- [ ] 误报的完整性发现已记录驳回理由
 - [ ] Suggestion 决策（接受/拒绝）已记录
 
 ## 下一步指引
