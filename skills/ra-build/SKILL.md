@@ -83,7 +83,7 @@ digraph reliable_build {
 ### Step 2: 加载上下文
 - 读取任务验收标准
 - 加载相关已有代码、CLAUDE.md 中的模式
-- 检查 `.reliable-agent/experiences.md` 中相关经验
+- 检查 `.reliable-agent/experiences.md`（集中式）和 `.reliable-agent/ra-build/experiences.md`（技能专属）中相关经验
 - 完成标准: 已理解任务和相关代码上下文
 
 ### Step 3: RED — 编写失败测试

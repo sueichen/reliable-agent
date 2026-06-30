@@ -101,17 +101,30 @@ digraph reliable_spec {
 7. Commit 格式偏好
 - 完成标准: 所有 7 个维度有明确答案
 
-### Step 4: 生成 CLAUDE.md
+### Step 4: 生成 CLAUDE.md（宪法模式）
+
+CLAUDE.md 是项目宪法，**只包含规则、约束、边界、门禁**。严格排除以下内容：
+- 教程、示例、操作指南（属于 using-reliable-agent）
+- 功能列表、目标用户描述（属于 README）
+- ASCII art 目录树（属于 README）
+- 技能目录/表格（技能自描述）
+- 编译器 flag 建议、操作配置示例（属于 references/）
+
+生成后必须检查：行数 ≤ 500 行。超过则自动精简直到满足。
+
 使用 `templates/CLAUDE.md.template` 生成草稿，覆盖：
-- Commands（构建/测试/lint/类型检查命令）
-- Project Structure
-- Code Style（含具体代码示例）
-- Testing Strategy（框架+覆盖率阈值+测试层级）
-- Boundaries（Always/Ask First/Never）
-- Security Baseline（OWASP+密钥管理+依赖审计）
-- Performance Baseline（响应时间+内存+模式约束）
-- Commit Format（类型+范围+格式示例）
-- 完成标准: 7 部分全部填充具体内容
+- 核心使命
+- 技术约束（仅版本和工具硬性要求）
+- 结构与约定（技能/角色/经验管理/审批）
+- 代码规范（指向 codestyle/）
+- 测试策略（层次+门禁要求）
+- 安全基线（代码安全+数据传输+插件安全）
+- 性能基线（文件大小硬限制+上下文窗口效率）
+- 可观测性要求（执行可追溯+门禁审计）
+- Commit 格式（类型+规则，不含示例）
+- 质量门禁（5 个门禁条件）
+- 边界与红线（Always/Never/红线思想）
+- 完成标准: CLAUDE.md ≤ 500 行，仅含规则/约束/边界/门禁
 
 ### Step 5: 人类审查
 - 展示完整草稿
@@ -126,9 +139,10 @@ digraph reliable_spec {
 ### Step 7: 搭建 `.reliable-agent/`
 
 - 创建 `.reliable-agent/plans/` 目录
-- 创建 `.reliable-agent/adrs/` 目录
+- 创建 `.reliable-agent/adrs/` 目录（如项目使用 ADR）
 - 创建 `.reliable-agent/codestyle/` 目录（如已导入规范）
-- 初始化空的 `.reliable-agent/experiences.md`
+- 初始化空的 `.reliable-agent/experiences.md`（集中式经验文件）
+- 为每个已有技能创建空的 `.reliable-agent/<skill-name>/experiences.md`（技能专属经验，按需初始化）
 - 完成标准: `.reliable-agent/` 目录结构就位
 
 <HARD-GATE>
@@ -153,6 +167,8 @@ digraph reliable_spec {
 - 生成只有占位符的模板内容
 - 省略某些部分（尤其是安全和性能基线）
 - CLAUDE.md 未保存就开始写代码
+- CLAUDE.md 超过 500 行未精简
+- CLAUDE.md 包含非宪法内容（教程、示例、操作配置、功能列表）
 
 ## Verification
 
@@ -162,7 +178,9 @@ digraph reliable_spec {
 - [ ] Commands 部分列出实际可执行命令含参数
 - [ ] Boundaries 部分有具体的 Always/Ask First/Never 条目
 - [ ] Commit 格式模板存在且可匹配
-- [ ] `.reliable-agent/` 目录结构完整（plans/、adrs/、codestyle/、experiences.md）
+- [ ] `.reliable-agent/` 目录结构完整（plans/、codestyle/、experiences.md、<skill>/experiences.md）
+- [ ] CLAUDE.md ≤ 500 行
+- [ ] CLAUDE.md 不含非宪法内容（教程、示例、ASCII art、功能列表、操作配置）
 - [ ] 人类审查并批准了完整的 CLAUDE.md
 
 ## 下一步指引

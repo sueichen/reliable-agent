@@ -242,7 +242,7 @@ digraph skill_flow {
 ## Session 上下文管理
 
 1. **开始任何实现工作前先读 CLAUDE.md** — 它定义了项目的宪法、代码标准和边界。
-2. **在调试、审查、或修改有记录经验区域的代码前读 `.reliable-agent/experiences.md`** — 它包含结构化的过往错误模式、优化发现和审查高频问题。
+2. **在调试、审查、或修改有记录经验区域的代码前读 `.reliable-agent/experiences.md`（集中式，所有技能共享）和 `.reliable-agent/<skill>/experiences.md`（技能专属）** — 双层经验文件包含结构化的过往错误模式、优化发现和审查高频问题。
 3. **关键阶段保持在同一未中断的 context window** — spec→plan→build 三个阶段在同一上下文中完成，确保思维连贯。
 4. **每个 /ra-build 任务从干净上下文启动** — 从 plan 中获取当前任务，避免上下文污染。
 

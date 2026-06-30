@@ -165,6 +165,7 @@ iostat -x 1 3                    # IO 压力
 根据问题类型选取工具。完整工具矩阵和降级链在 `references/debug/tools-reference.md`。
 
 降级链原则（Phase 2 需要时加载完整参考文件）:
+- 读取 `.reliable-agent/experiences.md`（集中式，如存在）和 `.reliable-agent/ra-debug/experiences.md`（技能专属）中相关经验
 ```
 Level 1: 编译插桩（ASan/TSAN/UBSan）— 最精确，需重编译
 Level 2: 运行时分析（valgrind/heaptrack/rr）— 无需重编译，但慢

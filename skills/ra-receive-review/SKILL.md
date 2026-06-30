@@ -81,6 +81,7 @@ digraph reliable_receive_review {
 
 ### Step 1: 解析审查报告
 - 提取所有发现，含严重度、file:line、建议
+- 读取 `.reliable-agent/experiences.md`（集中式，如存在）和 `.reliable-agent/ra-receive-review/experiences.md`（技能专属）中相关经验
 - 完成标准: 发现列表已完整提取
 
 ### Step 2: 按严重度排序

@@ -101,6 +101,8 @@ digraph reliable_auto {
 
 按优先级检测项目工件，确定当前所处阶段。检测后向用户展示结果，获得一次性确认后开始执行。
 
+**启动时加载**: 读取 `.reliable-agent/experiences.md`（集中式，如存在）和 `.reliable-agent/ra-auto/experiences.md`（技能专属，如存在）中相关经验。
+
 ### 检测算法（按顺序匹配，首个命中即停止）
 
 ```
@@ -459,7 +461,7 @@ update-doc 完成后，auto 模式必须:
 **AUTO 模式在此停止。请手动运行:**
 
 1. **`/ra-ship`** — 最终发布门禁：验证所有质量门禁 → 检查提交格式 → 生成 PR 描述 → 需要人类批准 push
-2. **`/ra-evolve`** — Session 回顾与进化：提取结构化经验 → 追加到 experiences.md → 聚类分析 → 生成 Type A/B/C 建议 → 需人类批准后应用
+2. **`/ra-evolve`** — Session 回顾与进化：提取结构化经验 → 写入双层经验文件 → 聚类分析 → 生成 Type A/C 建议 → 需人类批准后应用
 
 **如果 auto 模式中途停止（遇到阻塞）**:
 - 解决阻塞问题后，重新运行 `/ra-auto` — 它会从当前阶段继续

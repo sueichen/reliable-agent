@@ -62,6 +62,7 @@ digraph reliable_update_doc {
 ### Step 1: 扫描变更
 - 从上次文档更新以来扫描 git diff
 - 识别变更的文件和模块
+- 读取 `.reliable-agent/experiences.md`（集中式，如存在）和 `.reliable-agent/ra-update-doc/experiences.md`（技能专属）中相关经验
 - 完成标准: 变更文件列表已生成
 
 ### Step 2: 映射到文档

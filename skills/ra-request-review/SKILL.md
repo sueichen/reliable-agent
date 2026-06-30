@@ -71,6 +71,7 @@ digraph reliable_request_review {
 ### Step 1: 前置检查
 - 确认 ra-verify 已通过
 - 如果未通过：拒绝审查——"G2 未满足：ra-verify 必须在审查前通过。先运行 /ra-verify。"
+- 读取 `.reliable-agent/experiences.md`（集中式，如存在）和 `.reliable-agent/ra-request-review/experiences.md`（技能专属）中相关经验
 - 完成标准: G1/G2 已确认通过
 
 ### Step 2: 收集审查范围

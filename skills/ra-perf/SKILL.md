@@ -185,6 +185,8 @@ digraph reliable_perf {
 
 | 文件 | 内容 | 读取条件 |
 |------|------|---------|
+| `.reliable-agent/experiences.md` | 集中式经验 | 每次必读（如存在） |
+| `.reliable-agent/ra-perf/experiences.md` | 本技能专属经验 | 每次必读（如存在） |
 | `references/perf/cpu-optimization.md` | CPU 优化技法（TMA、编译器、SIMD） | CPU 为高可疑维度 |
 | `references/perf/memory-optimization.md` | 内存/Cache 优化技法 | 内存为高可疑维度 |
 | `references/perf/io-optimization.md` | IO/磁盘优化技法 | IO 为高可疑维度 |

@@ -73,6 +73,7 @@ digraph reliable_ship {
 - G1/G2: ra-verify 已通过
 - G3: 所有 Critical 已修复，Optional 已记录
 - 如果任何门禁未满足→返回失败的门禁
+- 读取 `.reliable-agent/experiences.md`（集中式，如存在）和 `.reliable-agent/ra-ship/experiences.md`（技能专属）中相关经验
 - 完成标准: 所有前置门禁已确认
 
 ### Step 2: Commit 格式校验

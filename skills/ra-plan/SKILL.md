@@ -91,6 +91,7 @@ digraph reliable_plan {
 - 读取 SPEC.md（如存在）
 - 读取 `references/grill-me-guide.md`（grill-me 详细执行规范）——Step 3 依赖此文件
 - 读取 `.reliable-agent/experiences.md`（如存在）——检查过往相关经验
+- 读取 `.reliable-agent/ra-plan/experiences.md`（如存在）——检查本技能专属经验
 - 搜索项目中类似的过往工作
 - 完成标准: 已确认所有相关上下文已加载
 

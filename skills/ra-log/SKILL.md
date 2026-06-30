@@ -51,6 +51,7 @@ digraph reliable_log {
 ```
 
 ### Step 1: 定义 On-Call 问题
+- 读取 `.reliable-agent/experiences.md`（集中式，如存在）和 `.reliable-agent/ra-log/experiences.md`（技能专属）中相关经验
 写下值班工程师关于此功能的 2-4 个问题：
 - "此功能正常工作吗？"
 - "如果坏了，哪里坏了？"

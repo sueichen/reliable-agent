@@ -81,6 +81,7 @@ digraph reliable_verify {
 
 ### Step 1: 读取验证命令
 - 从 CLAUDE.md 获取确切的验证命令
+- 读取 `.reliable-agent/experiences.md`（集中式，如存在）和 `.reliable-agent/ra-verify/experiences.md`（技能专属）中相关经验
 - 完成标准: 已确认所有命令
 
 ### Step 2: 运行测试套件
