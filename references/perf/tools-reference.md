@@ -1,197 +1,139 @@
-# 性能观测工具速查表
+# Perf 决策树与平台事件映射
 
-> 按分析维度和环境约束快速选取合适的工具
-
----
-
-## ⚠️ 数据敏感性警告
-
-**`perf record`、`strace`、`bpftrace` 等工具的输出可能包含：**
-- 加密密钥、认证令牌、密码
-- 用户 PII（个人身份信息）
-- 专有算法和商业秘密（通过指令追踪/调用图暴露）
-- 内核内存布局信息（KASLR 旁路辅助）
-
-**安全准则：**
-- perf.data、strace 日志、bpftrace 输出视为**机密产物**
-- 采样范围尽量限制到目标进程：`perf record --no-inherit -p <pid>`
-- 分析完成后立即删除诊断产物
-- 处理 PII/支付数据/密钥的生产系统：**运行前需数据保护审查**
-- 敏感系统上优先用 `perf stat`（纯统计数据，无内存内容）
+> 核心原则：`perf record` 说**哪里** → `perf list` 确认事件 → `perf stat` 说**为什么** → `perf annotate` 说**哪行**。
+> 本文件供 Phase 3 深挖热点时按需查阅。
 
 ---
 
-## 1. 工具矩阵
-
-| 工具 | CPU | 内存 | IO/磁盘 | 网络 | 多线程 | 需要 root | 开销 |
-|------|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| `perf record/report` | ● | ● | ◐ | ◐ | ● | 通常需要 | 低 |
-| `perf stat` | ● | ● | ○ | ○ | ◐ | 通常不需要 | 极低 |
-| `perf c2c` | ○ | ● | ○ | ○ | ● | 需要 | 低 |
-| `top`/`htop` | ● | ● | ○ | ○ | ● | 不需要 | 极低 |
-| `vmstat` | ◐ | ◐ | ● | ○ | ◐ | 不需要 | 极低 |
-| `iostat` | ○ | ○ | ● | ○ | ○ | 不需要 | 极低 |
-| `iotop` | ○ | ○ | ● | ○ | ○ | 需要 | 低 |
-| `sar` | ● | ● | ● | ● | ◐ | 需要安装 | 低 |
-| `netstat`/`ss` | ○ | ○ | ○ | ● | ○ | 不需要 | 极低 |
-| `strace` | ◐ | ◐ | ● | ● | ● | 不需要 | 中-高 |
-| `bpftrace` | ● | ● | ● | ● | ● | 需要 | 中 |
-| `bcc-tools` | ● | ● | ● | ● | ● | 需要 | 低-中 |
-| `numactl`/`numastat` | ● | ● | ○ | ○ | ● | 不需要 | 极低 |
-| `gperftools` | ● | ● | ○ | ○ | ○ | 不需要 | 中 |
-| `valgrind --tool=cachegrind` | ○ | ● | ○ | ○ | ○ | 不需要 | 极高 |
-
-- ● 强支持  ◐ 部分支持  ○ 不支持
-
----
-
-## 2. 环境降级链
-
-### 2.1 CPU 观测降级
-```
-最佳: perf record -F 999 --call-graph dwarf
-  ↓ 无符号
-perf record -F 999 (只有地址级热点)
-  ↓ 无 root / perf_event_paranoid=3
-perf stat -e instructions,cycles (统计级, 无需采样权限)
-  ↓ perf 不可用
-htop + time -v (进程级 CPU 占用 + 用户/系统时间)
-  ↓ 最差
-应用内 clock_gettime() 打点
-```
-
-### 2.2 内存观测降级
-```
-最佳: perf record -e LLC-load-misses (采样 cache miss)
-  ↓ 无 PMC
-perf stat -e cache-misses,cache-references
-  ↓ 无 perf
-/usr/bin/time -v (看 page faults、max resident set size)
-  ↓ 最差
-top/htop 看 RES (常驻内存)、SHR (共享内存)
-```
-
-### 2.3 IO 观测降级
-```
-最佳: bpftrace + iostat
-  ↓ 无 eBPF
-iostat -x 1 + iotop
-  ↓ 无 root
-strace -c -p <pid> (系统调用统计, 注意开销)
-  ↓ 最差
-/proc/<pid>/io (read_bytes, write_bytes 累计值)
-```
-
-### 2.4 网络观测降级
-```
-最佳: bpftrace / bcc-tools
-  ↓ 无 eBPF
-sar -n DEV,TCP,ETCP 1 + ss -s
-  ↓ 无 sar
-netstat -s + netstat -tan
-  ↓ 最差
-应用内耗时打点 + /proc/net/snmp
-```
-
----
-
-## 3. 常用命令模板
-
-### 3.1 perf 系列
-```bash
-# CPU 热点采样（推荐采样频率 999Hz）
-perf record -F 999 --call-graph dwarf -- ./prog
-perf report --stdio --no-children
-
-# CPU 统计（IPC、cache、分支）
-perf stat -e cycles,instructions,cache-references,cache-misses,branches,branch-misses -- ./prog
-
-# 内存访问采样
-perf record -e LLC-loads,LLC-load-misses -- ./prog
-
-# Cache-to-Cache 伪共享检测
-perf c2c record -- ./prog
-perf c2c report
-
-# 锁分析
-perf lock record -- ./prog
-perf lock report
-
-# 调度分析
-perf sched record -- ./prog
-perf sched latency
-```
-
-### 3.2 bpftrace 系列
-```bash
-# 函数调用延迟
-bpftrace -e 'uprobe:/path/to/prog:func_name { @start[tid] = nsecs; }
-    uretprobe:/path/to/prog:func_name /@start[tid]/ {
-    @lat_us = hist((nsecs - @start[tid]) / 1000); delete(@start[tid]); }'
-
-# 内存分配追踪
-bpftrace -e 'uprobe:/lib64/libc.so.6:malloc { @bytes[ustack] = sum(arg0); }'
-```
-
-### 3.3 系统级组合拳
-
-> **注意**: 以下为模板脚本，运行前逐条审查。**请勿在生产系统上盲目运行**。输出可能包含系统拓扑和网络配置等敏感数据，妥善保管。
+## 0. 第一步（强制）: 确认本平台可用事件
 
 ```bash
-# 诊断脚本模板 — 按需调整工具选择
-echo "=== CPU ==="
-perf stat -e cycles,instructions,branches,branch-misses,cache-misses sleep 5 2>&1
+perf list                       # 全部可用事件
+perf list | grep -i l1          # L1 cache 事件
+perf list | grep -i llc         # 末级 cache 事件
+perf list | grep -i branch      # 分支预测事件
+perf list | grep -i tlb         # TLB 事件
+perf list | grep -i topdown     # TMA 事件
+perf list | grep -i mem         # 内存 load/store 事件
+perf list | grep -i lock        # 锁相关事件
+```
 
-echo "=== Memory ==="
-free -h
-numastat -p $$ 2>/dev/null
+**不同 CPU 的事件名不同——绝不硬编码事件名。**
 
-echo "=== IO ==="
-iostat -x 1 3
+---
 
-echo "=== Network ==="
-sar -n DEV 1 3 2>/dev/null || netstat -i
+## 1. 平台事件映射表
 
-echo "=== Context Switches ==="
-vmstat 1 3
+| 语义 | Intel Skylake+ | Intel Icelake+ | AMD Zen3/4 | ARM Neoverse N1/V1 |
+|------|---------------|----------------|------------|-------------------|
+| L1 data cache loads | `L1-dcache-loads` | `L1-dcache-loads` | `l1_data_cache_fills_all` | `L1D_CACHE` |
+| L1 data cache misses | `L1-dcache-load-misses` | `L1-dcache-load-misses` | `l1_data_cache_misses_all` | `L1D_CACHE_REFILL` |
+| LLC loads | `LLC-loads` | `LLC-loads` | `l3_cache_accesses` | `LL_CACHE_RD` |
+| LLC misses | `LLC-load-misses` | `LLC-load-misses` | `l3_misses` | `LL_CACHE_MISS_RD` |
+| Branch instructions | `branch-instructions` | `branch-instructions` | `retired_branch_instructions` | `BR_RETIRED` |
+| Branch misses | `branch-misses` | `branch-misses` | `retired_branch_mispred` | `BR_MIS_PRED_RETIRED` |
+| DTLB load misses | `dTLB-load-misses` | `dTLB-load-misses` | `dtlb_misses` | `DTLB_WALK` |
+| ITLB misses | `iTLB-load-misses` | `iTLB-load-misses` | `itlb_misses` | `ITLB_WALK` |
+| Instructions | `instructions` | `instructions` | `instructions` | `INST_RETIRED` |
+| Cycles | `cycles` | `cycles` | `cycles` | `CPU_CYCLES` |
+| TMA Level 1 | `--topdown` | `--topdown` | `--topdown` (Zen4+) | **不支持** |
+| NUMA node loads | `node-loads` | `node-loads` | 不适用 | `REMOTE_ACCESS` |
+| NUMA node misses | `node-load-misses` | `node-load-misses` | 不适用 | — |
+
+> **以 `perf list` 实际输出为准**。若事件不存在，用 `perf list | grep <keyword>` 找同义事件。
+
+---
+
+## 2. Perf 决策树（从基础指标到深入方向）
+
+```
+perf stat 基础指标 + perf record 热点函数
+
+┌── cache-misses / cache-references > 5%?
+│   → 瓶颈: 内存子系统 (Memory Bound)
+│   → 深入:
+│     ✔ perf list | grep -i l1 → perf stat -e <L1-loads>,<L1-misses>
+│     ✔ perf list | grep -i llc → perf stat -e <LLC-loads>,<LLC-misses>
+│     ✔ perf list | grep -i tlb → perf stat -e <DTLB-misses>
+│     ✔ perf mem record -- <target>          (数据来自哪级 cache)
+│     ✔ LLC miss 主导 → 数据布局/预取问题 → Phase 4 理解代码
+│     ✔ DTLB miss 高 → huge page / 数据结构紧凑化
+│     ✔ NUMA node misses > 5% → numactl --membind / taskset
+│
+├── branch-misses / branches > 3%?
+│   → 瓶颈: 分支预测 (Bad Speculation / Branch Mispredict)
+│   → 深入:
+│     ✔ perf stat -e <branch-misses>,<branch-loads>
+│     ✔ perf annotate → 看具体分支指令开销
+│     ✔ 对策: __builtin_expect / PGO / 查表替代 / 消除不可预测分支
+│
+├── IPC < 1.0 且 cache-miss 低 且 branch-miss 低?
+│   → 瓶颈: 前端 (Frontend Bound) 或后端 (Backend Bound)
+│   → 深入:
+│     ✔ 若支持 --topdown (Intel Icelake+ / AMD Zen4+):
+│       perf stat --topdown -- <target>
+│       ├── Frontend Bound > 20%  → ICache/ITLB/解码器
+│       │   └── BOLT 二进制重排、PGO、减少虚函数、减少内联膨胀
+│       ├── Backend Bound > 20%   → 执行单元/L1/存储转发
+│       │   └── SIMD 向量化、循环展开、消除数据冒险
+│       └── Bad Speculation > 10% → 分支预测器
+│     ✔ 若不支持 --topdown (ARM / 旧 x86):
+│       低 IPC + 低 cache-miss + 低 branch-miss ≈ 前端瓶颈
+│       → perf stat -e icache_misses (如可用)
+│       → 检查代码: 大量小函数调用? 虚函数分发? 内联策略?
+│
+├── IPC > 2.0 且热点占比仍高?
+│   → 瓶颈: 纯计算密集 (Core Bound / Retiring)
+│   → 深入:
+│     ✔ perf annotate → 哪些指令占用执行单元?
+│     ✔ 检查 SIMD: 是否有手动循环可向量化? 编译器已自动向量化?
+│     ✔ 精度可降? float 替代 double? 算法复杂度可降?
+│
+└── perf record 中 syscall / 内核函数占比 > 10%?
+    → 瓶颈: 系统调用 / IO
+    → 深入:
+      ✔ strace -c -- <target>           (系统调用分布和耗时)
+      ✔ iostat -x 1                      (磁盘延迟)
+      ✔ 对策: 批量 IO、io_uring、零拷贝、连接池
 ```
 
 ---
 
-## 4. 权限问题处理
+## 3. 命令模板速查
 
-**WARNING**: 永远优先使用无需特权的替代方案，而非提升权限或降低安全设置。
+> 以下 `<event>` 为占位符——使用前必须用 `perf list` 确认本平台事件名。
 
-| 问题 | 推荐方案（安全优先） | 替代方案（需确认风险） |
-|------|---------------------|----------------------|
-| `perf_event_paranoid=3` | `perf stat` 优先尝试<br>（paranoid=3 时仍需 root/CAP_PERFMON，否则降至 top+time） | `sudo sysctl kernel.perf_event_paranoid=1` **[见下方警告]** |
-| 无 root 安装 bpftrace | 降级到可用工具链 | 安装 bpftrace |
-| 无法安装新软件 | 使用 `/proc` 文件系统和 shell 内置 | — |
-| perf 采样报 "No permission" | 使用 `perf stat` + `/proc` 替代 | 检查 paranoid 或 sudo |
-| 鲲鹏平台 perf 不支持某些事件 | 使用 `perf list` 查看可用事件 | — |
-
-### 4.1 `perf_event_paranoid` 安全警告
-
-**降低 `perf_event_paranoid` 前必须了解：**
-- 设为 1 允许非特权进程访问 CPU 性能计数器和采样数据
-- 采样数据可能包含：**密钥、令牌、密码、PII、内核内存布局（KASLR 旁路）**
-- 这是**全局系统级安全降级**，影响所有用户和进程
-- **绝不**在多租户环境或生产服务器上执行，除非经过安全团队批准
-- perf.data 文件应视为**机密文件**，用后立即删除
-
-**安全操作步骤：**
 ```bash
-# 1. 记录当前值
-cat /proc/sys/kernel/perf_event_paranoid  # 通常为 2 或 3
+# === 基础观测（任何平台） ===
+perf record -g -F 99 -- <workload>        # 采样 + 调用栈
+perf report --stdio --sort=overhead,symbol -n  # 热点函数排行
+perf annotate --stdio <function>          # 函数级汇编+源码开销
 
-# 2. [仅经批准后] 临时降低
-sudo sysctl kernel.perf_event_paranoid=1
+# === Cache 层次深挖 ===
+perf stat -e <L1-loads>,<L1-misses>,\
+<LLC-loads>,<LLC-misses> -- <workload>
+perf mem record -- <workload>             # 数据来源分析
 
-# 3. 分析完成后立即恢复
-sudo sysctl kernel.perf_event_paranoid=<原始值>
+# === 分支预测 ===
+perf stat -e <branch-inst>,<branch-misses> -- <workload>
+
+# === TMA (仅 Intel Icelake+ / AMD Zen4+) ===
+perf stat --topdown -- <workload>
+
+# === 多线程 ===
+perf lock record -- <workload>            # 锁竞争
+perf c2c record -- <workload>             # 伪共享
 ```
 
-**更安全的替代方案（优先使用）：**
-- `perf stat` — 统计级数据，无需降级 paranoid（通常参数 ≤2 即可工作）
-- Linux 5.8+ 可使用 `CAP_PERFMON` 替代完整 root：`sudo setcap cap_perfmon=ep /usr/bin/perf`
-- Linux 5.8+ bpftrace 可使用 `CAP_BPF`：`sudo setcap cap_bpf=ep /usr/bin/bpftrace`
+---
+
+## 4. 补充工具（仅当 perf 指明方向后使用）
+
+| perf 指出的方向 | 补充工具 | 用途 |
+|----------------|---------|------|
+| LLC miss 主导 | `perf mem record` | 确定数据在哪个 cache 层命中 |
+| NUMA 远端访问高 | `numastat`, `numactl -H` | 确认 NUMA 拓扑 |
+| DTLB miss 高 | `/proc/meminfo` (HugePages) | 确认大页配置 |
+| syscall 占比 > 10% | `strace -c` | 系统调用分布 |
+| IO 相关 syscall 多 | `iostat -x 1` | 磁盘延迟 |
+| futex 占比高 | `perf lock report` | 各锁等待时间 |

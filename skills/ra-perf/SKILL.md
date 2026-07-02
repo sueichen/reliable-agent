@@ -1,200 +1,178 @@
 ---
 name: ra-perf
-description: "在怀疑性能问题、需要系统性优化时使用。在有代码（可修改重编译）或无代码（仅可观测二进制）时均可使用。覆盖 CPU/内存/IO/网络/多线程五个维度。"
-version: "1.0.0"
+description: "在怀疑性能问题、需要白盒深度优化时使用"
+version: "2.0.0"
 license: MIT
 ---
 
-# ra-perf — 数据驱动性能优化
+# ra-perf — 热点驱动深度性能优化
 
-**刚性技能**: 严格遵循。观测→分析→假设→验证，禁止跳过任何步骤。
+**刚性技能**: 严格遵守「建立基线→发现热点→深挖→理解→优化→验证→再循环」的迭代纪律。
 
 ## Overview
 
-强制执行数据驱动的性能优化工作流。外层五维遍历（CPU→内存→IO/磁盘→网络→多线程）确保不遗漏瓶颈，CPU 和内存维度内层使用 TMA（Top-down Microarchitecture Analysis）自顶向下下钻定位根因。环境自适应降级——工具不可用时自动切换替代方案。
+不是五维广度扫描，而是**热点驱动的深度迭代**：
 
-**铁律**: 没有数据不优化，没有假设不实验，没有验证不结论。
+1. `perf record` 告诉你**哪里**慢
+2. `perf list` 确认本平台可用事件，`perf stat` 告诉你**为什么**慢
+3. `perf annotate` 告诉你**哪行代码**慢
+4. 读代码理解**设计意图 vs 实际行为**
+5. 选择优化手段（代码/编译器/运行时），修改后验证
+6. **重新 profile**，新热点涌现，回到步骤 1
+7. 至少 5 轮深挖，直到 IPC 饱和或热点不可约化
 
 ## When to Use
 
 - 用户报告性能问题（"程序慢"、"延迟高"、"吞吐低"）
-- 需要系统性诊断和优化
-- 有代码（可修改重编译）或无代码（仅可观测二进制）均可
+- 需要白盒深度优化（有源码、可重编译）
+- 需要系统性挖掘多个优化点而非浅尝辄止
 
-**不适用**: 纯 Web 前端性能优化、Java/JVM GC 调优、K8s 配置问题（不确定是代码还是配置问题）。
+**不适用**: 纯 Web 前端性能、JVM GC 调优、K8s 配置问题。
 
 ## Core Process
 
 ```dot
-digraph reliable_perf {
+digraph ra_perf_v2 {
     rankdir=TB;
     node [shape=box, style=rounded];
 
     start [label="启动 /ra-perf", shape=doublecircle];
-    p1 [label="Phase 1\n问题定性+环境评估"];
-    p2 [label="Phase 2\n五维分级遍历"];
-    dims [label="CPU/TMA | 内存/TMA | IO | 网络 | 多线程\n逐维度迭代", shape=record];
-    p3 [label="Phase 3\n根因验证"];
-    confirmed [label="根因确认？", shape=diamond];
-    retreat [label="修正假设"];
-    p4 [label="Phase 4\n技法匹配+行动计划"];
-    p5 [label="Phase 5\n验证闭环"];
-    improved [label="改善确认？", shape=diamond];
-    done [label="输出: 报告+计划", shape=doublecircle];
+
+    p1 [label="Phase 1\n建立基线\n(perf stat + 耗时测量)"];
+    p2 [label="Phase 2\n发现热点\n(perf record + report)"];
+    p3 [label="Phase 3\n深挖热点\n(perf list→定向stat→annotate)"];
+    p4 [label="Phase 4\n理解代码\n(算法/布局/冗余)"];
+    p5 [label="Phase 5\n优化+验证\n(代码/编译器/运行时→测试→对比)"];
+    next [label="继续?", shape=diamond];
+    done [label="完成\n输出优化报告", shape=doublecircle];
 
     start -> p1;
     p1 -> p2;
-    p2 -> dims;
-    dims -> dims [label="逐维度\n(高→低)", style=dashed];
-    dims -> p3;
-    p3 -> confirmed;
-    confirmed -> retreat [label="未确认"];
-    retreat -> p2;
-    confirmed -> p4 [label="已确认"];
+    p2 -> p3;
+    p3 -> p4;
     p4 -> p5;
-    p5 -> improved;
-    improved -> retreat [label="未改善\n回退+重诊"];
-    improved -> done [label="已改善"];
+    p5 -> next;
+    next -> p2 [label="是\n(新热点涌现)"];
+    next -> done [label="否\n(IPC饱和/热点耗尽)"];
 }
 ```
 
-### Phase 1: 问题定性 + 环境评估
+### Phase 1: 建立基线
 
-**目标**: 将模糊的"程序慢"转化为可分析的结构化描述。
+**目的**: 建立所有后续优化的参照系。
 
-1. **问题定性** — 确定分析的提问方向
-   - 什么操作慢？（启动？某个请求？批量处理？全部？）
-   - 何时开始？（某个提交后？某个数据量后？一直慢？）
-   - 有无量化数据？（耗时多少？吞吐多少？期望多少？）
+```bash
+# 整体微架构指标
+perf stat -e instructions,cycles,branches,branch-misses,\
+cache-references,cache-misses,LLC-loads,LLC-load-misses \
+<workload>
 
-2. **代码场景判断**
-   - **有代码**: 可修改源码、重编译、使用编译器优化和插桩
-   - **无代码**: 仅有二进制，依赖外部观测工具
+# 端到端耗时
+time <workload>
+```
 
-3. **安全评估** — AI 必须在 Phase 1 输出中明确记录以下评估结果，若有任一答案为"是"，须向用户说明风险并等待确认
-   - 是否为生产系统？→ 限制：禁止内核参数修改和 perf_event_paranoid 降级
-   - 是否为多租户/共享环境？→ 限制：禁止可能泄露他人数据的采样工具
-   - 目标进程是否处理敏感数据（密钥/PII/支付）？→ 限制：`perf record`/`strace`/`bpftrace` 需用户确认数据保护风险
-   
-4. **环境能力摸底** — 按降级链测试可用工具（**安全优先**：先尝试无需特权的选项）
-   - CPU: `perf stat` → `top -b -n 1 + time -v` → 应用内打点
-   - 内存: `perf stat -e cache-misses,cache-references` → `/usr/bin/time -v` → `top`
-   - IO: `iostat` → `/proc/<pid>/io` → `strace -c`（⚠️ 高开销，非生产环境）
-   - 网络: `sar -n DEV` → `netstat -s` → 应用内打点
+**输出**: `{wall_time, throughput, ipc, instructions, cycles, branch_miss_pct, cache_miss_pct}`
 
-   完整工具矩阵见: `references/perf/tools-reference.md`
+后续每轮优化都与这些基线值对比。
 
-**输出**: 结构化问题描述 + 安全约束清单 + 可用工具清单
+### Phase 2: 发现热点
 
-### Phase 2: 五维分级遍历
+**目的**: 找到当前 CPU 时间占比最高的函数。
 
-**目标**: 依次检查五个维度，按可疑度排序，定位瓶颈维度。
+```bash
+perf record -g -F 99 -- <workload>
+perf report --stdio --sort=overhead,symbol -n
+```
 
-1. **快速分级** — 对每个维度评估可疑度
-   | 维度 | 快速信号 | 深入条件 |
-   |------|---------|---------|
-   | CPU | `top -b -n 1` 显示 CPU >80% | TMA L1→L2→L3 |
-   | 内存 | Cache miss rate 高 / 内存增长 | TMA Memory Bound 下钻 |
-   | IO/磁盘 | `iostat` await >10ms (SSD) / >30ms (HDD) / %util >70% | `strace` + `bpftrace` |
-   | 网络 | TCP 重传 >0.1% / 队列积压 | `sar` + `bpftrace` |
-   | 多线程 | 加速比 << 核心数 | perf lock + c2c |
+**选热点规则**:
+- 默认选 #1（占比最高）
+- 若 #1 是 libc 函数（`__memset_avx2` 等），找调用它的用户函数
+- 若 #1 是内核函数，分析系统调用来源
 
-2. **按可疑度（高→中→低）逐维度深入分析**
+### Phase 3: 深挖热点
 
-3. **CPU/内存维度 — TMA 自顶向下内层**
-   ```
-   Level 1: 确定瓶颈大类 (Frontend/BadSpec/Backend/Retiring)
-     └── Backend Bound?
-         Level 2: Core Bound vs Memory Bound
-           └── Memory Bound?
-               Level 3: L1/L2/L3/DRAM/DTLB
-   ```
-   详细技法见: `references/perf/cpu-optimization.md`、`references/perf/memory-optimization.md`
+**目的**: 搞清楚热点函数为什么慢——哪种微架构瓶颈。
 
-4. **IO/网络/磁盘维度 — 工具驱动分析**
-   - 从可用的最高精度工具开始（bpftrace > strace > /proc）
-   - 详细技法见对应 reference 文件
+**⚠ 平台可移植性 — 第一步必做**:
+```bash
+perf list                      # 列出本平台所有可用事件
+perf list | grep -i cache      # 确认 cache 事件名
+perf list | grep -i branch     # 确认分支预测事件名
+perf list | grep -i llc        # 确认 LLC/last-level 事件名
+```
+不同 CPU（Intel/AMD/ARM）事件名差异很大。Reference 只写语义，用 `perf list` 查本平台名字。`--topdown` 仅 Intel Icelake+ 和 AMD Zen4+ 支持——不支持时用基础事件手工计算。
 
-5. **多线程维度 — 专项诊断**
-   - 锁竞争、伪共享、NUMA、扩展效率
-   - 详细技法见: `references/perf/concurrency-optimization.md`
+**perf 决策树**（从基础数据逐步缩小方向）:
 
-6. **交叉分析** — 警惕级联效应
-   - IO 高 iowait → CPU 看似高但实际在等 IO
-   - 内存带宽竞争 → 多线程扩展差
+```
+perf stat 基础数据 + perf record 热点
 
-**输出**: 各维度分析结果 + 根因候选（含置信度）
+热点函数开销 > 30%:
+├── cache-misses/cache-references > 5%?
+│   → 内存瓶颈: 进一步 perf stat -e L1-{loads,misses},LLC-{loads,misses}
+│   → perf mem record 看数据来源（L1/L2/L3/DRAM/远端NUMA）
+│
+├── branch-misses/branches > 3%?
+│   → 分支预测差: perf stat -e branch-misses,branch-loads
+│
+├── IPC < 1.0 且 cache/branch miss 都低?
+│   → 前端/后端: perf stat --topdown (L1大类)
+│     ├── Frontend Bound > 20% → ICache/ITLB/解码器
+│     ├── Backend Bound > 20%  → 执行单元/L1/存储转发
+│     └── Bad Speculation > 10% → 分支预测器
+│
+└── IPC > 2.0 且占比仍高?
+    → 纯计算密集: 检查 SIMD 向量化机会、算法复杂度
+```
 
-### Phase 3: 根因验证
+**定位代码行**:
+```bash
+perf annotate --stdio <hotspot_function>
+# 输出每行源码对应的 CPU 开销，直接看到哪行最贵
+```
 
-**目标**: 用实验证明假设，禁止凭直觉下结论。
+### Phase 4: 理解代码
 
-1. 对候选根因设计对照实验
-   - 微基准隔离: 写最小复现代码验证假设
-   - 对比实验: A/B 测试（改前/改后、开/关某优化）
-   - 工具交叉验证: 多个工具确认同一结论
+**目的**: 从性能数据回到源码，理解为什么慢。
 
-2. 验证标准
-   - 有代码: 修改代码 → 重新测试 → 确认改善
-   - 无代码: 更换工具/角度 → 交叉验证 → 确认根因
+读代码时回答：
+- 这段代码在做什么？为什么需要这样做？
+- 循环遍历顺序对 cache 友好吗？
+- 数据结构布局是否导致了不必要的内存访问？
+- 热路径上是否有可预计算/缓存的值？有无冗余操作？
+- 分支可预测吗？可查表替代吗？
+- 适合 SIMD 向量化吗？
 
-3. 如果实验推翻了假设 → 回到 Phase 2 重新分析
+**产物**: 根因（设计缺陷？路径问题？数据布局？），不是猜测，是结合 perf 数据的判断。
 
-**输出**: 确认的根因（含实验数据支撑，置信度 >80%）
+### Phase 5: 优化+验证
 
-### Phase 4: 技法匹配 + 行动计划
+**目的**: 选择合适手段，拿到 before/after 数据。
 
-**目标**: 从参考文件中匹配最优优化手段，生成可执行的行动计划。
+**优化手段三维度**（按成本排序）:
 
-1. 根据确认的根因，检索对应 reference 文件
-2. 评估候选技法:
-   - **预期收益**: 大/中/小
-   - **实施成本**: 低（改编译选项）/ 中（局部重构）/ 高（架构变更）
-   - **风险**: 低（纯编译器优化）/ 中（局部代码修改）/ 高（改变语义）
+| 维度 | 手段 | 成本 | 何时用 |
+|------|------|------|--------|
+| 编译器 | `-O3 -march=native`, `-flto`, PGO, BOLT | 极低 | 优先检查 |
+| 运行时 | `numactl`, `MALLOC_ARENA_MAX`, THP, `LD_PRELOAD=jemalloc` | 极低 | DTLB/分配/NUMA |
+| 代码 | 循环交换、分支改写、数据布局、算法替换 | 低-高 | 多数热点 |
 
-3. 按 ROI 排序生成行动计划
-   ```
-   优先级 = 高收益 + 低成本 + 低风险  → 先做
-   次优   = 高收益 + 中成本            → 次做
-   最后   = 中收益 + 高成本            → 评估是否值得
-   ```
+**规则**:
+- **一次只改一个变量**
+- **编译器/运行时手段优先尝试** — 零代码改动的收益可能出乎意料
+- **重新编译后必须运行测试用例** — 编译器优化改变了二进制行为（`-O3`/`-march=native`/`-flto`/PGO 都可能引入微妙问题），代码修改更不用说。每次重编译后先跑现有测试套件确认功能无碍，再跑性能 benchmark
+- 修改后立即用相同 workload 重新 `perf stat`，对比 Phase 1 基线
+- 记录 before/after: `{指标, before, after, improvement%}`
 
-**输出**: 分析报告（根因+数据+推理）+ 行动计划（优先级+预期收益+成本+风险）
+### 循环: 回到 Phase 2
 
-### Phase 5: 验证闭环
+优化后**重新 `perf record`**。前一个热点消除后，新的 #1 热点自然涌现。
 
-**目标**: 确认优化真正有效，而非幻觉。
+**继续条件**: Top 热点 > 3% / IPC 仍有提升空间 / 剩余热点在用户代码中
 
-1. 在相同条件/输入下重新观测
-2. 对比优化前后数据
-3. 如未改善 → 分析原因、回退、重新诊断
-4. 如已改善 → 记录 before/after 数据作为经验沉淀
+**停止条件**: Top 热点 < 3%（无主导瓶颈）| IPC 接近微架构理论上限 | 剩余在 kernel/libc | 用户中断
 
-**输出**: 改善确认报告（含 before/after 数据对比）
-
----
-
-## References
-
-本技能的设计理念来自两本书:
-- "Performance Analysis and Tuning on Modern CPUs" (Denis Bakhvalov)
-- "鲲鹏编程与调优指南" (华为)
-
-按需加载以下参考文件（不在 SKILL.md 中内联，避免上下文膨胀）:
-> 所有参考路径相对于仓库根目录 `<repo>/reliable-agent/`。使用时需解析为绝对路径。
-
-| 文件 | 内容 | 读取条件 |
-|------|------|---------|
-| `.reliable-agent/experiences.md` | 集中式经验 | 每次必读（如存在） |
-| `.reliable-agent/ra-perf/experiences.md` | 本技能专属经验 | 每次必读（如存在） |
-| `references/perf/cpu-optimization.md` | CPU 优化技法（TMA、编译器、SIMD） | CPU 为高可疑维度 |
-| `references/perf/memory-optimization.md` | 内存/Cache 优化技法 | 内存为高可疑维度 |
-| `references/perf/io-optimization.md` | IO/磁盘优化技法 | IO 为高可疑维度 |
-| `references/perf/network-optimization.md` | 网络优化技法 | 网络为高可疑维度 |
-| `references/perf/concurrency-optimization.md` | 多线程/并发优化技法 | 多线程为高可疑维度 |
-| `references/perf/tools-reference.md` | 观测工具速查 + 环境降级链 | Phase 1 环境评估阶段 |
-| `references/perf/case-studies.md` | 典型优化案例 | 需要启发式参考时 |
-| `references/performance-checklist.md` | 通用性能检查清单（数据访问、算法、IO 模式） | Phase 2 快速分级 或 Phase 4 交叉验证 |
+**循环纪律**: 至少 5 轮深挖。一轮优化不是终点——下一个热点永远在等你。
 
 ---
 
@@ -202,57 +180,70 @@ digraph reliable_perf {
 
 | 借口 | 现实 |
 |------|------|
-| "这个改动显然会加速" | 如果没观测，你不知道。直觉在性能领域通常不可靠。 |
-| "换这个算法一定快" | 算法复杂度不决定实际性能。Cache 行为往往主导。 |
-| "编译器会自动优化" | 编译器不总是能优化——别名问题、复杂循环、跨文件调用都可能阻止优化。 |
-| "先试几个优化看看哪个有用" | 盲目试错在最坏情况下引入新问题而不自知。数据驱动，一次一个假设。 |
-| "我的机器上很快" | 生产环境的硬件/数据量/并发量可能完全不同。 |
-| "加点线程就好了" | 多线程可能引入锁竞争和伪共享，反而更慢。 |
-| "优化到一半就够了，不需要验证" | 无验证的优化是"似乎正确"——你不知道是真有效还是测量噪声。 |
-| "我需要 root 才能做性能分析" | `perf stat`、`/proc` 文件系统、`iostat` 等大量工具无需 root。先尝试这些。 |
+| "这个改动显然会加速" | 没观测就不知道。直觉在性能领域不可靠。 |
+| "先跑 iostat/sar 看看" | 别广撒网。先 `perf record` 看热点，perf 会自动告诉你瓶颈方向。 |
+| "换这个算法一定快" | 算法复杂度不决定实际性能。Cache 行为往往主导。先 perf stat 看 cache miss。 |
+| "编译器会自动优化" | 编译器受限于别名分析、跨文件可见性。检查 `-march=native -flto` 是否开启。 |
+| "一个热点修好了，结束吧" | 修复一个热点后重新 profile——新的瓶颈必然出现。至少 5 轮。 |
+| "先试几个优化看看哪个有用" | 一次改一个变量，否则无法归因。盲目试错引入新问题不自知。 |
+| "加点线程就好了" | 多线程可能引入锁竞争和伪共享，反而更慢。先用 perf lock。 |
+| "这个事件名我记得" | 不同平台事件名不同。先 `perf list` 确认。 |
 
 ## Red Flags
 
-- 无观测数据就提出优化方案
-- 跳过 Phase 3 根因验证直接写代码
-- 一次修改多个优化变量（无法归因）
-- 没有 before/after 对比
-- 在没有 perf stat 数据的情况下断定"CPU 瓶颈"
-- 在没有 iostat 数据的情况下断定"IO 瓶颈"
-- 用 `printf` + 墙钟时间作为唯一测量手段（精度差、噪声大）
+- 没跑 `perf record` 就提优化方案
+- 没跑 `perf annotate` 定位代码行就改代码
+- 一次修改多个变量（无法归因）
+- 一轮优化后就停（不循环迭代）
+- 没有 before/after 数据对比
+- 在没确认平台可用事件的情况下硬编码 perf 事件名
+- 用 `printf` + 墙钟作为唯一测量手段
+- 重编译后不跑测试用例就声称优化成功（编译器优化/代码修改都可能引入 bug）
 
 ## Verification
 
-- [ ] Phase 1: 问题已结构化描述，安全评估已完成（生产系统？敏感数据？），环境能力已摸底
-- [ ] Phase 2: 五个维度可疑度已分级，高可疑维度已深入分析
-- [ ] Phase 3: 根因有实验数据支撑，置信度 >80%
-- [ ] Phase 4: 分析报告完整，行动计划含优先级+收益+成本+风险+回退方案
-- [ ] Phase 5: before/after 数据对比，改善确认或回退
-- [ ] 内核参数修改已记录当前值和恢复命令
-- [ ] 整个过程中没有凭直觉跳步，没有未经确认的安全降级
+- [ ] Phase 1: 基线数据已采集（IPC、耗时、cache/branch miss）
+- [ ] Phase 2: `perf record` 已完成，热点 Top 5 已识别
+- [ ] Phase 3a: `perf list` 已执行，本平台可用事件已确认（含 `perf list \| grep topdown` 检查）
+- [ ] Phase 3b: 定向 `perf stat` 已执行，微架构瓶颈类别已确定（含具体 perf 数据）
+- [ ] Phase 3c: `perf annotate` 已执行，高开销代码行已定位（记录文件路径+行号）
+- [ ] Phase 4: 代码逻辑已理解——热路径的循环遍历/数据布局/冗余操作已分析，根因有具体的 perf 数据佐证（非猜测）
+- [ ] Phase 5: 优化手段已选择，**重编译后测试用例全部通过**，before/after 数据已记录，改善已确认或已回退
+- [ ] 循环: 至少 5 轮深挖，或直到 IPC 饱和 / 热点耗尽
+- [ ] 每轮只改一个变量
+- [ ] 最终优化报告含所有轮次的 before/after 数据链
 
 <HARD-GATE>
+**迭代纪律:**
+至少 5 轮深挖迭代。一轮优化→重新 profile→下一个热点。修复一个热点即停 = 失败。
+Top 热点 < 3% 或 IPC 接近微架构理论上限或剩余全在 kernel/libc 时可停止。
+
 **数据纪律:**
-在没有观测数据的情况下，禁止提出任何优化方案。
-每个优化建议必须附带对应的观测数据（perf stat / iostat / 采样 / 其他工具输出）。
-环境工具不可用时，必须先降级尝试，记录降级路径，再继续分析。
+没有 `perf record` 数据，禁止提出任何优化方案。
+每个优化建议必须附带对应的观测数据（perf stat / annotate 输出）。
+`perf list` 必须先于 `perf stat` 定向事件——不同平台事件名不同。
 禁止一次修改多个变量——每次实验只改变一个因素。
 
-**安全纪律:**
-禁止在未经用户明确确认的情况下修改内核参数（sysctl -w / /proc/sys/ / /sys/）。
-禁止在未经用户明确确认的情况下降低系统安全设置（perf_event_paranoid 等）。
-内核参数修改前必须：记录当前值 → 描述变更风险 → 提供恢复命令。
-行动计划中的每项内核/系统级修改必须附带恢复（回退）命令。
-生产系统/多租户环境禁止试验性内核参数修改。
+**功能正确性纪律:**
+每次重新编译后必须运行现有测试套件。编译器优化 flag（`-O3 -march=native -flto`）改变代码生成、PGO 改变布局、代码修改改变逻辑——任何一个都可能引入功能回归。测试不过的优化不算优化——回退、定位问题、修复后再来。
+
+**上下文纪律:**
+只采集与当前热点调查直接相关的数据。不要广撒网扫描其他维度。
+不要预跑与当前瓶颈类别无关的工具——perf 本身会告诉你瓶颈在内存还是计算。
 </HARD-GATE>
+
+## References
+
+> 以下文件按需查阅（不在 SKILL.md 中内联，避免上下文膨胀）。
+
+| 文件 | 内容 | 读取条件 |
+|------|------|---------|
+| `references/perf/tools-reference.md` | perf 决策树 + 平台事件映射表 | Phase 3 选择事件时 |
+| `references/perf/optimization-patterns.md` | 按症状组织的优化模式速查 | Phase 4 理解代码后验证优化方向 |
+| `references/perf/case-studies.md` | 深度迭代优化案例 | 需要启发式参考时 |
 
 ## 下一步指引
 
-**推荐路径**:
-- 行动计划中的优化任务 → `/ra-build`（有代码修改时）
+- 优化任务产生代码修改 → `/ra-build`
 - 需要审查优化代码 → `/ra-request-review`
 - 性能改善后的经验沉淀 → `/ra-evolve`
-
-**其他选项**:
-- 如需生成完整性能报告 → 在 Phase 4 产出后人工审阅
-- 如需进一步分析其他维度 → 重新进入 `/ra-perf` Phase 2

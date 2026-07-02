@@ -1,11 +1,12 @@
-description = "在怀疑性能问题、需要系统性优化时使用。覆盖 CPU/内存/IO/网络/多线程五维诊断"
+description = "在怀疑性能问题、需要白盒深度优化时使用"
 
 prompt = """
-Invoke the ra-perf skill.
+Invoke the ra-perf skill. Follow the hotspot-driven deep iteration workflow defined in SKILL.md:
 
-Phase 1: 问题定性 + 安全评估 + 环境能力摸底（工具降级链）
-Phase 2: 五维分级遍历（CPU/内存 TMA 自顶向下，IO/网络/多线程工具驱动）
-Phase 3: 根因验证（假设→实验→确认）
-Phase 4: 技法匹配（读取 references/perf/）+ 行动计划（含恢复命令）
-Phase 5: 验证闭环（before/after 对比，未改善则回退重诊）
+Phase 1: Establish baseline (perf stat + time)
+Phase 2: Discover hotspots (perf record + report)
+Phase 3: Deep-dive hotspot (perf list → targeted perf stat → perf annotate)
+Phase 4: Understand the code (algorithm, data layout, redundancy)
+Phase 5: Optimize + verify (code/compiler/runtime → test suite → before/after)
+Loop back to Phase 2. At least 5 rounds of iteration until IPC saturates or hotspots are exhausted.
 """
