@@ -1,12 +1,14 @@
 description = "在怀疑性能问题、需要白盒深度优化时使用"
 
 prompt = """
-Invoke the ra-perf skill. Follow the hotspot-driven deep iteration workflow defined in SKILL.md:
+Invoke the ra-perf v2.1 skill. Follow the single-hotspot deep iteration workflow:
 
-Phase 1: Establish baseline (perf stat + time)
-Phase 2: Discover hotspots (perf record + report)
-Phase 3: Deep-dive hotspot (perf list → targeted perf stat → perf annotate)
-Phase 4: Understand the code (algorithm, data layout, redundancy)
-Phase 5: Optimize + verify (code/compiler/runtime → test suite → before/after)
-Loop back to Phase 2. At least 5 rounds of iteration until IPC saturates or hotspots are exhausted.
+Phase 1: Baseline (perf stat + full benchmark)
+Phase 2: Pick #1 hotspot ONLY (re-run perf record, take only #1 function)
+Phase 3: Deep-dive THIS hotspot (perf list → targeted perf stat → annotate)
+Phase 4: Understand THIS code (only the function selected in P2)
+Phase 5a: One optimization + quick direction check (< 1 min, small dataset)
+Phase 5b: Full validation (benchmark + test suite, must pass)
+Loop: MUST re-run perf record before entering next round. Pre-check all 5 items.
+At least 5 rounds of iteration. ONE round = ONE hotspot + ONE optimization.
 """
