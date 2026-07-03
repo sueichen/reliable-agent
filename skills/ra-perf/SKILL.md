@@ -1,7 +1,7 @@
 ---
 name: ra-perf
 description: "在怀疑性能问题、需要白盒深度优化时使用"
-version: "2.1.0"
+version: "2.2.0"
 license: MIT
 ---
 
@@ -19,7 +19,7 @@ license: MIT
 4. 读代码理解**设计意图 vs 实际行为**
 5. 选择优化手段（代码/编译器/运行时），修改后验证
 6. **重新 profile**，新热点涌现，回到步骤 1
-7. 至少 5 轮深挖，直到 IPC 饱和或热点不可约化
+7. 至少 3 轮深挖，直到 IPC 饱和或热点不可约化
 
 ## When to Use
 
@@ -32,7 +32,7 @@ license: MIT
 ## Core Process
 
 ```dot
-digraph ra_perf_v2_1 {
+digraph ra_perf_v2_2 {
     rankdir=TB;
     node [shape=box, style=rounded];
 
@@ -40,6 +40,8 @@ digraph ra_perf_v2_1 {
 
     p1 [label="Phase 1\n建立基线\n(perf stat+完整benchmark)"];
     p2 [label="Phase 2\n取 #1 热点\n(重新perf record→只取第1名)"];
+    delegate [label="委派分析?", shape=diamond];
+    sub [label="子Agent: Phase 3+4联合\n(perf list→stat→annotate\n→读源码→结构化摘要)"];
     p3 [label="Phase 3\n深挖此热点\n(perf list→定向stat→annotate)"];
     p4 [label="Phase 4\n理解此代码\n(仅P2选中的函数)"];
     p5 [label="Phase 5\n一个优化+快验\n(改→小数据验证方向)"];
@@ -49,7 +51,11 @@ digraph ra_perf_v2_1 {
 
     start -> p1;
     p1 -> p2;
-    p2 -> p3 [label="仅 #1"];
+    p2 -> delegate [label="仅 #1"];
+    delegate -> sub [label="是:\n委派决策表命中"];
+    delegate -> p3 [label="否:\n直接执行"];
+    sub -> p5 [label="结构化摘要"];
+    sub -> p3 [label="校验失败:\n回退"];
     p3 -> p4;
     p4 -> p5;
     p5 -> next;
@@ -94,6 +100,28 @@ perf report --stdio --sort=overhead,symbol -n
 - **只取 #1**。如果 #1 是 libc 函数（`__memset_avx2` 等），找调用它的用户函数作为真正的 #1
 - 如果 #1 是内核函数，分析系统调用来源，找到触发该 syscall 的用户函数
 - 如果 #1 无可优化空间（外部库、纯 memcpy 无改进空间等）→ 仍只取一个，完成本轮分析并记录"不可优化"结论，下一轮重新 perf record 找新的 #1
+
+### Phase 2a: 委派决策（可选优化路径）
+
+**目的**: 决定 Phase 3+4 是由主 agent 直接执行还是委派给子 agent。
+
+**决策表**（按优先级从上到下匹配，首次命中即生效）:
+
+| 优先级 | 条件 | 决策 | 理由 |
+|--------|------|------|------|
+| 1 | Agent 工具被禁用 / 不可用 | **不委派** | 无子 agent 能力 |
+| 2 | 热点是 libc/kernel wrapper（无用户源码可读） | **不委派** | 无源码可分析，直接判"不可优化" |
+| 3 | 热点函数源码 ≤ 30 行 | **不委派** | perf stat 直接看出问题，委派开销 > 收益 |
+| 4 | 编译选项缺失优化 flag（检查 Makefile/CMakeLists.txt 是否缺少 `-O2`/`-O3`/`-march=native`/`-flto`） | **不委派** | 先补齐编译选项，重新 profile 后再判断是否需要深挖 |
+| 5 | 当前轮次 ≥ 2 | **强制委派** | 3 轮即可停止的节奏下，尽早隔离上下文 |
+| 6 | 热点函数源码 > 100 行，或需交叉参考多个参考文件（tools-reference + optimization-patterns） | **强制委派** | 大量源码或跨文件分析会严重污染主 agent 上下文 |
+| 7 | 热点函数源码 31-100 行，在用户代码中 | **委派** | 标准委派场景，信息密度高、决策复杂度低 |
+
+> **注意**: 决策表按优先级从上到下匹配，首次命中即生效。优先级 6-7 仅在轮次 1 生效（轮次 2+ 由优先级 5 统一接管，除非被优先级 1-4 拦截）。
+
+**委派时**: 详见下方 [Phase 3+4 委派模式](#phase-34-委派模式可选优化路径) 节。核心流程：填充模板 → 启动子 agent → 校验输出 → 展示发现或回退。
+
+**不委派时**: 主 agent 按下方 Phase 3 → Phase 4 标准流程执行。下一轮重新评估委派条件（轮次增加后可能触发强制委派）。
 
 ### Phase 3: 深挖此热点（仅针对 Phase 2 选中的那一个函数）
 
@@ -204,7 +232,43 @@ perf annotate --stdio <hotspot_function>
 
 **停止条件**: Top 热点 < 3%（无主导瓶颈）| IPC 接近微架构理论上限 | 剩余在 kernel/libc | 用户中断
 
-**循环纪律**: 至少 5 轮深挖。轮 = 一个热点的一个优化 + 重新 profile。不是一轮发现多个优化点。
+**循环纪律**: 至少 3 轮深挖。轮 = 一个热点的一个优化 + 重新 profile。不是一轮发现多个优化点。
+
+---
+
+## Phase 3+4 委派模式（可选优化路径）
+
+当 Phase 2a 决策表判定"委派"时，主 agent 将 Phase 3（perf 深挖）和 Phase 4（代码理解）合并委派给子 agent 执行。这是**可选优化路径**——不委派时按标准流程执行，行为不变。
+
+### 委派流程
+
+1. **主 agent** 从 `references/perf/subagent-prompt-template.md` 复制 prompt 模板
+2. **主 agent** 替换 placeholder（`<FUNCTION_NAME>`, `<SOURCE_FILE>`, `<WORKLOAD_CMD>`, `<ROUND_N>`, `<PREVIOUS_ROUNDS_SUMMARY>`）
+   - **WORKLOAD_CMD 验证**: 不含 shell 元字符（`;`, `&&`, `||`, `|`, `` ` ``, `$()`）；若为复合命令 → 包装为脚本文件
+   - **SOURCE_FILE 验证**: 路径位于当前仓库目录树内（resolve 符号链接后），拒绝仓库外路径
+   - **PREVIOUS_ROUNDS_SUMMARY 上限**: 最多 5 条要点，每条 ≤ 1 行（防止上下文重新膨胀）
+3. **主 agent** 通过 `Agent` 工具启动子 agent（general-purpose 类型），传入填充后的 prompt，设置超时 120 秒
+4. **子 agent** 执行 Phase 3+4 联合分析（perf list → stat → annotate → 读源码 → 交叉参考），返回结构化 Markdown
+5. **主 agent** 校验输出：必填字段齐全、置信度 ≥ 中、关键指标与 Phase 1 基线无矛盾（IPC 偏离 ≤ 2x）
+6. **主 agent** 消毒优化建议：逐条交叉验证是否匹配 `references/perf/optimization-patterns.md` 中的已知模式。不匹配的建议标记为可疑，需人工确认后才可实施
+7. **校验通过** → 主 agent 向用户展示关键发现，进入 Phase 5
+8. **校验不通过** → 主 agent 告知用户原因，回退到直接执行 Phase 3+4
+
+### 回退触发条件
+
+| 条件 | 处理 |
+|------|------|
+| 子 agent 超时或返回 null | 记录原因，主 agent 接管 Phase 3+4 |
+| 瓶颈类别置信度 = 低 | 交叉验证关键指标，若矛盾则回退 |
+| 必填字段缺失（无 annotate 行号、无根因分析） | 直接回退 |
+| 指标与 Phase 1 基线数据矛盾（如 IPC 值偏离 > 2x 或 cache-miss% 反向变化 > 3x） | 主 agent 交叉验证，若矛盾则回退 |
+
+### 用户可见性
+
+委派不是静默的——主 agent 必须：
+- 通知用户正在委派（"将 `<函数名>` 的 Phase 3+4 分析委派给子 agent..."）
+- 展示子 agent 返回的瓶颈类别、关键指标、根因摘要
+- 说明基于此分析选择的优化方案
 
 ---
 
@@ -216,7 +280,7 @@ perf annotate --stdio <hotspot_function>
 | "先跑 iostat/sar 看看" | 别广撒网。先 `perf record` 看热点，perf 会自动告诉你瓶颈方向。 |
 | "换这个算法一定快" | 算法复杂度不决定实际性能。Cache 行为往往主导。先 perf stat 看 cache miss。 |
 | "编译器会自动优化" | 编译器受限于别名分析、跨文件可见性。检查 `-march=native -flto` 是否开启。 |
-| "一个热点修好了，结束吧" | 修复一个热点后重新 profile——新的瓶颈必然出现。至少 5 轮。 |
+| "一个热点修好了，结束吧" | 修复一个热点后重新 profile——新的瓶颈必然出现。至少 3 轮。 |
 | "先试几个优化看看哪个有用" | 一次改一个变量，否则无法归因。盲目试错引入新问题不自知。 |
 | "加点线程就好了" | 多线程可能引入锁竞争和伪共享，反而更慢。先用 perf lock。 |
 | "这个事件名我记得" | 不同平台事件名不同。先 `perf list` 确认。 |
@@ -225,6 +289,8 @@ perf annotate --stdio <hotspot_function>
 | "同一个函数里有 3 个问题，一起修了再测" | 3 个问题 = 3 轮。修完第 1 个后重新 profile，后 2 个可能已经不再是热点了。 |
 | "这个热点是 libc 的 memcpy，没什么可优化的" | memcpy 是热点说明调用它太多。深挖: 能否减少 memcpy 次数？能否用更小的 buffer？能否用 move 语义替代 copy？ |
 | "只是改了 Makefile 的编译选项，代码没动，不用重测" | 编译器选项改变代码生成、内联决策、甚至 UB 行为。必须重新 profile 确认效果 + 运行测试套件确认无回归。 |
+| "委派给子 agent 太慢了，我自己分析更快" | 前几轮确实如此。但第 2 轮起上下文已有积累，不委派的累积退化可能比重做一轮更贵。3 轮可停止的节奏下，尽早委派。 |
+| "这个热点很复杂，子 agent 肯定分析不好" | 子 agent 有自己的干净上下文 + 相同的参考文件。如果担心质量，先委派一次并校验输出。回退机制保证安全。 |
 
 ## Red Flags
 
@@ -240,6 +306,8 @@ perf annotate --stdio <hotspot_function>
 - 优化后没有重新 `perf record` 就进入下一轮（用旧的 profile 数据论证新优化）
 - 同一个函数内部一次性修了多个独立问题（每个独立问题 = 单独一轮）
 - 用完整 benchmark 太慢为借口跳过验证（可先用快速验证 5a 确认方向）
+- 明知上下文已膨胀仍不委派 Phase 3+4（第 2 轮起应优先委派）
+- 子 agent 返回后不校验必填字段就直接采纳
 
 ## Verification
 
@@ -252,12 +320,16 @@ perf annotate --stdio <hotspot_function>
 - [ ] Phase 5a: 快速验证已执行（小数据/采样），优化方向已确认（不是猜测）
 - [ ] Phase 5b: 全量验证已执行，**重编译后测试用例全部通过**，before/after 数据已记录
 - [ ] 下一轮前置检查: 已重新 `perf record`（不是复用旧 profile）\|\| 每轮只改一个变量 \|\| 5a 方向确认 \|\| before/after 已记录
-- [ ] 循环: 至少 5 轮深挖，或直到 IPC 饱和 / 热点耗尽
+- [ ] 委派模式（如使用）: 子 agent 返回的分析包含所有必填字段（瓶颈类别/关键指标/annotate行号/根因/置信度）
+- [ ] 委派模式（如使用）: 回退机制已就绪——子 agent 失败时主 agent 已接管 Phase 3+4
+- [ ] 委派模式（如使用）: 用户已被通知委派和关键发现
+- [ ] 委派模式（如使用）: 仅采纳了子 agent 的一条优化建议——即使子 agent 返回多条，主 agent 仍保持每轮一个优化的纪律
+- [ ] 循环: 至少 3 轮深挖，或直到 IPC 饱和 / 热点耗尽
 - [ ] 最终优化报告含所有轮次的 before/after 数据链
 
 <HARD-GATE>
 **迭代纪律:**
-至少 5 轮深挖迭代。一轮优化→重新 profile→下一个热点。修复一个热点即停 = 失败。
+至少 3 轮深挖迭代。一轮优化→重新 profile→下一个热点。修复一个热点即停 = 失败。
 Top 热点 < 3% 或 IPC 接近微架构理论上限或剩余全在 kernel/libc 时可停止。
 
 **数据纪律:**
@@ -284,6 +356,14 @@ Top 热点 < 3% 或 IPC 接近微架构理论上限或剩余全在 kernel/libc �
 **上下文纪律:**
 只采集与当前热点调查直接相关的数据。不要广撒网扫描其他维度。
 不要预跑与当前瓶颈类别无关的工具——perf 本身会告诉你瓶颈在内存还是计算。
+
+**委派纪律（新增 v2.2）:**
+第 2 轮起优先委派 Phase 3+4 给子 agent——3 轮可停止的节奏下，尽早隔离上下文。
+子 agent 返回后必须校验必填字段（瓶颈类别/关键指标/annotate行号/根因/置信度）。
+校验不通过 → 直接回退，主 agent 接管 Phase 3+4。不得以"委派更快"为借口采纳不完整的分析。
+委派不是强制的——Agent 工具不可用时回退到直接执行，行为不变。
+设置子 agent 超时 = 120 秒（perf 命令通常 < 60 秒完成）。超时触发回退。
+委派深度上限 = 1——子 agent 不得进一步委派任务（模板中已声明）。主 agent 不得对同一轮次重复委派。
 </HARD-GATE>
 
 ## References
@@ -294,6 +374,7 @@ Top 热点 < 3% 或 IPC 接近微架构理论上限或剩余全在 kernel/libc �
 |------|------|---------|
 | `references/perf/tools-reference.md` | perf 决策树 + 平台事件映射表 | Phase 3 选择事件时 |
 | `references/perf/optimization-patterns.md` | 按症状组织的优化模式速查 | Phase 4 理解代码后验证优化方向 |
+| `references/perf/subagent-prompt-template.md` | Phase 3+4 委派子 agent prompt 模板 | Phase 2a 判定委派时 |
 | `references/perf/case-studies.md` | 深度迭代优化案例 | 需要启发式参考时 |
 
 ## 下一步指引
